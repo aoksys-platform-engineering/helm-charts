@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  example:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-07-10T16:27:19.113025862Z"
+    description: A Helm chart for Kubernetes
+    digest: 5ed577b70dd0ed43b14b10e41e17eb6ca4e36062d6b2050d4a515bdec7b8235e
+    name: example
+    type: application
+    urls:
+    - https://github.com/aoksys-platform-engineering/helm-charts/releases/download/example-0.1.0/example-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-07-10T16:27:19.113029559Z"
