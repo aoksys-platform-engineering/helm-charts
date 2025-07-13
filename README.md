@@ -23,20 +23,20 @@ helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
 ```
 
 # Diff release versions
-In the "Releases" tab of the repository, you can track what has changed since the last released version of a Helm chart.
+In the ``Releases`` tab of the repository, you can track what has changed since the last released version of a Helm chart.
 
-To see those changes, click on the "Releases" tab:
+To see those changes, click on the ``Releases`` tab:
 
-![](images/diff-releases-1.jpg)
+<img src="images/diff-releases-1.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 Then click on the specific release:
 
-![](images/diff-releases-2.jpg)
+<img src="images/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 Next, click on the commit for that release:
 
-![](images/diff-releases-3.jpg)
+<img src="images/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 And finally, view the diffs:
 
-![](images/diff-releases-4.jpg)
+<img src="images/diff-releases-4.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
