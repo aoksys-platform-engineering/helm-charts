@@ -21,3 +21,22 @@ or by downloading and unpacking the chart locally after you have added the aoksy
 ```bash
 helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
 ```
+
+# Diff release versions
+In the "Releases" tab of the repository, you can track what has changed since the last released version of a Helm chart.
+
+To see those changes, click on the "Releases" tab:
+
+![](images/diff-releases-1.jpg)
+
+Then click on the specific release:
+
+![](images/diff-releases-2.jpg)
+
+Next, click on the commit for that release:
+
+![](images/diff-releases-3.jpg)
+
+And finally, view the diffs:
+
+![](images/diff-releases-4.jpg)
