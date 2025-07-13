@@ -22,6 +22,12 @@ or by downloading and unpacking the chart locally after you have added the aoksy
 helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
 ```
 
+# Contributing and support
+The Helm charts published in this repository are open source, but closed commit.
+Development and releases are handled internally by AOK Systems GmbH.
+
+If you are a customer and encounter issues using one of these charts, please open a support ticket via the established SUD process.
+
 # Diff release versions
 In the ``Releases`` tab of the repository, you can track what has changed since the last released version of a Helm chart.
 
@@ -36,9 +42,3 @@ Then click on the commit for a specific release:
 And finally, view the diffs for that release:
 
 <img src="images/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
-
-# Contributing and support
-The Helm charts published in this repository are open source, but closed commit.
-Development and releases are handled internally by AOK Systems GmbH.
-
-If you are a customer and encounter issues using one of these charts, please open a support ticket via the established SUD process.
