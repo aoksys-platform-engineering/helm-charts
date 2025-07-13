@@ -29,14 +29,10 @@ To see those changes, click on the ``Releases`` tab:
 
 <img src="images/diff-releases-1.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
-Then click on a specific release:
+Then click on the commit for a specific release:
 
 <img src="images/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
-Next, click on the commit for that release:
+And finally, view the diffs for that release:
 
 <img src="images/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
-
-And finally, view the diffs:
-
-<img src="images/diff-releases-4.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
