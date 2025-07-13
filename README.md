@@ -39,6 +39,6 @@ Then click on the commit for a specific release:
 
 <img src="images/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
-And finally, view the diffs for that release:
+And view the diffs for that release:
 
 <img src="images/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
