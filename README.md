@@ -29,7 +29,7 @@ To see those changes, click on the ``Releases`` tab:
 
 <img src="images/diff-releases-1.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
-Then click on the specific release:
+Then click on a specific release:
 
 <img src="images/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
