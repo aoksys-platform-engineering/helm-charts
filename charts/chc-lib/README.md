@@ -36,7 +36,7 @@ Add the following ``dependencies`` block to your chart’s ``Chart.yaml`` to use
 dependencies:
   - name: chc-lib
     version: 0.9.8
-    repository: https://nexus.central.aws.aok-systems.de/repository/helm-cloud-services
+    repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is crucial to correctly import default values provided by the chc-lib.
     import-values:
       - defaults
