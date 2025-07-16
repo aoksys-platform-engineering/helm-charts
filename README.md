@@ -25,6 +25,7 @@ helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
 
 ## Table of content
 Because chart documentations can be quite extensive, it’s helpful to use GitHub’s auto-generated table of contents for easier navigation.
+
 When viewing a chart's documentation within the ``charts/`` directory, click the “Outline” button to see the table of contents generated from a chart’s ``README.md`` file.
 You can click on any heading to jump directly to that section, or use the filter to quickly search for specific content.
 
