@@ -1,0 +1,17 @@
+---
+apiVersion: v2
+name: chc-lib
+description: Library chart to provide reusable functions and templates to compose application charts with.
+icon: https://www.aok-systems.de/daten/corporate/i/logo-aok-systems.png
+home: https://bitbucket.central.aws.aok-systems.de/projects/PAAS/repos/chc-lib
+type: library
+version: 0.9.8
+maintainers:
+  - name: Oliver Geyer
+    email: Oliver.Geyer@sys.aok.de
+    url: https://www.aok-systems.de/startseite.html
+
+dependencies:
+  - name: common
+    version: 2.31.3
+    repository: oci://registry-1.docker.io/bitnamicharts

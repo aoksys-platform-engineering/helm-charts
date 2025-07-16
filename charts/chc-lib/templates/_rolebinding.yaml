@@ -1,0 +1,25 @@
+{{- define "chc-lib.rolebinding" }}
+{{- $rolebinding := .Values.rbac.roleBinding -}}
+{{- if and .Values.serviceAccount.create .Values.rbac.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Values.rbac.namespaceOverride | default .Release.Namespace }}
+  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $rolebinding.labels .Values.commonLabels) "context" .) | fromYaml }}
+  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
+  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $rolebinding.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
+  {{- if $annotations }}
+  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "chc-lib.helpers.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "common.names.fullname" . }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,205 @@
+---
+exports:
+  # -- Default values to import when using this chart as dependency in your application chart.
+  defaults:
+    # -- Used to override the base name for all resources.
+    nameOverride: ""
+
+    # -- Used to override the full name for all resources.
+    fullnameOverride: ""
+
+    # -- Labels to add to all resources. Values go through tpl.
+    commonLabels: {}
+
+    # -- Annotations to add to all resources. Values go through tpl.
+    commonAnnotations: {}
+
+    # -- Labels to add to all pods in addition to "commonLabels". Values go through tpl.
+    podLabels: {}
+
+    # -- Annotations to add to all pods in addition to "commonAnnotations". Values go through tpl.
+    podAnnotations: {}
+
+    # -- Security context to add to all pods. Can be freely defined as a dict, or a preset name
+    # can be supplied as a string. Available presets: "default". 
+    podSecurityContext: default
+
+    # Values to use for the deployment AND statefulset templates.
+    controller:
+      # -- Controller kind to create. Can be "Deployment" or "StatefulSet".
+      kind: Deployment
+
+      # -- Labels to add to the controller in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the controller in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Number of pod replicas to create by the controller.
+      replicas: 1
+
+      # -- Update strategy for pods managed by the controller.
+      updateStrategy:
+        type: Recreate
+
+      affinity:
+        # -- Pod affinity to set for pod scheduling. Useful to ensure that pod replicas are placed on the same node.
+        # Can be freely defined by supplying a dict, or a preset can be used by supplying a preset name as string.
+        # See 'Pod affinity presets' section in README for more.
+        podAffinity: {}
+
+        # -- Pod anti affinity to set for pod scheduling. Useful to ensure that pod replicas are placed on different nodes.
+        # Can be freely defined by supplying a dict, or a preset can be used by supplying the preset name as string.
+        # See 'Pod affinity presets' section in README for more.
+        podAntiAffinity: soft
+
+        # -- Node affinity to set for pod scheduling. Useful to ensure that pods are placed on a specific node.
+        nodeAffinity: {}
+
+      # -- Tolerations to set for pod scheduling.
+      tolerations: []
+
+      # -- List of host aliases to inject into the pod.
+      hostAliases: []
+
+      # -- InitContainers to inject into the pod. Values have to be provided as dict, not as list.
+      # Keys are used for the "name" value of each entry. Values go through tpl. Using a dict, instead of a list,
+      # is done to ensure proper merging of values when layering files.
+      # See 'InitContainers' section in README for more.
+      initContainers: {}
+
+    # Values to use ONLY in the deployment template.
+    deployment:
+      # -- Number of ReplicaSet revisions to keep.
+      revisionHistoryLimit: 5
+
+    # Values to use ONLY in the statefulset template.
+    statefulset: {}
+
+    hpa:
+      # -- Toggle to enable/disable the creation of the hpa.
+      create: false
+
+      # -- Labels to add to the hpa in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the hpa in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Sets the "minReplicas" spec for the hpa.
+      minReplicas: 1
+
+      # -- Sets the "maxReplicas" spec for the hpa.
+      maxReplicas: 3
+
+      # -- Sets the "targetCPUUtilizationPercentage" spec for the hpa.
+      targetCPUUtilizationPercentage: 80
+
+      # -- Sets the "targetMemoryUtilizationPercentage" spec for the hpa.
+      targetMemoryUtilizationPercentage: ~
+
+    service:
+      # -- Type of the service to create.
+      type: ClusterIP
+
+      # -- Labels to add to the service in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the service in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Session affinity to control how requests are routed. Can be "ClientIP" or "None".
+      sessionAffinity: None
+
+      # -- Session affinity configs to be set in addition to "sessionAffinity".
+      sessionAffinityConfig: ~
+
+      # -- Port configs for the service. Values go through tpl.
+      ports:
+        - name: https
+          port: 443
+          targetPort: 8443
+          porotocol: TCP
+
+    serviceAccount:
+      # -- Toggle to enable/disable creation of the serviceaccount.
+      create: true
+
+      # -- Name of the serviceaccount to use. Will be generated, if empty.
+      name: ""
+
+      # -- Labels to add to the serviceaccount in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the serviceaccount in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Toggle to enable/disable the "automountServiceAccountToken" feature.
+      # Mounting the serviceaccount token is only necessary if your app calls the K8s API directly.
+      automountServiceAccountToken: false
+
+    # Settings for RBAC resources (role and rolebinding) that will be automatically attached to the serviceaccount,
+    # if "serviceAccount.create" is true.
+    rbac:
+      # -- Toggle to enable/disable creation of RBAC resources.
+      create: false
+
+      # -- Namespace to create RBAC resources in. If empty or unset, "{{ .Release.Namespace }}" is used.
+      namespaceOverride: ""
+
+      role:
+        # -- Labels to add to the role in addition to "commonLabels". Values go through tpl.
+        labels: {}
+
+        # -- Annotations to add to the role in addition to "commonAnnotations". Values go through tpl.
+        annotations: {}
+
+        # -- Rules to add to the role. Values go through tpl.
+        rules: []
+
+      roleBinding:
+        # -- Labels to add to the rolebinding in addition to "commonLabels". Values go through tpl.
+        labels: {}
+
+        # -- Annotations to add to the rolebinding in addition to "commonAnnotations". Values go through tpl.
+        annotations: {}
+
+    pdb:
+      # -- Toggle to enable/disable creation of the pdb.
+      create: false
+
+      # -- Labels to add to the pdb in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the pdb in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Sets the minAvailable spec for the pdb.
+      minAvailable: 1
+
+      # -- Sets the maxUnavailable spec for the pdb. Set "minAvailable" to nil (~) for this to take effect.
+      maxUnavailable: 1
+
+    prometheusOperator:
+      # -- Toggle to enable/disable the prometheus-operator integration.
+      # Should be set to "true" if the prometheus-operator is installed in your cluster.
+      enabled: false
+
+      podMonitor:
+        # -- Toggle to enable/disable the creation of the podMonitor resource.
+        create: false
+
+        # -- Namespace to create the podMonitor resource in. If empty or unset, "{{ .Release.Namespace }}" is used.
+        namespaceOverride: ""
+
+        # -- Labels to add to the podMonitor in addition to "commonLabels". Values go through tpl.
+        labels: {}
+
+        # -- Annotations to add to the podMonitor in addition to "commonAnnotations". Values go through tpl.
+        annotations: {}
+
+        # -- Values to configure the "podMetricsEndpoints" of the podMonitor. Values have to be provided as dict, not as list.
+        # Keys are used for the "port" value of each entry. Values go through tpl. Using a dict, instead of a list,
+        # is done to ensure proper merging of values when layering files.
+        # See 'PodMonitor "podMetricsEndpoints" example values' section in README for more.
+        podMetricsEndpoints: {}

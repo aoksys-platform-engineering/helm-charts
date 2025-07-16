@@ -1,0 +1,25 @@
+{{- define "chc-lib.service" }}
+{{- $service := .Values.service -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $service.labels .Values.commonLabels) "context" .) | fromYaml }}
+  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
+  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $service.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
+  {{- if $annotations }}
+  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{ include "common.labels.matchLabels" . | nindent 4 }}
+  type: {{ $service.type }}
+  {{- if $service.sessionAffinity }}
+  sessionAffinity: {{ $service.sessionAffinity }}
+  {{- end }}
+  {{- if $service.sessionAffinityConfig }}
+  sessionAffinityConfig: {{ $service.sessionAffinityConfig | toYaml | nindent 4 }}
+  {{- end }}
+  ports: {{ include "common.tplvalues.render" (dict "value" $service.ports "context" $) | nindent 4 }}
+{{- end }}
