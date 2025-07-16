@@ -1,4 +1,4 @@
-# chc-lib
+# chc-lib (ℹ️ work in progress)
 
 ![Version: 0.9.8](https://img.shields.io/badge/Version-0.9.8-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
