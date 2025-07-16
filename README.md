@@ -27,7 +27,8 @@ helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
 The Helm charts published in this repository are open source, but closed commit.
 Development and releases are handled internally by AOK Systems GmbH.
 
-If you are a customer and encounter issues using one of these charts, please open a support ticket via the established SUD process.
+If you are a customer of AOK Systems GmbH and encounter issues using one of these charts,
+please open a support ticket via the established SUD process.
 
 # Diff release versions
 In the ``Releases`` tab of the repository, you can track what has changed since the last released version of a Helm chart.
