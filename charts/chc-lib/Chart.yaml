@@ -5,7 +5,7 @@ description: Library chart to provide reusable functions and templates to compos
 icon: https://www.aok-systems.de/daten/corporate/i/logo-aok-systems.png
 home: https://bitbucket.central.aws.aok-systems.de/projects/PAAS/repos/chc-lib
 type: library
-version: 0.9.8
+version: 0.9.9
 maintainers:
   - name: Oliver Geyer
     email: Oliver.Geyer@sys.aok.de

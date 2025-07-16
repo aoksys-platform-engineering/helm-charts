@@ -21,8 +21,12 @@ exports:
     podAnnotations: {}
 
     # -- Security context to add to all pods. Can be freely defined as a dict, or a preset name
-    # can be supplied as a string. Available presets: "default". 
+    # can be supplied as a string.
     podSecurityContext: default
+
+    # -- Security context to add to all containers in a pod, except initContainers.
+    # Can be freely defined as a dict, or a preset name can be supplied as a string. 
+    containerSecurityContext: default
 
     # Values to use for the deployment AND statefulset templates.
     controller:
@@ -44,16 +48,17 @@ exports:
 
       affinity:
         # -- Pod affinity to set for pod scheduling. Useful to ensure that pod replicas are placed on the same node.
-        # Can be freely defined by supplying a dict, or a preset can be used by supplying a preset name as string.
+        # Can be freely defined as dict, or as string from predefined preset names (``soft`` or ``hard``).
         # See 'Pod affinity presets' section in README for more.
         podAffinity: {}
 
         # -- Pod anti affinity to set for pod scheduling. Useful to ensure that pod replicas are placed on different nodes.
-        # Can be freely defined by supplying a dict, or a preset can be used by supplying the preset name as string.
+        # Can be freely defined as dict, or as string from predefined preset names (``soft`` or ``hard``).
         # See 'Pod affinity presets' section in README for more.
         podAntiAffinity: soft
 
-        # -- Node affinity to set for pod scheduling. Useful to ensure that pods are placed on a specific node.
+        # -- Node affinity to set for pod scheduling. Useful to ensure that pods are placed on a specific node.#
+        # Has to be supplied as dict, because no presets exists for it.
         nodeAffinity: {}
 
       # -- Tolerations to set for pod scheduling.
@@ -68,13 +73,21 @@ exports:
       # See 'InitContainers' section in README for more.
       initContainers: {}
 
-    # Values to use ONLY in the deployment template.
+      # -- Sidecar containers to inject into the pod.
+      # Setting values for "sidecarContainers" works the same way as configuring initContainers,
+      # with the exception of not needing to set a "weight" value.
+      # See 'InitContainers' section in README for more.
+      sidecarContainers: {}
+
+    # Values to use in the deployment template.
     deployment:
       # -- Number of ReplicaSet revisions to keep.
       revisionHistoryLimit: 5
 
-    # Values to use ONLY in the statefulset template.
-    statefulset: {}
+    # Values to use in the statefulset template.
+    statefulset:
+      # -- List of volumeClaimTemplates for the pod. Values go through tpl.
+      volumeClaimTemplates: []
 
     hpa:
       # -- Toggle to enable/disable the creation of the hpa.
@@ -86,10 +99,10 @@ exports:
       # -- Annotations to add to the hpa in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Sets the "minReplicas" spec for the hpa.
+      # -- Sets the "minReplicas" of pods managed by the hpa.
       minReplicas: 1
 
-      # -- Sets the "maxReplicas" spec for the hpa.
+      # -- Sets the "maxReplicas" of pods managed by the hpa.
       maxReplicas: 3
 
       # -- Sets the "targetCPUUtilizationPercentage" spec for the hpa.
@@ -201,5 +214,5 @@ exports:
         # -- Values to configure the "podMetricsEndpoints" of the podMonitor. Values have to be provided as dict, not as list.
         # Keys are used for the "port" value of each entry. Values go through tpl. Using a dict, instead of a list,
         # is done to ensure proper merging of values when layering files.
-        # See 'PodMonitor "podMetricsEndpoints" example values' section in README for more.
+        # See 'PodMetricsEndpoints' section in README for more.
         podMetricsEndpoints: {}
