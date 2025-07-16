@@ -31,9 +31,6 @@ You can click on any heading to jump directly to that section, or use the filter
 
 <img src="images/toc-readme.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
-If you are a customer of AOK Systems GmbH and encounter issues using one of these charts,
-please open a support ticket via the established SUD process.
-
 # Diff release versions
 In the ``Releases`` tab of the repository, you can track what has changed since the last released version of a Helm chart.
 
@@ -52,3 +49,6 @@ And view the diffs for that release:
 # Contributing and support
 The Helm charts published in this repository are open source, but closed commit.
 Development and releases are handled internally by AOK Systems GmbH.
+
+If you are a customer of AOK Systems GmbH and encounter issues using one of these charts,
+please open a support ticket via the established SUD process.
