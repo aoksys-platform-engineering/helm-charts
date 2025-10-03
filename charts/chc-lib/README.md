@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.25](https://img.shields.io/badge/Version-0.44.25-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.26](https://img.shields.io/badge/Version-0.44.26-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.25
+    version: 0.44.26
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -97,7 +97,7 @@ Values that can be set at `.Values.configs.<Value>`. These values are used in th
 | create | bool | `false` | Toggle to enable/disable the creation of configMaps. |
 | labels | object | `{}` | Labels to add to all configMaps in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of configMaps to create. Follows the `Secret and config items` input scheme. See [Secret and config items](#secret-and-config-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input scheme. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Secrets
 Values that can be set at `.Values.secrets.<Value>`. These values are used in the secrets template.
@@ -107,7 +107,7 @@ Values that can be set at `.Values.secrets.<Value>`. These values are used in th
 | create | bool | `false` | Toggle to enable/disable the creation of secrets. |
 | labels | object | `{}` | Labels to add to all secrets in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of secrets to create. Follows the `Secret and config items` input scheme. See [Secret and config items](#secret-and-config-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input scheme. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Deployment
 Values that can be set at `.Values.deployment.<Value>`. These values are used in the deployment template.
@@ -497,8 +497,8 @@ The `chc-lib` converts the dict items into an unordered list when rendering a te
 It is used to compute all kinds of values like `volumes`, `volumeMounts`, `ports`, `ENVs` and more.
 It is also used in various specs and templates like the `JobTemplate`, `PodTemplate`, `ContainerSpec` and others.
 
-When a value follows the `ListFromDict` scheme, the `name` field for each item of the generated list is populated from its key in the dict.
-The values can be provided in free-form, are merged and indented (to generate a properly formatted list) and all items go through tpl.
+When a value follows the `ListFromDict` scheme, the `name` field for each item in the generated list will be populated from its key in the dict.
+The values are be provided in free-form, merged and indented (to generate a properly formatted YAML list) and all items go through tpl.
 
 These example values ...
 

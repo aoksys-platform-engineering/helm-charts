@@ -27,8 +27,8 @@ exports:
       # -- Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of configMaps to create. Follows the `Secret and config items` input scheme.
-      # See [Secret and config items](#secret-and-config-items) in README for more.
+      # -- Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input scheme.
+      # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
     secrets:
@@ -41,8 +41,8 @@ exports:
       # -- Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of secrets to create. Follows the `Secret and config items` input scheme.
-      # See [Secret and config items](#secret-and-config-items) in README for more.
+      # -- Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input scheme.
+      # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
     deployment:
