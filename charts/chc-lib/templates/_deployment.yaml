@@ -1,68 +1,35 @@
 {{- define "chc-lib.deployment" }}
-{{- $controller := .Values.controller -}}
-{{- $deployment := .Values.deployment -}}
-{{- if eq $controller.kind "Deployment" }}
+{{- include "chc-lib.validations.deploymentXORstatefulset" . }}
+{{- $deployment := .Values.deployment }}
+{{- if $deployment.create }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $controller.labels .Values.commonLabels) "context" .) | fromYaml }}
-  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $controller.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
-  {{- if $annotations }}
-  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include "chc-lib.render.labelsAnnotations" (dict
+      "labels" (list .Values.commonLabels $deployment.labels)
+      "annotations" (list .Values.commonAnnotations $deployment.annotations)
+      "context" $) | nindent 2 }}
 spec:
   {{- if not .Values.hpa.create }}
-  replicas: {{ $controller.replicas }}
+  replicas: {{ $deployment.replicas }}
   {{- end }}
-  strategy: {{ $controller.updateStrategy | toYaml | nindent 4 }}
+  strategy: {{ $deployment.updateStrategy | toYaml | nindent 4 }}
   revisionHistoryLimit: {{ $deployment.revisionHistoryLimit }}
   selector:
     matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}
-  
+
   template:
     metadata:
-      {{- $podLabels := include "common.tplvalues.merge" (dict "values" (list .Values.podLabels .Values.commonLabels) "context" .) | fromYaml }}
-      labels: {{ include "common.labels.standard" (dict "customLabels" $podLabels "context" $) | nindent 8 }}
-      {{- $podAnnotations := include "common.tplvalues.merge" (dict "values" (list .Values.podAnnotations .Values.commonAnnotations) "context" .) | fromYaml }}
-      {{- if $podAnnotations }}
-      annotations: {{ include "common.tplvalues.render" (dict "value" $podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
-    
-    spec:
-      securityContext: {} # TODO
-      serviceAccountName: {{ include "chc-lib.helpers.serviceAccountName" . }}
-      {{- if $controller.hostAliases }}
-      hostAliases: {{ $controller.hostAliases | toYaml | nindent 8 }}
-      {{- end }}
-      {{- if $controller.tolerations }}
-      tolerations: {{ $controller.tolerations | toYaml | nindent 8 }}
-      {{- end }}
-      affinity:
-        {{- if typeIs "string" $controller.affinity.podAffinity }}
-        podAffinity: {{ include "common.affinities.pods" (dict "type" $controller.affinity.podAffinity "customLabels" $podLabels "context" $) | nindent 10 }}
-        {{- else if gt (len $controller.affinity.podAffinity) 0 }}
-        podAffinity: {{ $controller.affinity.podAffinity | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if typeIs "string" $controller.affinity.podAntiAffinity }}
-        podAntiAffinity: {{ include "common.affinities.pods" (dict "type" $controller.affinity.podAntiAffinity "customLabels" $podLabels "context" $) | nindent 10 }}
-        {{- else if gt (len $controller.affinity.podAntiAffinity) 0 }}
-        podAntiAffinity: {{ $controller.affinity.podAntiAffinity | toYaml | nindent 10 }}
-        {{- end }}
-        {{- if gt (len $controller.affinity.nodeAffinity) 0 }}
-        nodeAffinity: {{ $controller.affinity.nodeAffinity | toYaml | nindent 10 }}
-        {{- end }}
-      
-      volumes: [] # TODO
-      {{- if gt (len $controller.initContainers) 0 }}
-      initContainers:
-      {{- range $key, $value := $controller.initContainers }}
-        - name: {{ $key }}
-          {{- include "common.tplvalues.render" (dict "value" $value "context" $) | nindent 10 }}
-      {{- end }}
-      {{- end }}
+      {{- $configHashes := include "chc-lib.compute.restartPodsOnChange" (dict "values" .Values.configs.items "kind" "configs") | fromYaml -}}
+      {{- $secretHashes := include "chc-lib.compute.restartPodsOnChange" (dict "values" .Values.secrets.items "kind" "secrets") | fromYaml -}}
+      {{- include "chc-lib.render.labelsAnnotations" (dict
+        "labels" (list .Values.commonLabels $deployment.pods.labels)
+        "annotations" (list .Values.commonAnnotations $deployment.pods.annotations $configHashes $secretHashes)
+        "context" $) | nindent 6 }}
+
+    spec: {{ include "chc-lib.render.podSpec" (dict "values" $deployment.pods "defaultRegistry" .Values.imageRegistry "context" $) | nindent 6 }}
 {{- end }}
 {{- end }}

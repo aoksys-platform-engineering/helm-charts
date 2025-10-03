@@ -7,12 +7,10 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $pdb.labels .Values.commonLabels) "context" .) | fromYaml }}
-  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $pdb.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
-  {{- if $annotations }}
-  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include "chc-lib.render.labelsAnnotations" (dict
+      "labels" (list .Values.commonLabels $pdb.labels)
+      "annotations" (list .Values.commonAnnotations $pdb.annotations)
+      "context" $) | nindent 2 }}
 spec:
   selector:
     matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}

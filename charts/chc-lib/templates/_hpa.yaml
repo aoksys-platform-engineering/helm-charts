@@ -1,4 +1,5 @@
 {{- define "chc-lib.hpa" }}
+{{- include "chc-lib.validations.deploymentXORstatefulset" . }}
 {{- $hpa := .Values.hpa -}}
 {{- if $hpa.create }}
 ---
@@ -7,21 +8,19 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $hpa.labels .Values.commonLabels) "context" .) | fromYaml }}
-  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $hpa.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
-  {{- if $annotations }}
-  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include "chc-lib.render.labelsAnnotations" (dict
+      "labels" (list .Values.commonLabels $hpa.labels)
+      "annotations" (list .Values.commonAnnotations $hpa.annotations)
+      "context" $) | nindent 2 }}
 spec:
   minReplicas: {{ $hpa.minReplicas }}
   maxReplicas: {{ $hpa.maxReplicas }}
   scaleTargetRef:
     apiVersion: apps/v1
     name: {{ include "common.names.fullname" . }}
-    {{- if eq .Values.controller.kind "Deployment" }}
+    {{- if .Values.deployment.create }}
     kind: Deployment
-    {{- else if eq .Values.controller.kind "StatefulSet" }}
+    {{- else if .Values.statefulset.create }}
     kind: StatefulSet
     {{- end }}
 
@@ -34,6 +33,7 @@ spec:
           type: Utilization
           averageUtilization: {{ $hpa.targetCPUUtilizationPercentage }}
     {{- end }}
+
     {{- if $hpa.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:

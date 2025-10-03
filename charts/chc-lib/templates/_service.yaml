@@ -1,17 +1,16 @@
 {{- define "chc-lib.service" }}
 {{- $service := .Values.service -}}
+{{- if $service.create }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $service.labels .Values.commonLabels) "context" .) | fromYaml }}
-  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $service.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
-  {{- if $annotations }}
-  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include "chc-lib.render.labelsAnnotations" (dict
+      "labels" (list .Values.commonLabels $service.labels)
+      "annotations" (list .Values.commonAnnotations $service.annotations)
+      "context" $) | nindent 2 }}
 spec:
   selector: {{ include "common.labels.matchLabels" . | nindent 4 }}
   type: {{ $service.type }}
@@ -21,5 +20,6 @@ spec:
   {{- if $service.sessionAffinityConfig }}
   sessionAffinityConfig: {{ $service.sessionAffinityConfig | toYaml | nindent 4 }}
   {{- end }}
-  ports: {{ include "common.tplvalues.render" (dict "value" $service.ports "context" $) | nindent 4 }}
+  ports: {{ include "chc-lib.compute.listFromDict" (dict "values" $service.ports "keyName" "name" "context" $) | nindent 4 }}
+{{- end }}
 {{- end }}

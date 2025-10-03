@@ -7,12 +7,10 @@ kind: Role
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ .Values.rbac.namespaceOverride | default .Release.Namespace }}
-  {{- $labels := include "common.tplvalues.merge" (dict "values" (list $role.labels .Values.commonLabels) "context" .) | fromYaml }}
-  labels: {{ include "common.labels.standard" (dict "customLabels" $labels "context" $) | nindent 4 }}
-  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $role.annotations .Values.commonAnnotations) "context" .) | fromYaml }}
-  {{- if $annotations }}
-  annotations: {{ include "common.tplvalues.render" (dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include "chc-lib.render.labelsAnnotations" (dict
+      "labels" (list .Values.commonLabels $role.labels)
+      "annotations" (list .Values.commonAnnotations $role.annotations)
+      "context" $) | nindent 2 }}
 rules: {{ include "common.tplvalues.render" (dict "value" $role.rules "context" $) | nindent 2 }}
 {{- end }}
 {{- end }}
