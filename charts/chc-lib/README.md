@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.26](https://img.shields.io/badge/Version-0.44.26-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.27](https://img.shields.io/badge/Version-0.44.27-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.26
+    version: 0.44.27
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -423,7 +423,7 @@ You can use any of the above listed values when configuring a pod. Note that if 
 ### PodSecurityContext
 When configuring the `securityContext` in a `PodTemplate`, you can provide values either as string or dict.
 
-The chart behaves differently depending on the type of values provided:
+The chart behaviour depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
@@ -700,7 +700,7 @@ spec:
 ### ContainerSecurityContext
 When configuring the `securityContext` for a container, you can provide values either as string or dict.
 
-The chart behaves differently depending on the type of values provided:
+The chart behaviour depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
@@ -728,7 +728,7 @@ capabilities:
 ### Resources
 When configuring the `resources` for a container, you can provide values either as string or dict.
 
-The chart behaves differently depending on the type of values provided:
+The chart behaviour depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
