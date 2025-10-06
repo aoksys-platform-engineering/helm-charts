@@ -340,26 +340,26 @@ exports:
 
         keystores:
           jks:
-            # Toggle to enable/disable the creation of secrets for all certificates containg a JKS keystore.
+            # -- Toggle to enable/disable the creation of secrets for all certificates containg a JKS keystore.
             # Can be overwritten in each certificate.
             create: false
             passwordSecretRef:
-              # Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
+              # -- Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
               # Can be overwritten in each certificate. Can be created from `.Values.secrets.items`.
               name: "{{ .Release.Name }}-jks"
-              # Name of the key in the secret that contains the password to encrypt the keystore with.
+              # -- Name of the key in the secret that contains the password to encrypt the keystore with.
               # Can be overwritten in each certificate.
               key: password
 
           pkcs12:
-            # Toggle to enable/disable the creation of secrets for all certificates containg a pkcs12 keystore.
+            # -- Toggle to enable/disable the creation of secrets for all certificates containg a pkcs12 keystore.
             # Can be overwritten in each certificate.
             create: false
             passwordSecretRef:
-              # Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
+              # -- Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
               # Can be overwritten in each certificate. Can be created from `.Values.secrets.items`.
               name: "{{ .Release.Name }}-pkcs12"
-              # Name of the key in the secret that contains the password to encrypt the keystore with.
+              # -- Name of the key in the secret that contains the password to encrypt the keystore with.
               # Can be overwritten in each certificate.
               key: password
 

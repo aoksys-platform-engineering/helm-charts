@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.28](https://img.shields.io/badge/Version-0.44.28-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.33](https://img.shields.io/badge/Version-0.44.33-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.28
+    version: 0.44.33
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -264,6 +264,12 @@ Values that can be set at `.Values.certManager.certificates.<Value>`. These valu
 | commonName | string | `"{{ .Release.Name }}"` | Common name to use for all certificates. Goes through tpl. Can be overwritten in each certificate. |
 | dnsNames | list | `["{{ .Release.Name }}","{{ .Release.Name }}.{{ .Release.Namespace }}","{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local"]` | List of dnsNames to use for all certificates. Goes through tpl. Can be overwritten in each certificate. |
 | privateKey | object | `{"algorithm":"RSA","encoding":"PKCS1","size":2048}` | Spec for how to create the the private key for all certificates. Can be overwritten in each certificate. |
+| keystores.jks.create | bool | `false` | Toggle to enable/disable the creation of secrets for all certificates containg a JKS keystore. Can be overwritten in each certificate. |
+| keystores.jks.passwordSecretRef.name | string | `"{{ .Release.Name }}-jks"` | Name of the secret containing the key to encrypt the keystore with. Goes through tpl. Can be overwritten in each certificate. Can be created from `.Values.secrets.items`. |
+| keystores.jks.passwordSecretRef.key | string | `"password"` | Name of the key in the secret that contains the password to encrypt the keystore with. Can be overwritten in each certificate. |
+| keystores.pkcs12.create | bool | `false` | Toggle to enable/disable the creation of secrets for all certificates containg a pkcs12 keystore. Can be overwritten in each certificate. |
+| keystores.pkcs12.passwordSecretRef.name | string | `"{{ .Release.Name }}-pkcs12"` | Name of the secret containing the key to encrypt the keystore with. Goes through tpl. Can be overwritten in each certificate. Can be created from `.Values.secrets.items`. |
+| keystores.pkcs12.passwordSecretRef.key | string | `"password"` | Name of the key in the secret that contains the password to encrypt the keystore with. Can be overwritten in each certificate. |
 | items | object | `{}` | Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input schema. See [Certificate items](#certificate-items) in README for more. |
 
 ## External-Secrets Operator
@@ -630,9 +636,7 @@ This section explains which values can be set when the "ContainerSpec" input sch
 You can use all of the above values to configure a container. This is true for initContainers, too.
 
 ### Images
-When configuring the `image` for a container, you have to provide values in a specific way to ensure they are picked up and processed correctly.
-
-Provide the following values to configure the image of a container:
+When setting values for `image` in a container, provide them using the following input schema:
 
 | Value      | Type   | Default                                   | Description                                                                                                                                                                         |
 |------------|--------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -877,10 +881,141 @@ spec:
 ```
 
 ## Config and secret items
-TBD
+When setting values for `items` in configs or secrets, provide them using the following input schema:
+
+| Value               | Type    | Default             | Description                                                                                                                                     |
+|---------------------|---------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels              | dict    | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                     |
+| annotations         | dict    | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                      |
+| restartPodsOnChange | bool    | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.           |
+| data                | dict    | {}                  | Data to store in the configmap/secret. Note that `secrets data` are not provided as base64 encoded string, but as clear text. Goes through tpl. |
 
 ## Certificate items
-TBD
+When setting values for `items` in certificates, provide them using the following input schema:
+
+| Value                                   | Type   | Default                                                                    | Description                                                                                                                                                    |
+|-----------------------------------------|--------|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels                                  | dict   | helm default labels                                                        | Labels to add in addition to `commonLabels` and `.Values.certManager.certificates.labels`. Values go through tpl.                                              |
+| annotations                             | dict   | omitted                                                                    | Annotations to add in addition to `commonAnnotations` and `.Values.certManager.certificates.annotations`. Values go through tpl.                               |
+| secretLabels                            | dict   | helm default labels                                                        | Labels to add to the generated secret in addition to `commonLabels` and `.Values.certManager.certificates.secretLabels`. Values go through tpl.                |
+| secretAnnotations                       | dict   | omitted                                                                    | Annotations to add to the generated secret in addition to `commonAnnotations` and `.Values.certManager.certificates.secretAnnotations`. Values go through tpl. |
+| issuerKind                              | string | `.Values.certManager.certificates.issuerKind`                              | Issuer kind for the certificate.                                                                                                                               |
+| issuerName                              | string | `.Values.certManager.certificates.issuerName`                              | Issuer name for the certificate.                                                                                                                               |
+| duration                                | string | `.Values.certManager.certificates.duration`                                | Duration of validity for the certificate.                                                                                                                      |
+| renewBefore                             | string | `.Values.certManager.certificates.renewBefore`                             | When to renew the certificate before it expires.                                                                                                               |
+| commonName                              | string | `.Values.certManager.certificates.commonName`                              | Common name to use in the certificate.                                                                                                                         |
+| dnsNames                                | string | `.Values.certManager.certificates.dnsNames`                                | List of dnsNames to use in the certificate. This overwrites the value of `.Values.certManager.certificates.dnsNames`.                                          |
+| privateKey                              | dict   | `.Values.certManager.certificates.privateKey`                              | Spec for how to create the the private key for the certificate.                                                                                                |
+| keystores.jks.create                    | bool   | `.Values.certManager.certificates.keystores.jks`                           | Toggle to enable/disable the creation of secrets for the certificate containg a JKS keystore.                                                                  |
+| keystores.jks.passwordSecretRef.name    | string | `.Values.certManager.certificates.keystores.jks.passwordSecretRef.name`    | Name of the secret containing the key to encrypt the keystore with. Goes through tpl.                                                                          |
+| keystores.jks.passwordSecretRef.key     | string | `.Values.certManager.certificates.keystores.jks.passwordSecretRef.key`     | Name of the key in the secret that contains the password to encrypt the keystore with.                                                                         |
+| keystores.pkcs12.create                 | bool   | `.Values.certManager.certificates.keystores.pkcs12`                        | Toggle to enable/disable the creation of secrets for the certificate containg a pkcs12 keystore.                                                               |
+| keystores.pkcs12.passwordSecretRef.name | string | `.Values.certManager.certificates.keystores.pkcs12.passwordSecretRef.name` | Name of the secret containing the key to encrypt the keystore with. Goes through tpl.                                                                          |
+| keystores.pkcs12.passwordSecretRef.key  | string | `.Values.certManager.certificates.keystores.pkcs12.passwordSecretRef.key`  | Name of the key in the secret that contains the password to encrypt the keystore with.                                                                         |
+| isCA                                    | bool   | omitted                                                                    | Flag to indicate if the certificate is a CA certificate, or not.                                                                                               |
+| usages                                  | list   | omitted                                                                    | Defines how the issued certificate can be used, such as for server authentication, client authentication, code signing, or digital signatures.                 |
 
 ## ExternalSecret items
-TBD
+When setting values for `items` in externalSecrets, provide them using the following input schema:
+
+| Value              | Type   | Default                                                              | Description                                                                                                                                                                                                                                  |
+|--------------------|--------|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels             | dict   | helm default labels                                                  | Labels to add in addition to `commonLabels` and `.Values.externalSecretsOperator.externalSecrets.labels`. Values go through tpl.                                                                                                             |
+| annotations        | dict   | omitted                                                              | Annotations to add in addition to `commonAnnotations` and `.Values.externalSecretsOperator.externalSecrets.annotations`. Values go through tpl.                                                                                              |
+| secretLabels       | dict   | helm default labels                                                  | Labels to add to the generated secret in addition to `commonLabels` and `.Values.externalSecretsOperator.externalSecrets.secretLabels`. Values go through tpl.                                                                               |
+| secretAnnotations  | dict   | omitted                                                              | Annotations to add to the generated secret in addition to `commonAnnotations` and `.Values.externalSecretsOperator.externalSecrets.secretAnnotations`. Values go through tpl.                                                                |
+| secretType         | string | `.Values.externalSecretsOperator.externalSecrets.secretType`         | Type of k8s secret to create.                                                                                                                                                                                                                |
+| secretStoreName    | string | `.Values.externalSecretsOperator.externalSecrets.secretStoreName`    | Name of the secret store to use.                                                                                                                                                                                                             |
+| secretStoreKind    | string | `.Values.externalSecretsOperator.externalSecrets.secretStoreKind`    | Type of the secret store to use.                                                                                                                                                                                                             |
+| refreshPolicy      | string | `.Values.externalSecretsOperator.externalSecrets.refreshPolicy`      | Refresh policy to use.                                                                                                                                                                                                                       |
+| refreshInterval    | string | `.Values.externalSecretsOperator.externalSecrets.refreshInterval`    | Refresh interval to use.                                                                                                                                                                                                                     |
+| creationPolicy     | string | `.Values.externalSecretsOperator.externalSecrets.creationPolicy`     | Creation policy to configure the behaviour of owenership for the created secret.                                                                                                                                                             |
+| deletionPolicy     | string | `.Values.externalSecretsOperator.externalSecrets.deletionPolicy`     | Deletion policy to configure what happens to the secret when data fields are deleted from the provider (e.g., Vault, AWS SecretsManager).                                                                                                    |
+| decodingStrategy   | string | `.Values.externalSecretsOperator.externalSecrets.decodingStrategy`   | Decoding strategy to use for the `remoteRef` fields.                                                                                                                                                                                         |
+| conversionStrategy | string | `.Values.externalSecretsOperator.externalSecrets.conversionStrategy` | Conversion strategy to use for the `remoteRef` fields.                                                                                                                                                                                       |
+| metadataPolicy     | string | `.Values.externalSecretsOperator.externalSecrets.metadataPolicy`     | Metadata policy to use for the `remoteRef` fields.                                                                                                                                                                                           |
+| remoteRefs         | list   | omitted                                                              | Defines where and which external secrets to fetch. Each entry specifies the secretKey, providerSecretName, and providerSecretKey to retrieve the value from. See [Example remoteRefs values](#example-remoterefs-values) in README for more. |
+
+### Example remoteRefs values
+The `remoteRefs` section of an `externalSecret` specifies where and which data to fetch from the configured secret store.
+
+Each list item has to contain the `secretKey`, `providerSecretName` and optionally `providerSecretKey`, `decodingStrategy`, `conversionStrategy` and `metadataPolicy`.
+
+When `.Values.externalSecretsOperator.externalSecrets.basePath` is set, it is prepended to each `providerSecretName`. If it is empty or unset, only `providerSecretName` is used.
+
+These example values ...
+
+```yaml
+---
+externalSecretsOperator:
+  enabled: true
+  externalSecrets:
+    items:
+      ingress-tls:
+        secretType: kubernetes.io/tls
+        remoteRefs:
+          - secretKey: tls.crt
+            providerSecretName: eks/ingress
+            providerSecretKey: tls.crt
+
+          - secretKey: tls.key
+            providerSecretName: eks/ingress
+            providerSecretKey: tls.key
+
+          - secretKey: ca.crt
+            providerSecretName: eks/ingress
+            providerSecretKey: ca.crt
+```
+
+... generate this YAML output:
+
+```yaml
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ingress-tls
+  namespace: <computed>
+spec:
+  refreshPolicy: Periodic
+  refreshInterval: 1h
+  secretStoreRef:
+    name: default
+    kind: ClusterSecretStore
+ 
+  target:
+    name: ingress-tls-es
+    creationPolicy: Owner
+    deletionPolicy: Merge
+    template:
+      type: kubernetes.io/tls
+      metadata: <computed>
+
+  data:
+    - secretKey: eks/ingress
+      remoteRef:
+        key: tls.crt
+        property: tls.crt
+        decodingStrategy: None
+        conversionStrategy: Default
+        metadataPolicy: None
+
+    - secretKey: eks/ingress
+      remoteRef:
+        key: tls.key
+        property: tls.key
+        decodingStrategy: None
+        conversionStrategy: Default
+        metadataPolicy: None
+
+    - secretKey: eks/ingress
+      remoteRef:
+        key: ca.crt
+        property: ca.crt
+        decodingStrategy: None
+        conversionStrategy: Default
+        metadataPolicy: None
+```
+
+If `.Values.externalSecretsOperator.externalSecrets.basePath` would have been set to `aoksystems/dev`,
+the `key` of each `remoteRef` entry would have been set to `aoksystems/dev/eks/ingress`.
