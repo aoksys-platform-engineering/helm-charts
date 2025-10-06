@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.27](https://img.shields.io/badge/Version-0.44.27-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.28](https://img.shields.io/badge/Version-0.44.28-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.27
+    version: 0.44.28
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -79,7 +79,7 @@ Many templates use `tpl` for their values to take advantage of helms templating 
 Use them whenever possible to minimize the number of values files needed to deploy to different stages and environments.
 
 ## Common
-Values that are used in almost all templates and can be set at `.Values.<Value>`.
+Values that are used in most templates and can be set at `.Values.<Value>`.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -97,7 +97,7 @@ Values that can be set at `.Values.configs.<Value>`. These values are used in th
 | create | bool | `false` | Toggle to enable/disable the creation of configMaps. |
 | labels | object | `{}` | Labels to add to all configMaps in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input scheme. See [Config and secret items](#config-and-secret-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Secrets
 Values that can be set at `.Values.secrets.<Value>`. These values are used in the secrets template.
@@ -107,7 +107,7 @@ Values that can be set at `.Values.secrets.<Value>`. These values are used in th
 | create | bool | `false` | Toggle to enable/disable the creation of secrets. |
 | labels | object | `{}` | Labels to add to all secrets in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input scheme. See [Config and secret items](#config-and-secret-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Deployment
 Values that can be set at `.Values.deployment.<Value>`. These values are used in the deployment template.
@@ -117,10 +117,10 @@ Values that can be set at `.Values.deployment.<Value>`. These values are used in
 | create | bool | `true` | Toggle to enable/disable the creation of the deployment. Mutually exclusive with `.Values.statefulset.create=true`. |
 | labels | object | `{}` | Labels to add to the deployment in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the deployment in addition to `commonAnnotations`. Values go through tpl. |
-| replicas | int | `1` | Number of pods to create. |
+| replicas | int | `1` | Number of pods to create. Only used if `.Values.hpa.create=false`. |
 | updateStrategy | object | `{"type":"RollingUpdate"}` | Update strategy for pods. |
 | revisionHistoryLimit | int | `10` | Number of ReplicaSet revisions to keep. |
-| pods | object | `{}` | Values to configure the pods managed by the deployment. Follows the `PodTemplate` input scheme. See [PodTemplate](#podtemplate) in README for more. |
+| pods | object | `{}` | Values to configure the pods managed by the deployment. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more. |
 
 ## StatefulSet
 Values that can be set at `.Values.statefulset.<Value>` to configure the statefulset template.
@@ -130,14 +130,14 @@ Values that can be set at `.Values.statefulset.<Value>` to configure the statefu
 | create | bool | `false` | Toggle to enable/disable the creation of a statefulset. Mutually exclusive with `.Values.deployment.create=true`. |
 | minReadySeconds | int | `0` | Minimum number of seconds for which a pod should be ready without any of its container crashing until it is considered healthy. |
 | podManagementPolicy | string | `"OrderedReady"` | Policy to control how pods are created during initial scale up, when replacing pods on nodes, or when scaling down. Can be `OrderedReady` or `Parallel`. |
-| replicas | int | `1` | Number of pods to create. |
+| replicas | int | `1` | Number of pods to create. Only used if `.Values.hpa.create=false`. |
 | revisionHistoryLimit | int | `10` | Maximum number of revisions that will be maintained in the StatefulSet's revision history. |
 | updateStrategy | object | `{"type":"RollingUpdate"}` | Update strategy for pods. |
 | volumeClaimTemplates | list | `[]` | A list of storage claims that are created and attached to the statefulset automatically. Useful to dynamically provision PVCs that are mapped to each pod controlled by the statefulset. It takes precedence over volumes defined in the PodTemplate, if a volume and volumeClaimTemplate have the same name. Should be used with caution because volumes managed by a volumeClaimTemplate cannot be resized dynamically after their creation. Values go through tpl. |
 | persistentVolumeClaimRetentionPolicy | object | `{"whenDeleted":"Delete","whenScaled":"Delete"}` | Policy to manage the lifecycle of PVCs created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and deleted when the statefulset is uninstalled. Very handy to automatically delete PVCs and assiciated volumes after pod autoscaling. |
 | persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Delete"` | WhenDeleted specifies what happens to PVCs created from volumeClaimTemplates when the statefulset is deleted. Can be `Retain` or `Delete`. |
 | persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Delete"` | WhenScaled specifies what happens to PVCs created from volumeClaimTemplates when pods managed by the statefulset are scaled down. Can be `Retain` or `Delete`. |
-| pods | object | `{}` | Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input scheme. See [PodTemplate](#podtemplate) in README for more. |
+| pods | object | `{}` | Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more. |
 
 ## Horizontal Pod Autoscaler (HPA)
 Values that can be set at `.Values.hpa.<Value>` to configure the hpa template.
@@ -163,7 +163,7 @@ Values that can be set at `.Values.service.<Value>` to configure the service tem
 | type | string | `"ClusterIP"` | Type of the service to create. |
 | sessionAffinity | string | `"None"` | Session affinity to control how requests are routed. Can be `ClientIP` or `None`. |
 | sessionAffinityConfig | string | `nil` | Session affinity configs to be set in addition to `sessionAffinity`. |
-| ports | object | `{}` | Ports for the service. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more. |
+| ports | object | `{}` | Ports for the service. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ## Ingress
 Values that can be set at `.Values.ingress.<Value>` to configure the ingress template.
@@ -221,7 +221,7 @@ Values that can be set at `.Values.job.<Value>` to configure the job template.
 | generateName | bool | `false` | Toggle to generate a suffix for `metadata.name` everytime the job is deployed. |
 | labels | object | `{}` | Labels to add to the job in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the job in addition to `commonLabels`. Values go through tpl. |
-| spec | object | `{}` | Values to configure the job with. Follows the `JobTemplate` input scheme. See [JobTemplate](#jobtemplate) in README for more. |
+| spec | object | `{}` | Values to configure the job with. Follows the `JobTemplate` input schema. See [JobTemplate](#jobtemplate) in README for more. |
 
 ## CronJob
 Values that can be set at `.Values.cronjob.<Value>` to configure the cronjob template.
@@ -238,7 +238,7 @@ Values that can be set at `.Values.cronjob.<Value>` to configure the cronjob tem
 | timeZone | string | `"Europe/Berlin"` | Time zone (TZ identifier) for the schedule. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for more. |
 | startingDeadlineSeconds | int | `180` | Deadline in seconds for starting the job if it misses scheduled time for any reason. Missed jobs executions will be counted as failed ones. Will be omitted, if set to nil ("~"). |
 | suspend | bool | `false` | This flag tells the controller to suspend subsequent executions. |
-| jobs | object | `{}` | Values to configure the jobs managed by the cronjob. Follows the `JobTemplate` input scheme. See [JobTemplate](#jobtemplate) in README for more. |
+| jobs | object | `{}` | Values to configure the jobs managed by the cronjob. Follows the `JobTemplate` input schema. See [JobTemplate](#jobtemplate) in README for more. |
 
 ## Cert-Manager
 Values that can be set at `.Values.certManager.<Value>` to enable the usage of related custom resources.
@@ -264,7 +264,7 @@ Values that can be set at `.Values.certManager.certificates.<Value>`. These valu
 | commonName | string | `"{{ .Release.Name }}"` | Common name to use for all certificates. Goes through tpl. Can be overwritten in each certificate. |
 | dnsNames | list | `["{{ .Release.Name }}","{{ .Release.Name }}.{{ .Release.Namespace }}","{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local"]` | List of dnsNames to use for all certificates. Goes through tpl. Can be overwritten in each certificate. |
 | privateKey | object | `{"algorithm":"RSA","encoding":"PKCS1","size":2048}` | Spec for how to create the the private key for all certificates. Can be overwritten in each certificate. |
-| items | object | `{}` | Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input scheme. See [Certificate items](#certificate-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input schema. See [Certificate items](#certificate-items) in README for more. |
 
 ## External-Secrets Operator
 Values that can be set at `.Values.externalSecretsOperator.<Value>` to enable the usage of related custom resources.
@@ -312,13 +312,13 @@ Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to 
 | namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used. |
 | labels | object | `{}` | Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl. |
-| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more. |
+| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ## Extra manifests
-The values for `extraManifests` are a list of arbitrary kubernetes YAML manifests to use when there is no dedicated library template (yet).
+The values for `extraManifests` are a list of k8s YAML manifests to deploy when there is no dedicated template (yet).
 It is meant to be used as a fallback to not slow down the development and deployment of new services before a new template is added to the `chc-lib`.
 
-You simply provide the YAML of kubernetes manifests to deploy as value for the `extraManifests` list. All values go through tpl.
+You simply provide the YAML of k8s manifests to deploy as value for the `extraManifests` list. All values go through tpl.
 
 These example values ...
 
@@ -359,11 +359,11 @@ data:
   log.level: info
 ```
 
-## Custom input schemes
+## Custom input schemas
 Because the chc-lib is a library chart, most values have sane defaults or are omitted from the templated output if the user doesn't configure them explicitly.
 
 Some parts of the values use more complex data types than strings, integers or booleans and require additional knowledge to be used properly.
-This section describes those data types ("input schemes") and provides examples on how to configure them and what the templated output looks like.
+This section describes those data types ("input schemas") and provides examples on how to configure them and what the templated output looks like.
 Note that some values depend on metadata of the release, like `{{ .Release.Name }}` and `{{ .Release.Namespace }}`, and cannot be resolved in those examples.
 They are shown as `<placeholders>`.
 
@@ -375,7 +375,7 @@ The following keywords are used to describe how values behave when a chart is re
 * `helm default labels`: When this default is set, the user doesn't have to provide a value, but provided values are merged with a set of always rendered, recommended default labels for kubernetes objects (https://helm.sh/docs/chart_best_practices/labels/#standard-labels).
 
 ## JobTemplate
-This section explains which values can be set when the `JobTemplate` input scheme is used.
+This section explains which values can be set when the `JobTemplate` input schema is used.
 
 | Value                   | Type   | Default             | Description                                                                                                                                                                    |
 |-------------------------|--------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -389,12 +389,12 @@ This section explains which values can be set when the `JobTemplate` input schem
 | parallelism             | int    | 1                   | Specifies the maximum desired number of pods the job should run at any given time. This value is bound to the value for `completions`.                                         |
 | suspend                 | bool   | false               | Specifies whether the Job controller should create Pods or not. This can be set `false` to pause job execution.                                                                |
 | ttlSecondsAfterFinished | int    | 86400               | This limits the lifetime of a Job that has finished execution (either Complete or Failed). After `ttlSecondsAfterFinished` have passed, pods will be cleaned up automatically. |
-| pods                    | dict   | {}                  | All values eligible to configure pods managed by the job. Follows the `PodTemplate` input scheme. See [PodTemplate](#podtemplate) in README for more.                          |
+| pods                    | dict   | {}                  | All values eligible to configure pods managed by the job. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more.                          |
 
 You can use any of the above listed values when configuring a job. Note that if you don't set any values, the defaults from `chc-lib` are used.
 
 ## PodTemplate
-This section explains which values can be set when the `PodTemplate` input scheme is used.
+This section explains which values can be set when the `PodTemplate` input schema is used.
 
 | Value                         | Type           | Default             | Description                                                                                                                                                                     |
 |-------------------------------|----------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -414,16 +414,16 @@ This section explains which values can be set when the `PodTemplate` input schem
 | hostNetwork                   | bool           | omitted             | Toggle to start pods in hostNetwork mode.                                                                                                                                       |
 | dnsPolicy                     | string         | omitted             | DNS policy to use. Should probably be set to `ClusterFirstWithHostNet`, if `hostNetwork=true`.                                                                                  |
 | terminationGracePeriodSeconds | int            | omitted             | Seconds to wait for graceful termination of the pod, when a SIGTERM/SIGKILL is send by kubernetes.                                                                              |
-| volumes                       | dict           | omitted             | Volumes to mount into pods. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more.                                                      |
-| containers                    | dict           | {}                  | Containers to inject into pods. Follows the `ContainerSpec` input scheme. See [ContainerSpec](#containerspec) in README for more.                                               |
-| initContainers                | dict           | omitted             | Containers to inject into pods. Follows the `ContainerSpec` input scheme plus a mandatory `weight` value for odering. See [InitContainers](#initcontainers) in README for more. |
+| volumes                       | dict           | omitted             | Volumes to mount into pods. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                      |
+| containers                    | dict           | {}                  | Containers to inject into pods. Follows the `ContainerSpec` input schema. See [ContainerSpec](#containerspec) in README for more.                                               |
+| initContainers                | dict           | omitted             | Containers to inject into pods. Follows the `ContainerSpec` input schema plus a mandatory `weight` value for odering. See [InitContainers](#initcontainers) in README for more. |
 
 You can use any of the above listed values when configuring a pod. Note that if you don't set any value, the `chc-lib` defaults are used.
 
 ### PodSecurityContext
 When configuring the `securityContext` in a `PodTemplate`, you can provide values either as string or dict.
 
-The chart behaviour depends on the type of values provided:
+The generated output depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
@@ -492,13 +492,14 @@ The chart behaves differently depending on the values provided:
 > K8s only checks if values are indented under `podAffinity` or `podAntiAffinity` to decide which scheduling actions to perform.
 
 ## ListFromDict
-This scheme accepts values as dict for proper merging when layering values files.
-The `chc-lib` converts the dict items into an unordered list when rendering a template.
-It is used to compute all kinds of values like `volumes`, `volumeMounts`, `ports`, `ENVs` and more.
+This input schema accepts arbitrary key/value pairs from a dict and converts them into an unordered list.
+This enables proper merging of values when layering values files.
+
+The input schema is used to compute all kinds of values like `volumes`, `volumeMounts`, `ports`, `ENVs` and more.
 It is also used in various specs and templates like the `JobTemplate`, `PodTemplate`, `ContainerSpec` and others.
 
-When a value follows the `ListFromDict` scheme, the `name` field for each item in the generated list will be populated from its key in the dict.
-The values are be provided in free-form, merged and indented (to generate a properly formatted YAML list) and all items go through tpl.
+For values that follow the `ListFromDict` input schema, each list item's `name` comes from its key in the dict.
+All values are merged, indented for valid YAML, and processed using `tpl`.
 
 These example values ...
 
@@ -602,26 +603,26 @@ spec:
 
 > NOTE
 >
-> Some input schemes like `JobTemplate`, `PodTemplate`, `ContainerSpec` and others technically follow the `ListFromDict` pattern, but there is an important difference:
+> Some input schemas like `JobTemplate`, `PodTemplate`, `ContainerSpec` and others technically follow the `ListFromDict` pattern, but there is an important difference:
 >
 > * In a `JobTemplate`, `PodTemplate`, `ContainerSpec` etc. only a predefined list of keys will be picked up and processed by the template.
 > * In a `ListFromDict` input, arbitrary keys and values are taken as-is, converted into a list, indented, and processed through tpl.
 
 ## ContainerSpec
-This section explains which values can be set when the "ContainerSpec" input scheme is used.
+This section explains which values can be set when the "ContainerSpec" input schema is used.
 
 | Value           | Type           | Default          | Description                                                                                                                                                                                                         |
 |-----------------|----------------|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name            | string         | computed         | Value for the `name` field of the container. This is generated from the key of the dict item.                                                                                                                       |
-| image           | dict           | mandatory        | Container image to use. Follows the `Images` input scheme. See [Images](#images) in README for more.                                                                                                                |
+| image           | dict           | mandatory        | Container image to use. Follows the `Images` input schema. See [Images](#images) in README for more.                                                                                                                |
 | command         | list           | omitted          | List of commands to use as ENTRYPOINT for the container. If not specified, the ENTRYPOINT from the container image is used. Values go through tpl.                                                                  |
 | args            | list           | omitted          | List of argument to provide for the ENTRYPOINT. Values go through tpl.                                                                                                                                              |
 | securityContext | dict or string | "default" preset | Security context for the container. Can be a preset name (string) or a dict. See [ContainerSecurityContext](#containersecuritycontext) in README for more.                                                          |
 | restartPolicy   | string         | omitted          | RestartPolicy defines the restart behavior of individual containers in a pod. This field may only be set for init containers. For non-init containers, the restart behavior is defined by the Pod's restart policy. |
 | resources       | dict or string | "xsmall" preset  | Resources for the container. Can be a preset name (string) or a dict. See [Resources](#resources) in README for more.                                                                                               |
-| volumeMounts    | dict           | omitted          | Volumes to mount in the container. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more.                                                                                   |
-| env             | dict           | omitted          | ENVs to set for the container. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more.                                                                                       |
-| ports           | dict           | {}               | Ports for the container. Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more.                                                                                             |
+| volumeMounts    | dict           | omitted          | Volumes to mount in the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                   |
+| env             | dict           | omitted          | ENVs to set for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                       |
+| ports           | dict           | {}               | Ports for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                             |
 | startupProbe    | dict           | omitted          | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully.                                                                     |
 | livenessProbe   | dict           | omitted          | Periodic probe of container liveness. Container will be restarted if the probe fails.                                                                                                                               |
 | readinessProbe  | dict           | omitted          | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.                                                                                                 |
@@ -700,7 +701,7 @@ spec:
 ### ContainerSecurityContext
 When configuring the `securityContext` for a container, you can provide values either as string or dict.
 
-The chart behaviour depends on the type of values provided:
+The generated output depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
@@ -728,7 +729,7 @@ capabilities:
 ### Resources
 When configuring the `resources` for a container, you can provide values either as string or dict.
 
-The chart behaviour depends on the type of values provided:
+The generated output depends on the type of values provided:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
 - String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
 
@@ -822,7 +823,7 @@ limits:
 </table>
 
 ### InitContainers
-Setting values for initContainers follows the same input scheme as containers with the addition that you have to specify a mandatory `weight` value
+Setting values for initContainers follows the same input schema as containers with the addition that you have to specify a mandatory `weight` value
 because initContainers are ordered.
 
 The `weight` value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order,

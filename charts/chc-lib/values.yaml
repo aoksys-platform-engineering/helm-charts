@@ -27,7 +27,7 @@ exports:
       # -- Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input scheme.
+      # -- Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input schema.
       # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
@@ -41,7 +41,7 @@ exports:
       # -- Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input scheme.
+      # -- Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input schema.
       # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
@@ -55,7 +55,7 @@ exports:
       # -- Annotations to add to the deployment in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Number of pods to create.
+      # -- Number of pods to create. Only used if `.Values.hpa.create=false`.
       replicas: 1
 
       # -- Update strategy for pods.
@@ -65,7 +65,7 @@ exports:
       # -- Number of ReplicaSet revisions to keep.
       revisionHistoryLimit: 10
 
-      # -- Values to configure the pods managed by the deployment. Follows the `PodTemplate` input scheme.
+      # -- Values to configure the pods managed by the deployment. Follows the `PodTemplate` input schema.
       # See [PodTemplate](#podtemplate) in README for more.
       pods: {}
 
@@ -80,7 +80,7 @@ exports:
       # Can be `OrderedReady` or `Parallel`.
       podManagementPolicy: OrderedReady
 
-      # -- Number of pods to create.
+      # -- Number of pods to create. Only used if `.Values.hpa.create=false`.
       replicas: 1
 
       # -- Maximum number of revisions that will be maintained in the StatefulSet's revision history.
@@ -108,7 +108,7 @@ exports:
         # Can be `Retain` or `Delete`.
         whenScaled: Delete
 
-      # -- Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input scheme.
+      # -- Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema.
       # See [PodTemplate](#podtemplate) in README for more.
       pods: {}
 
@@ -153,7 +153,7 @@ exports:
       # -- Session affinity configs to be set in addition to `sessionAffinity`.
       sessionAffinityConfig: ~
 
-      # -- Ports for the service. Follows the `ListFromDict` input scheme.
+      # -- Ports for the service. Follows the `ListFromDict` input schema.
       # See [ListFromDict](#listfromdict) in README for more.
       ports: {}
 
@@ -250,7 +250,7 @@ exports:
       # -- Annotations to add to the job in addition to `commonLabels`. Values go through tpl.
       annotations: {}
 
-      # -- Values to configure the job with. Follows the `JobTemplate` input scheme.
+      # -- Values to configure the job with. Follows the `JobTemplate` input schema.
       # See [JobTemplate](#jobtemplate) in README for more.
       spec: {}
 
@@ -286,7 +286,7 @@ exports:
       # -- This flag tells the controller to suspend subsequent executions.
       suspend: false
 
-      # -- Values to configure the jobs managed by the cronjob. Follows the `JobTemplate` input scheme.
+      # -- Values to configure the jobs managed by the cronjob. Follows the `JobTemplate` input schema.
       # See [JobTemplate](#jobtemplate) in README for more.
       jobs: {}
 
@@ -363,7 +363,7 @@ exports:
               # Can be overwritten in each certificate.
               key: password
 
-        # -- Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input scheme.
+        # -- Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input schema.
         # See [Certificate items](#certificate-items) in README for more.
         items: {}
 
@@ -387,7 +387,7 @@ exports:
 
         # -- Defines a list of endpoints serving metrics to be scraped by prometheus.
         # See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options.
-        # Follows the `ListFromDict` input scheme. See [ListFromDict](#listfromdict) in README for more.
+        # Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.
         podMetricsEndpoints: {}
     
     externalSecretsOperator:
