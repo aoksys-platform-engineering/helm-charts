@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.36](https://img.shields.io/badge/Version-0.44.36-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.37](https://img.shields.io/badge/Version-0.44.37-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.36
+    version: 0.44.37
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -983,6 +983,7 @@ spec:
     kind: ClusterSecretStore
  
   target:
+    # The target secret name is always `<.metadata.name>-es`
     name: ingress-tls-es
     creationPolicy: Owner
     deletionPolicy: Merge

@@ -5,7 +5,7 @@ description: Library chart to provide reusable functions and templates to compos
 icon: https://www.aok-systems.de/daten/corporate/i/logo-aok-systems.png
 home: https://github.com/aoksys-platform-engineering/helm-charts/tree/main/charts/chc-lib
 type: library
-version: 0.44.36
+version: 0.44.37
 maintainers:
   - name: Oliver Geyer
     email: N/A
