@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.34](https://img.shields.io/badge/Version-0.44.34-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.35](https://img.shields.io/badge/Version-0.44.35-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.34
+    version: 0.44.35
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -94,10 +94,10 @@ Values that can be set at `.Values.configs.<Value>`. These values are used in th
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
-| create | bool | `false` | Toggle to enable/disable the creation of configMaps. |
-| labels | object | `{}` | Labels to add to all configMaps in addition to `commonLabels`. Values go through tpl. |
-| annotations | object | `{}` | Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
+| create | bool | `false` | Toggle to enable/disable the creation of configmaps. |
+| labels | object | `{}` | Labels to add to all configmaps in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to all configmaps in addition to `commonAnnotations`. Values go through tpl. |
+| items | object | `{}` | Dict containing key/value pairs of configmaps to create. Each item creates one configmap resource. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Secrets
 Values that can be set at `.Values.secrets.<Value>`. These values are used in the secrets template.
@@ -107,7 +107,7 @@ Values that can be set at `.Values.secrets.<Value>`. These values are used in th
 | create | bool | `false` | Toggle to enable/disable the creation of secrets. |
 | labels | object | `{}` | Labels to add to all secrets in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl. |
-| items | object | `{}` | Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of secrets to create. Each item creates one secret resource. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Deployment
 Values that can be set at `.Values.deployment.<Value>`. These values are used in the deployment template.
@@ -134,9 +134,7 @@ Values that can be set at `.Values.statefulset.<Value>` to configure the statefu
 | revisionHistoryLimit | int | `10` | Maximum number of revisions that will be maintained in the StatefulSet's revision history. |
 | updateStrategy | object | `{"type":"RollingUpdate"}` | Update strategy for pods. |
 | volumeClaimTemplates | list | `[]` | A list of storage claims that are created and attached to the statefulset automatically. Useful to dynamically provision PVCs that are mapped to each pod controlled by the statefulset. It takes precedence over volumes defined in the PodTemplate, if a volume and volumeClaimTemplate have the same name. Should be used with caution because volumes managed by a volumeClaimTemplate cannot be resized dynamically after their creation. Values go through tpl. |
-| persistentVolumeClaimRetentionPolicy | object | `{"whenDeleted":"Delete","whenScaled":"Delete"}` | Policy to manage the lifecycle of PVCs created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and deleted when the statefulset is uninstalled. Very handy to automatically delete PVCs and assiciated volumes after pod autoscaling. |
-| persistentVolumeClaimRetentionPolicy.whenDeleted | string | `"Delete"` | WhenDeleted specifies what happens to PVCs created from volumeClaimTemplates when the statefulset is deleted. Can be `Retain` or `Delete`. |
-| persistentVolumeClaimRetentionPolicy.whenScaled | string | `"Delete"` | WhenScaled specifies what happens to PVCs created from volumeClaimTemplates when pods managed by the statefulset are scaled down. Can be `Retain` or `Delete`. |
+| persistentVolumeClaimRetentionPolicy | object | `{"whenDeleted":"Delete","whenScaled":"Delete"}` | Policy to manage the lifecycle of PVCs created from `volumeClaimTemplates`. The `whenDeleted` value configures what happens to PVCs when the statefulset is deleted. The `whenScaled` value configures what happens to PVCs when pods are scaled down. Both can be set to either `Retain` or `Delete`. |
 | pods | object | `{}` | Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more. |
 
 ## Horizontal Pod Autoscaler (HPA)
@@ -234,7 +232,7 @@ Values that can be set at `.Values.cronjob.<Value>` to configure the cronjob tem
 | concurrencyPolicy | string | `"Forbid"` | Specifies how to treat concurrent executions of a Job. Valid values are `Allow`, `Forbid` and `Replace`. |
 | successfulJobsHistoryLimit | int | `1` | The number of successful finished jobs to retain. Value must be non-negative integer. |
 | failedJobsHistoryLimit | int | `3` | The number of failed finished jobs to retain. Value must be non-negative integer. |
-| schedule | string | `"@daily"` | The schedule to spawn jobs in Cron format, see https://en.wikipedia.org/wiki/Cron. |
+| schedule | string | `"@daily"` | The schedule to spawn jobs in Cron format. See https://en.wikipedia.org/wiki/Cron for more. |
 | timeZone | string | `"Europe/Berlin"` | Time zone (TZ identifier) for the schedule. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for more. |
 | startingDeadlineSeconds | int | `180` | Deadline in seconds for starting the job if it misses scheduled time for any reason. Missed jobs executions will be counted as failed ones. Will be omitted, if set to nil ("~"). |
 | suspend | bool | `false` | This flag tells the controller to suspend subsequent executions. |
@@ -270,7 +268,7 @@ Values that can be set at `.Values.certManager.certificates.<Value>`. These valu
 | keystores.pkcs12.create | bool | `false` | Toggle to enable/disable the creation of secrets for all certificates containg a pkcs12 keystore. Can be overwritten in each certificate. |
 | keystores.pkcs12.passwordSecretRef.name | string | `"{{ .Release.Name }}-pkcs12"` | Name of the secret containing the key to encrypt the keystore with. Goes through tpl. Can be overwritten in each certificate. Can be created from `.Values.secrets.items`. |
 | keystores.pkcs12.passwordSecretRef.key | string | `"password"` | Name of the key in the secret that contains the password to encrypt the keystore with. Can be overwritten in each certificate. |
-| items | object | `{}` | Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input schema. See [Certificate items](#certificate-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of certificates to create. Each item creates one certificate resource. Follows the `Certificate items` input schema. See [Certificate items](#certificate-items) in README for more. |
 
 ## External-Secrets Operator
 Values that can be set at `.Values.externalSecretsOperator.<Value>` to enable the usage of related custom resources.
@@ -300,7 +298,7 @@ Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Valu
 | decodingStrategy | string | `"None"` | Decoding strategy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
 | conversionStrategy | string | `"Default"` | Conversion strategy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
 | metadataPolicy | string | `"None"` | Metadata policy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
-| items | object | `{}` | Dict containing key/value pairs of externalsecrets to create. See [ExternalSecret items](#externalsecret-items) in README for more. |
+| items | object | `{}` | Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource. See [ExternalSecret items](#externalsecret-items) in README for more. |
 
 ## Prometheus-Operator
 Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usage of related custom resources.
@@ -888,7 +886,7 @@ When setting values for `items` in configs or secrets, provide them using the fo
 | labels              | dict    | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                     |
 | annotations         | dict    | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                      |
 | restartPodsOnChange | bool    | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.           |
-| data                | dict    | {}                  | Data to store in the configmap/secret. Note that `secrets data` are not provided as base64 encoded string, but as clear text. Goes through tpl. |
+| data                | dict    | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. Goes through tpl.                 |
 
 ## Certificate items
 When setting values for `items` in certificates, provide them using the following input schema:

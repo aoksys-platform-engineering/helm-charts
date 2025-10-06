@@ -18,16 +18,17 @@ exports:
     imageRegistry: ""
 
     configs:
-      # -- Toggle to enable/disable the creation of configMaps.
+      # -- Toggle to enable/disable the creation of configmaps.
       create: false
 
-      # -- Labels to add to all configMaps in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to all configmaps in addition to `commonLabels`. Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to all configMaps in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to all configmaps in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of configMaps to create. Follows the `Config and secret items` input schema.
+      # -- Dict containing key/value pairs of configmaps to create. Each item creates one configmap resource.
+      # Follows the `Config and secret items` input schema.
       # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
@@ -41,7 +42,8 @@ exports:
       # -- Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl.
       annotations: {}
 
-      # -- Dict containing key/value pairs of secrets to create. Follows the `Config and secret items` input schema.
+      # -- Dict containing key/value pairs of secrets to create. Each item creates one secret resource.
+      # Follows the `Config and secret items` input schema.
       # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
@@ -97,15 +99,12 @@ exports:
       # Values go through tpl.
       volumeClaimTemplates: []
 
-      # -- Policy to manage the lifecycle of PVCs created from volumeClaimTemplates.
-      # By default, all persistent volume claims are created as needed and deleted when the statefulset is uninstalled.
-      # Very handy to automatically delete PVCs and assiciated volumes after pod autoscaling.
+      # -- Policy to manage the lifecycle of PVCs created from `volumeClaimTemplates`.
+      # The `whenDeleted` value configures what happens to PVCs when the statefulset is deleted.
+      # The `whenScaled` value configures what happens to PVCs when pods are scaled down.
+      # Both can be set to either `Retain` or `Delete`.
       persistentVolumeClaimRetentionPolicy:
-        # -- WhenDeleted specifies what happens to PVCs created from volumeClaimTemplates when the statefulset is deleted.
-        # Can be `Retain` or `Delete`.
         whenDeleted: Delete
-        # -- WhenScaled specifies what happens to PVCs created from volumeClaimTemplates when pods managed by the statefulset are scaled down.
-        # Can be `Retain` or `Delete`.
         whenScaled: Delete
 
       # -- Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema.
@@ -273,7 +272,7 @@ exports:
       # -- The number of failed finished jobs to retain. Value must be non-negative integer.
       failedJobsHistoryLimit: 3
 
-      # -- The schedule to spawn jobs in Cron format, see https://en.wikipedia.org/wiki/Cron.
+      # -- The schedule to spawn jobs in Cron format. See https://en.wikipedia.org/wiki/Cron for more.
       schedule: "@daily"
 
       # -- Time zone (TZ identifier) for the schedule. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for more.
@@ -363,7 +362,8 @@ exports:
               # Can be overwritten in each certificate.
               key: password
 
-        # -- Dict containing key/value pairs of certificates to create. Follows the `Certificate items` input schema.
+        # -- Dict containing key/value pairs of certificates to create. Each item creates one certificate resource.
+        # Follows the `Certificate items` input schema.
         # See [Certificate items](#certificate-items) in README for more.
         items: {}
 
@@ -449,7 +449,7 @@ exports:
         # Can be overwritten in each externalsecret.
         metadataPolicy: None
 
-        # -- Dict containing key/value pairs of externalsecrets to create.
+        # -- Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource.
         # See [ExternalSecret items](#externalsecret-items) in README for more.
         items: {}
 
