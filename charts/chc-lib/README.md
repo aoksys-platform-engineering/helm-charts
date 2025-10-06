@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.33](https://img.shields.io/badge/Version-0.44.33-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.34](https://img.shields.io/badge/Version-0.44.34-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.33
+    version: 0.44.34
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -386,7 +386,7 @@ This section explains which values can be set when the `JobTemplate` input schem
 | Value                   | Type   | Default             | Description                                                                                                                                                                    |
 |-------------------------|--------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | labels                  | dict   | helm default labels | Labels to add to jobs in addition to `commonLabels`. Values go through tpl.                                                                                                    |
-| annotations             | dict   | omitted             | Annotations to add to jobs in addition to `commonLabels`. Values go through tpl.                                                                                               |
+| annotations             | dict   | omitted             | Annotations to add to jobs in addition to `commonAnnotations`. Values go through tpl.                                                                                          |
 | activeDeadlineSeconds   | int    | 600                 | Specifies the duration in seconds relative to the startTime that the job may be continuously active before the system tries to terminate it. Value must be a positive integer. |
 | backoffLimit            | int    | 3                   | Specifies the number of retries before marking this job as failed.                                                                                                             |
 | backoffLimitPerIndex    | int    | omitted             | Specifies the limit for the number of retries within an index before marking this index as failed. Only takes effect if `completionMode=Indexed`.                              |
@@ -405,7 +405,7 @@ This section explains which values can be set when the `PodTemplate` input schem
 | Value                         | Type           | Default             | Description                                                                                                                                                                     |
 |-------------------------------|----------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | labels                        | dict           | helm default labels | Labels to add to pods in addition to `commonLabels`. Values go through tpl.                                                                                                     |
-| annotations                   | dict           | omitted             | Annotations to add to pods in addition to `commonLabels`. Values go through tpl.                                                                                                |
+| annotations                   | dict           | omitted             | Annotations to add to pods in addition to `commonAnnotations`. Values go through tpl.                                                                                           |
 | restartPolicy                 | string         | Always              | Policy to manage restart behaviour for all containers in pods.                                                                                                                  |
 | securityContext               | dict or string | "default" preset    | Security context for pods. Can be a preset name (string) or a dict. See [PodSecurityContext](#podsecuritycontext) in README for more.                                           |
 | serviceAccountName            | string         | computed            | Name of the serviceAccount to use. Computed from `.Values.serviceAccount` settings.                                                                                             |
