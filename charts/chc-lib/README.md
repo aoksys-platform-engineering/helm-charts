@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.35](https://img.shields.io/badge/Version-0.44.35-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.36](https://img.shields.io/badge/Version-0.44.36-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.35
+    version: 0.44.36
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
     # Other predefined values are optional.
@@ -932,7 +932,7 @@ When setting values for `items` in externalSecrets, provide them using the follo
 | decodingStrategy   | string | `.Values.externalSecretsOperator.externalSecrets.decodingStrategy`   | Decoding strategy to use for the `remoteRef` fields.                                                                                                                                                                                         |
 | conversionStrategy | string | `.Values.externalSecretsOperator.externalSecrets.conversionStrategy` | Conversion strategy to use for the `remoteRef` fields.                                                                                                                                                                                       |
 | metadataPolicy     | string | `.Values.externalSecretsOperator.externalSecrets.metadataPolicy`     | Metadata policy to use for the `remoteRef` fields.                                                                                                                                                                                           |
-| remoteRefs         | list   | omitted                                                              | Defines where and which external secrets to fetch. Each entry specifies the secretKey, providerSecretName, and providerSecretKey to retrieve the value from. See [Example remoteRefs values](#example-remoterefs-values) in README for more. |
+| remoteRefs         | list   | []                                                                   | Defines where and which external secrets to fetch. Each entry specifies the secretKey, providerSecretName, and providerSecretKey to retrieve the value from. See [Example remoteRefs values](#example-remoterefs-values) in README for more. |
 
 ### Example remoteRefs values
 The `remoteRefs` section of an `externalSecret` specifies where and which data to fetch from the configured secret store.
@@ -948,6 +948,7 @@ These example values ...
 externalSecretsOperator:
   enabled: true
   externalSecrets:
+    basePath: aoksystems/dev
     items:
       ingress-tls:
         secretType: kubernetes.io/tls
@@ -990,30 +991,30 @@ spec:
       metadata: <computed>
 
   data:
-    - secretKey: eks/ingress
+    - secretKey: tls.crt
       remoteRef:
-        key: tls.crt
+        key: aoksystems/dev/eks/ingress
         property: tls.crt
         decodingStrategy: None
         conversionStrategy: Default
         metadataPolicy: None
 
-    - secretKey: eks/ingress
+    - secretKey: tls.key
       remoteRef:
-        key: tls.key
+        key: aoksystems/dev/eks/ingress
         property: tls.key
         decodingStrategy: None
         conversionStrategy: Default
         metadataPolicy: None
 
-    - secretKey: eks/ingress
+    - secretKey: ca.crt
       remoteRef:
-        key: ca.crt
+        key: aoksystems/dev/eks/ingress
         property: ca.crt
         decodingStrategy: None
         conversionStrategy: Default
         metadataPolicy: None
 ```
 
-If `.Values.externalSecretsOperator.externalSecrets.basePath` would have been set to `aoksystems/dev`,
-the `key` of each `remoteRef` entry would have been set to `aoksystems/dev/eks/ingress`.
+If `.Values.externalSecretsOperator.externalSecrets.basePath` would not have been set,
+the `key` of each `remoteRef` entry would've been `eks/ingress`.
