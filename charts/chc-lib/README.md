@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.39](https://img.shields.io/badge/Version-0.44.39-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.40](https://img.shields.io/badge/Version-0.44.40-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.39
+    version: 0.44.40
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" are mandatory
     import-values:
@@ -398,10 +398,6 @@ This section explains which values can be set when the `JobTemplate` input schem
 | ttlSecondsAfterFinished | int    | 86400               | This limits the lifetime of a Job that has finished execution (either Complete or Failed). After `ttlSecondsAfterFinished` have passed, pods will be cleaned up automatically. |
 | pods                    | dict   | {}                  | All values eligible to configure pods managed by the job. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more.                          |
 
-> [!NOTE]
->
-> You can use any of the above values when configuring a job. Note that if you don't set any values, defaults from `chc-lib` are used.
-
 ## PodTemplate
 This section explains which values can be set when the `PodTemplate` input schema is used.
 
@@ -426,10 +422,6 @@ This section explains which values can be set when the `PodTemplate` input schem
 | volumes                       | dict           | omitted             | Volumes to mount into pods. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                      |
 | containers                    | dict           | {}                  | Containers to inject into pods. Follows the `ContainerSpec` input schema. See [ContainerSpec](#containerspec) in README for more.                                               |
 | initContainers                | dict           | omitted             | Containers to inject into pods. Follows the `ContainerSpec` input schema plus a mandatory `weight` value for odering. See [InitContainers](#initcontainers) in README for more. |
-
-> [!NOTE]
->
-> You can use any of the listed values when to configure a pod. Note that if you don't set any value, `chc-lib` defaults are used.
 
 ### PodSecurityContext
 When configuring the `securityContext` in a `PodTemplate`, you can provide values as string or dict.
@@ -499,8 +491,7 @@ The output depends on the provided data type:
 
 > [!NOTE]
 >
-> The preset names and generated YAML output for `affinity.podAffinity` and `affinity.podAntiAffinity` are identical
-> because k8s only checks if values are indented under `podAffinity` or `podAntiAffinity` in a `PodTemplate` to decide which scheduling actions to perform.
+> The preset names for `affinity.podAffinity` and `affinity.podAntiAffinity` are identical.
 
 ## ListFromDict
 This input schema accepts a dict with arbitrary key/value pairs and converts them into an unordered list.
@@ -612,12 +603,12 @@ spec:
           ...
 ```
 
-> [!NOTE]
+> [!IMPORTANT]
 >
 > Some input schemas like `JobTemplate`, `PodTemplate`, `ContainerSpec` and others technically follow the `ListFromDict` pattern, but there is an important difference:
 >
-> * In a `JobTemplate`, `PodTemplate`, `ContainerSpec` etc. only a predefined list of keys will be picked up and processed.
-> * In a `ListFromDict` input, arbitrary keys and values are valid input and processed through tpl.
+> * In a `JobTemplate`, `PodTemplate`, `ContainerSpec` etc. only a predefined list of values will be picked up and processed.
+> * In a `ListFromDict` input, arbitrary values are picked up and processed.
 
 ## ContainerSpec
 This section explains which values can be set when the "ContainerSpec" input schema is used.
@@ -638,9 +629,9 @@ This section explains which values can be set when the "ContainerSpec" input sch
 | livenessProbe   | dict           | omitted          | Periodic probe of container liveness. Container will be restarted if the probe fails.                                                                                                                               |
 | readinessProbe  | dict           | omitted          | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.                                                                                                 |
 
-> [!NOTE]
+> [!TIP]
 >
-> You can use all of the above values to configure a container. This is true for initContainers, too.
+> You can use all of the above values to configure initContainers, too.
 
 ### Images
 When setting values for a container `image`, provide them using the following input schema:
@@ -887,9 +878,9 @@ spec:
           ...
 ```
 
-> [!NOTE]
+> [!TIP]
 >
-> You can use all of the values of the (ContainerSpec)[#containerspec] to configure initContainers.
+> You can use all values of the (ContainerSpec)[#containerspec] to configure initContainers.
 
 ## Config and secret items
 When setting values for configs or secrets `items`, provide them using the following input schema:
