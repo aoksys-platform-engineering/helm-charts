@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.37](https://img.shields.io/badge/Version-0.44.37-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.38](https://img.shields.io/badge/Version-0.44.38-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -19,7 +19,7 @@ Library chart to provide reusable functions and templates to compose application
 | oci://registry-1.docker.io/bitnamicharts | common | 2.31.4 |
 
 # Usage
-Include chc-lib as a dependency in your application chart to use it,
+Include `chc-lib` as dependency in your application chart to use it,
 because it cannot be installed or templated on its own:
 
 ```bash
@@ -27,7 +27,7 @@ $ helm template --generate-name chc-lib
 Error: library charts are not installable
 ```
 
-Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
+Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 
 ```yaml
 # Chart.yaml of your application chart
@@ -35,20 +35,19 @@ Add the following `dependencies` to your charts `Chart.yaml` to use the chc-lib:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.37
+    version: 0.44.38
     repository: https://aoksys-platform-engineering.github.io/helm-charts
-    # The "import-values" stanza is mandatory to not fail during templating due to missing default values.
-    # Other predefined values are optional.
+    # The "import-values" are mandatory
     import-values:
       - defaults
 ```
 
 # Values
-This section explains how to use the `values.yaml` to configure the provided templates.
+This section explains how to configure the templates that `chc-lib` provides.
 
 ## Dynamic values
 When `Goes through tpl`, `Values go through tpl` (or similar) is mentioned in the description of a value
-you can use helms templating syntax to dynamically compute the value when templates are rendered.
+you can use helms templating syntax to compute the value when templates are rendered.
 
 You need to make sure that computed values are quoted to be rendered correctly:
 
@@ -73,10 +72,10 @@ service:
 > NOTE
 >
 > You cannot use more complex expressions like `{{ .Values.service.ports[0].name }}` or
-> `{{ include "common.names.fullname" . }}` to compute values because expressions like that will result in templating errors.
+> `{{ include "common.names.fullname" . }}` because this will result in templating errors.
 
-Many templates use `tpl` for their values to take advantage of helms templating engine.
-Use them whenever possible to minimize the number of values files needed to deploy to different stages and environments.
+Many templates use dynamic values to take advantage of helms templating engine.
+Use them whenever possible to minimize the amount of values files needed to deploy to different stages and environments.
 
 ## Common
 Values that are used in most templates and can be set at `.Values.<Value>`.
@@ -90,7 +89,7 @@ Values that are used in most templates and can be set at `.Values.<Value>`.
 | imageRegistry | string | `""` | Default imageRegistry to use when no other registry is specified for a container. |
 
 ## Configs
-Values that can be set at `.Values.configs.<Value>`. These values are used in the configMaps template.
+Values that can be set at `.Values.configs.<Value>` to configure the `configMaps` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -100,7 +99,7 @@ Values that can be set at `.Values.configs.<Value>`. These values are used in th
 | items | object | `{}` | Dict containing key/value pairs of configmaps to create. Each item creates one configmap resource. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Secrets
-Values that can be set at `.Values.secrets.<Value>`. These values are used in the secrets template.
+Values that can be set at `.Values.secrets.<Value>` to configure the `secrets` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -110,7 +109,7 @@ Values that can be set at `.Values.secrets.<Value>`. These values are used in th
 | items | object | `{}` | Dict containing key/value pairs of secrets to create. Each item creates one secret resource. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
 
 ## Deployment
-Values that can be set at `.Values.deployment.<Value>`. These values are used in the deployment template.
+Values that can be set at `.Values.deployment.<Value>` to configure the `deployment` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -123,7 +122,7 @@ Values that can be set at `.Values.deployment.<Value>`. These values are used in
 | pods | object | `{}` | Values to configure the pods managed by the deployment. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more. |
 
 ## StatefulSet
-Values that can be set at `.Values.statefulset.<Value>` to configure the statefulset template.
+Values that can be set at `.Values.statefulset.<Value>` to configure the `statefulset` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -138,7 +137,7 @@ Values that can be set at `.Values.statefulset.<Value>` to configure the statefu
 | pods | object | `{}` | Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more. |
 
 ## Horizontal Pod Autoscaler (HPA)
-Values that can be set at `.Values.hpa.<Value>` to configure the hpa template.
+Values that can be set at `.Values.hpa.<Value>` to configure the `hpa` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -151,7 +150,7 @@ Values that can be set at `.Values.hpa.<Value>` to configure the hpa template.
 | targetMemoryUtilizationPercentage | string | `nil` | The target average memory utilization (represented as a percentage of requested memory) over all the pods. |
 
 ## Service
-Values that can be set at `.Values.service.<Value>` to configure the service template.
+Values that can be set at `.Values.service.<Value>` to configure the `service` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -164,7 +163,7 @@ Values that can be set at `.Values.service.<Value>` to configure the service tem
 | ports | object | `{}` | Ports for the service. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ## Ingress
-Values that can be set at `.Values.ingress.<Value>` to configure the ingress template.
+Values that can be set at `.Values.ingress.<Value>` to configure the `ingress` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -176,7 +175,7 @@ Values that can be set at `.Values.ingress.<Value>` to configure the ingress tem
 | tls | list | `[]` | List of TLS hosts to serve using the ingress. Values go through tpl. See https://kubernetes.io/docs/concepts/services-networking/ingress for more. |
 
 ## ServiceAccount
-Values that can be set at `.Values.serviceAccount.<Value>` to configure the serviceaccount template.
+Values that can be set at `.Values.serviceAccount.<Value>` to configure the `serviceaccount` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -187,7 +186,10 @@ Values that can be set at `.Values.serviceAccount.<Value>` to configure the serv
 | automountServiceAccountToken | bool | `false` | Toggle to enable/disable the `automountServiceAccountToken` feature. Mounting the serviceaccount token is only necessary if your app calls the K8s API. |
 
 ## Role-Based Access Control (RBAC)
-Values that can be set at `.Values.rbac.<Value>` to configure the role and rolebinding templates.
+Values that can be set at `.Values.rbac.<Value>` to configure the `role` and `rolebinding` templates.
+
+If `.Values.serviceAccount.create=true`, roles and bindings automatically attach to the serviceaccount of the release.
+Otherwise, they aren’t attached to avoid granting permissions to shared accounts like `default`.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -200,7 +202,7 @@ Values that can be set at `.Values.rbac.<Value>` to configure the role and roleb
 | roleBinding.annotations | object | `{}` | Annotations to add to the rolebinding in addition to `commonAnnotations`. Values go through tpl. |
 
 ## Pod Disruption Budget (PDB)
-Values that can be set at `.Values.pdb.<Value>` to configure the pdb template.
+Values that can be set at `.Values.pdb.<Value>` to configure the `pdb` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -211,7 +213,7 @@ Values that can be set at `.Values.pdb.<Value>` to configure the pdb template.
 | maxUnavailable | int | `1` | An eviction is allowed if at most `maxUnavailable` pods are unavailable after the eviction. This only takes effect if `minAvailable` is set to nil (~). |
 
 ## Job
-Values that can be set at `.Values.job.<Value>` to configure the job template.
+Values that can be set at `.Values.job.<Value>` to configure the `job` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -222,7 +224,7 @@ Values that can be set at `.Values.job.<Value>` to configure the job template.
 | spec | object | `{}` | Values to configure the job with. Follows the `JobTemplate` input schema. See [JobTemplate](#jobtemplate) in README for more. |
 
 ## CronJob
-Values that can be set at `.Values.cronjob.<Value>` to configure the cronjob template.
+Values that can be set at `.Values.cronjob.<Value>` to configure the `cronjob` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -246,7 +248,7 @@ Values that can be set at `.Values.certManager.<Value>` to enable the usage of r
 | enabled | bool | `false` | Toggle to enable/disable the creation of cert-manager related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
 
 ### Certificates
-Values that can be set at `.Values.certManager.certificates.<Value>`. These values are used in the certificates template.
+Values that can be set at `.Values.certManager.certificates.<Value>` to configure the `certificates` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -278,7 +280,7 @@ Values that can be set at `.Values.externalSecretsOperator.<Value>` to enable th
 | enabled | bool | `false` | Toggle to enable/disable the creation of external-secrets operator related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
 
 ### ExternalSecrets
-Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Value>`. These values are used in the externalsecrets template.
+Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Value>` to configure the `externalsecrets` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -308,7 +310,7 @@ Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usa
 | enabled | bool | `false` | Toggle to enable/disable the creation of prometheus-operator related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
 
 ### PodMonitor
-Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the podMonitor template.
+Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the `podmonitor` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -364,19 +366,20 @@ data:
 ```
 
 ## Custom input schemas
-Because the chc-lib is a library chart, most values have sane defaults or are omitted from the templated output if the user doesn't configure them explicitly.
+Because `chc-lib` is a library chart, most values have sane defaults or are omitted from templated output if not configured explicitly.
 
-Some parts of the values use more complex data types than strings, integers or booleans and require additional knowledge to be used properly.
-This section describes those data types ("input schemas") and provides examples on how to configure them and what the templated output looks like.
-Note that some values depend on metadata of the release, like `{{ .Release.Name }}` and `{{ .Release.Namespace }}`, and cannot be resolved in those examples.
-They are shown as `<placeholders>`.
+Some values use complex data types and require additional knowledge to be used.
+This section describes the data types for those values ("input schemas") and provides examples on how to configure them.
+
+Note that some values depend on the metadata of a release, like `{{ .Release.Name }}` and `{{ .Release.Namespace }}`,
+and cannot be resolved in the examples. They are shown as `<computed>`.
 
 The following keywords are used to describe how values behave when a chart is rendered:
 
-* `mandatory`: If a value is "mandatory", there is no default value set and the user has to provide a valid, non empty value for it. Otherwise, the chart will produce an error when templates are rendered.
-* `omitted`: If a value is "omitted", there is no default value set and the field will only be part of the templated output if the user explicitly sets a non empty value for it.
+* `mandatory`: If a value is "mandatory", there is no default value and the user has to provide a valid, non empty value for it. Otherwise, the chart will fail with an error when templates are rendered.
+* `omitted`: If a value is "omitted", there is no default value and the field will be removed from templated output if the user doesn't set a non empty value for it.
 * `computed`: If a value is "computed", the chart generates it in some way and the value may not be overwritten by a user at this path.
-* `helm default labels`: When this default is set, the user doesn't have to provide a value, but provided values are merged with a set of always rendered, recommended default labels for kubernetes objects (https://helm.sh/docs/chart_best_practices/labels/#standard-labels).
+* `helm default labels`: When this default is set, the user doesn't have to provide a value, but provided values are merged with a set of always rendered, recommended default labels for k8s objects (https://helm.sh/docs/chart_best_practices/labels/#standard-labels).
 
 ## JobTemplate
 This section explains which values can be set when the `JobTemplate` input schema is used.
@@ -395,7 +398,7 @@ This section explains which values can be set when the `JobTemplate` input schem
 | ttlSecondsAfterFinished | int    | 86400               | This limits the lifetime of a Job that has finished execution (either Complete or Failed). After `ttlSecondsAfterFinished` have passed, pods will be cleaned up automatically. |
 | pods                    | dict   | {}                  | All values eligible to configure pods managed by the job. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more.                          |
 
-You can use any of the above listed values when configuring a job. Note that if you don't set any values, the defaults from `chc-lib` are used.
+You can use any of the above values when configuring a job. Note that if you don't set any values, defaults from `chc-lib` are used.
 
 ## PodTemplate
 This section explains which values can be set when the `PodTemplate` input schema is used.
@@ -422,14 +425,14 @@ This section explains which values can be set when the `PodTemplate` input schem
 | containers                    | dict           | {}                  | Containers to inject into pods. Follows the `ContainerSpec` input schema. See [ContainerSpec](#containerspec) in README for more.                                               |
 | initContainers                | dict           | omitted             | Containers to inject into pods. Follows the `ContainerSpec` input schema plus a mandatory `weight` value for odering. See [InitContainers](#initcontainers) in README for more. |
 
-You can use any of the above listed values when configuring a pod. Note that if you don't set any value, the `chc-lib` defaults are used.
+You can use any of the listed values when to configure a pod. Note that if you don't set any value, `chc-lib` defaults are used.
 
 ### PodSecurityContext
-When configuring the `securityContext` in a `PodTemplate`, you can provide values either as string or dict.
+When configuring the `securityContext` in a `PodTemplate`, you can provide values as string or dict.
 
-The generated output depends on the type of values provided:
+The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
-- String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
+- String value: The chart checks if the value matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is printed that lists all presets available.
 
 <table>
   <thead>
@@ -453,9 +456,9 @@ seccompProfile:
 ### Affinities
 When configuring `affinity.podAffinity` or `affinity.podAntiAffinity` in a `PodTemplate`, you can provide values either as string or dict.
 
-The chart behaves differently depending on the values provided:
+The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
-- String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
+- String value: The chart checks if the value matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is printed that lists all presets available.
 
 <table>
   <thead>
@@ -492,18 +495,18 @@ The chart behaves differently depending on the values provided:
 
 > NOTE
 >
-> The preset names and generated YAML output for `affinity.podAffinity` and `affinity.podAntiAffinity` are identical, because they follow the same k8s spec.
-> K8s only checks if values are indented under `podAffinity` or `podAntiAffinity` to decide which scheduling actions to perform.
+> The preset names and generated YAML output for `affinity.podAffinity` and `affinity.podAntiAffinity` are identical
+> because k8s only checks if values are indented under `podAffinity` or `podAntiAffinity` in a `PodTemplate` to decide which scheduling actions to perform.
 
 ## ListFromDict
-This input schema accepts arbitrary key/value pairs from a dict and converts them into an unordered list.
+This input schema accepts a dict with arbitrary key/value pairs and converts them into an unordered list.
 This enables proper merging of values when layering values files.
 
 The input schema is used to compute all kinds of values like `volumes`, `volumeMounts`, `ports`, `ENVs` and more.
 It is also used in various specs and templates like the `JobTemplate`, `PodTemplate`, `ContainerSpec` and others.
 
 For values that follow the `ListFromDict` input schema, each list item's `name` comes from its key in the dict.
-All values are merged, indented for valid YAML, and processed using `tpl`.
+All values are merged, indented and processed using `tpl`.
 
 These example values ...
 
@@ -609,8 +612,8 @@ spec:
 >
 > Some input schemas like `JobTemplate`, `PodTemplate`, `ContainerSpec` and others technically follow the `ListFromDict` pattern, but there is an important difference:
 >
-> * In a `JobTemplate`, `PodTemplate`, `ContainerSpec` etc. only a predefined list of keys will be picked up and processed by the template.
-> * In a `ListFromDict` input, arbitrary keys and values are taken as-is, converted into a list, indented, and processed through tpl.
+> * In a `JobTemplate`, `PodTemplate`, `ContainerSpec` etc. only a predefined list of keys will be picked up and processed.
+> * In a `ListFromDict` input, arbitrary keys and values are valid input and processed through tpl.
 
 ## ContainerSpec
 This section explains which values can be set when the "ContainerSpec" input schema is used.
@@ -634,7 +637,7 @@ This section explains which values can be set when the "ContainerSpec" input sch
 You can use all of the above values to configure a container. This is true for initContainers, too.
 
 ### Images
-When setting values for `image` in a container, provide them using the following input schema:
+When setting values for a container `image`, provide them using the following input schema:
 
 | Value      | Type   | Default                                   | Description                                                                                                                                                                         |
 |------------|--------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -703,9 +706,9 @@ spec:
 ### ContainerSecurityContext
 When configuring the `securityContext` for a container, you can provide values either as string or dict.
 
-The generated output depends on the type of values provided:
+The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
-- String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
+- String value: The chart checks if the value matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is printed that lists all presets available.
 
 <table>
   <thead>
@@ -731,9 +734,9 @@ capabilities:
 ### Resources
 When configuring the `resources` for a container, you can provide values either as string or dict.
 
-The generated output depends on the type of values provided:
+The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
-- String value: The chart checks if the string matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is returned that lists all presets available.
+- String value: The chart checks if the value matches a preset name and if it does, returns the corresponding YAML block. If it doesn't match a preset name, an error message is printed that lists all presets available.
 
 <table>
   <thead>
@@ -825,11 +828,10 @@ limits:
 </table>
 
 ### InitContainers
-Setting values for initContainers follows the same input schema as containers with the addition that you have to specify a mandatory `weight` value
-because initContainers are ordered.
+Setting values for initContainers follows the same input schema as containers with the addition that you have to specify a mandatory `weight` value.
+This is necessary to generate an *ordered list* of initContainers because execution order matters here.
 
-The `weight` value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order,
-meaning that the highest weight will be the first item of the list.
+The `weight` value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order (highest value goes first).
 
 These example values ...
 
@@ -879,17 +881,17 @@ spec:
 ```
 
 ## Config and secret items
-When setting values for `items` in configs or secrets, provide them using the following input schema:
+When setting values for configs or secrets `items`, provide them using the following input schema:
 
-| Value               | Type    | Default             | Description                                                                                                                                     |
-|---------------------|---------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| labels              | dict    | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                     |
-| annotations         | dict    | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                      |
-| restartPodsOnChange | bool    | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.           |
-| data                | dict    | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. Goes through tpl.                 |
+| Value               | Type | Default             | Description                                                                                                                                                                                                  |
+|---------------------|------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels              | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                                                                                  |
+| annotations         | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                                                                                   |
+| restartPodsOnChange | bool | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.                                                                        |
+| data                | dict | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. If you need to keep data secure, use the `externalsecrets` template instead. Goes through tpl. |
 
 ## Certificate items
-When setting values for `items` in certificates, provide them using the following input schema:
+When setting values for certificate `items`, provide them using the following input schema:
 
 | Value                                   | Type   | Default                                                                    | Description                                                                                                                                                    |
 |-----------------------------------------|--------|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -914,7 +916,7 @@ When setting values for `items` in certificates, provide them using the followin
 | usages                                  | list   | omitted                                                                    | Defines how the issued certificate can be used, such as for server authentication, client authentication, code signing, or digital signatures.                 |
 
 ## ExternalSecret items
-When setting values for `items` in externalSecrets, provide them using the following input schema:
+When setting values for externalsecret `items`, provide them using the following input schema:
 
 | Value              | Type   | Default                                                              | Description                                                                                                                                                                                                                                  |
 |--------------------|--------|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -1018,4 +1020,4 @@ spec:
 ```
 
 If `.Values.externalSecretsOperator.externalSecrets.basePath` would not have been set,
-the `key` of each `remoteRef` entry would've been `eks/ingress`.
+the `key` of each `remoteRef` entry would've been taken as-is and resulted in `eks/ingress`.
