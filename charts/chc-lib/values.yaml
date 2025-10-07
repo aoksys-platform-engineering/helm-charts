@@ -291,7 +291,7 @@ exports:
 
     certManager:
       # -- Toggle to enable/disable the creation of cert-manager related custom resources.
-      # Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster.
+      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
       enabled: false
 
       certificates:
@@ -369,7 +369,7 @@ exports:
 
     prometheusOperator:
       # -- Toggle to enable/disable the creation of prometheus-operator related custom resources.
-      # Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster.
+      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
       enabled: false
 
       podMonitor:
@@ -392,23 +392,23 @@ exports:
     
     externalSecretsOperator:
       # -- Toggle to enable/disable the creation of external-secrets operator related custom resources.
-      # Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster.
+      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
       enabled: false
 
       externalSecrets:
         # -- Toggle to enable/disable the creation of external-secret resources.
         create: false
 
-        # -- Labels to add to all externalsecrets. Values go through tpl.
+        # -- Labels to add to all externalsecrets in addition to `commonLabels`. Values go through tpl.
         labels: {}
 
-        # -- Annotations to add to all externalsecrets. Values go through tpl.
+        # -- Annotations to add to all externalsecrets in addition to `commonAnnotations`. Values go through tpl.
         annotations: {}
 
-        # -- Labels to add to all secrets created from externalsecrets. Values go through tpl.
+        # -- Labels to add to all secrets created from externalsecrets in addition to `commonLabels`. Values go through tpl.
         secretLabels: {}
 
-        # -- Annotations to add to all secrets created from externalsecrets. Values go through tpl.
+        # -- Annotations to add to all secrets created from externalsecrets in addition to `commonAnnotations`. Values go through tpl.
         secretAnnotations: {}
 
         # -- Type of secret to create. Can be overwritten in each externalsecret.
@@ -451,6 +451,29 @@ exports:
 
         # -- Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource.
         # See [ExternalSecret items](#externalsecret-items) in README for more.
+        items: {}
+
+    keda:
+      # -- Toggle to enable/disable the creation of keda related custom resources.
+      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
+      enabled: false
+
+      scaledObjects:
+        # -- Toggle to enable/disable the creation of scaledObject resources.
+        create: false
+
+        # -- Labels to add to all scaledobjects in addition to `commonLabels`. Values go through tpl.
+        labels: {}
+
+        # -- Annotations to add to all scaledobjects in addition to `commonAnnotations`. Values go through tpl.
+        annotations: {}
+
+        # -- Specifies which container to read ENVs from when resolving trigger authentication or connection strings.
+        # Can be overwritten in each scaledObject. Goes through tpl.
+        envSourceContainerName: ""
+
+        # -- Dict containing key/value pairs of scaledobjects to create. Each item creates one scaledobject resource.
+        # See [ScaledObject items](#scaledobject-items) in README for more.
         items: {}
 
     # -- List of arbitrary kubernetes manifests to deploy when there is no dedicated library template (yet). Values go through tpl.

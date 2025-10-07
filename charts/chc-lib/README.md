@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.41](https://img.shields.io/badge/Version-0.44.41-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.45.0](https://img.shields.io/badge/Version-0.45.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.41
+    version: 0.45.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" are mandatory
     import-values:
@@ -245,7 +245,7 @@ Values that can be set at `.Values.certManager.<Value>` to enable the usage of r
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
-| enabled | bool | `false` | Toggle to enable/disable the creation of cert-manager related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
+| enabled | bool | `false` | Toggle to enable/disable the creation of cert-manager related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
 
 ### Certificates
 Values that can be set at `.Values.certManager.certificates.<Value>` to configure the `certificates` template.
@@ -277,7 +277,25 @@ Values that can be set at `.Values.externalSecretsOperator.<Value>` to enable th
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
-| enabled | bool | `false` | Toggle to enable/disable the creation of external-secrets operator related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
+| enabled | bool | `false` | Toggle to enable/disable the creation of external-secrets operator related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
+
+## Prometheus-Operator
+Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usage of related custom resources.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| enabled | bool | `false` | Toggle to enable/disable the creation of prometheus-operator related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
+
+### PodMonitor
+Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the `podmonitor` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `false` | Toggle to enable/disable the creation of the podMonitor resource. |
+| namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used. |
+| labels | object | `{}` | Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl. |
+| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ### ExternalSecrets
 Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Value>` to configure the `externalsecrets` template.
@@ -285,10 +303,10 @@ Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Valu
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `false` | Toggle to enable/disable the creation of external-secret resources. |
-| labels | object | `{}` | Labels to add to all externalsecrets. Values go through tpl. |
-| annotations | object | `{}` | Annotations to add to all externalsecrets. Values go through tpl. |
-| secretLabels | object | `{}` | Labels to add to all secrets created from externalsecrets. Values go through tpl. |
-| secretAnnotations | object | `{}` | Annotations to add to all secrets created from externalsecrets. Values go through tpl. |
+| labels | object | `{}` | Labels to add to all externalsecrets in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to all externalsecrets in addition to `commonAnnotations`. Values go through tpl. |
+| secretLabels | object | `{}` | Labels to add to all secrets created from externalsecrets in addition to `commonLabels`. Values go through tpl. |
+| secretAnnotations | object | `{}` | Annotations to add to all secrets created from externalsecrets in addition to `commonAnnotations`. Values go through tpl. |
 | secretType | string | `"Opaque"` | Type of secret to create. Can be overwritten in each externalsecret. |
 | secretStoreName | string | `"default"` | Name of the secret store to use. Can be overwritten in each externalsecret. |
 | secretStoreKind | string | `"ClusterSecretStore"` | Kind of secret store to use. Can be overwritten in each externalsecret. |
@@ -302,23 +320,23 @@ Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Valu
 | metadataPolicy | string | `"None"` | Metadata policy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
 | items | object | `{}` | Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource. See [ExternalSecret items](#externalsecret-items) in README for more. |
 
-## Prometheus-Operator
-Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usage of related custom resources.
+## KEDA
+Values that can be set at `.Values.keda.<Value>` to enable the usage of related custom resources.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
-| enabled | bool | `false` | Toggle to enable/disable the creation of prometheus-operator related custom resources. Should only be set to `true` if the corresponding custom resource definitions are installed in your cluster. |
+| enabled | bool | `false` | Toggle to enable/disable the creation of keda related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
 
-### PodMonitor
-Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the `podmonitor` template.
+### ScaledObjects
+Values that can be set under `.Values.keda.scaledObjects.<Value>` to configure the `scaledobjects` template.
 
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
-| create | bool | `false` | Toggle to enable/disable the creation of the podMonitor resource. |
-| namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used. |
-| labels | object | `{}` | Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl. |
-| annotations | object | `{}` | Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl. |
-| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
+| create | bool | `false` | Toggle to enable/disable the creation of scaledObject resources. |
+| labels | object | `{}` | Labels to add to all scaledobjects in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to all scaledobjects in addition to `commonAnnotations`. Values go through tpl. |
+| envSourceContainerName | string | `""` | Specifies which container to read ENVs from when resolving trigger authentication or connection strings. Can be overwritten in each scaledObject. Goes through tpl. |
+| items | object | `{}` | Dict containing key/value pairs of scaledobjects to create. Each item creates one scaledobject resource. See [ScaledObject items](#scaledobject-items) in README for more. |
 
 ## Extra manifests
 Values for `extraManifests` are a list of k8s manifests to deploy when there is no dedicated template (yet).
@@ -615,7 +633,7 @@ This section explains which values can be set when the "ContainerSpec" input sch
 
 | Value           | Type           | Default          | Description                                                                                                                                                                                                         |
 |-----------------|----------------|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name            | string         | computed         | Value for the `name` field of the container. This is generated from the key of the dict item.                                                                                                                       |
+| name            | string         | computed         | Value for the `name` field of the container. This is generated from the key of each dict item.                                                                                                                      |
 | image           | dict           | mandatory        | Container image to use. Follows the `Images` input schema. See [Images](#images) in README for more.                                                                                                                |
 | command         | list           | omitted          | List of commands to use as ENTRYPOINT for the container. If not specified, the ENTRYPOINT from the container image is used. Values go through tpl.                                                                  |
 | args            | list           | omitted          | List of argument to provide for the ENTRYPOINT. Values go through tpl.                                                                                                                                              |
@@ -624,7 +642,7 @@ This section explains which values can be set when the "ContainerSpec" input sch
 | resources       | dict or string | "xsmall" preset  | Resources for the container. Can be a preset name (string) or a dict. See [Resources](#resources) in README for more.                                                                                               |
 | volumeMounts    | dict           | omitted          | Volumes to mount in the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                   |
 | env             | dict           | omitted          | ENVs to set for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                       |
-| ports           | dict           | {}               | Ports for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                             |
+| ports           | dict           | omitted          | Ports for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                             |
 | startupProbe    | dict           | omitted          | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully.                                                                     |
 | livenessProbe   | dict           | omitted          | Periodic probe of container liveness. Container will be restarted if the probe fails.                                                                                                                               |
 | readinessProbe  | dict           | omitted          | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.                                                                                                 |
@@ -1025,3 +1043,24 @@ spec:
 >
 > If `.Values.externalSecretsOperator.externalSecrets.basePath` would not have been set,
 > the `key` of each `remoteRef` entry would've been taken as-is and resulted in `eks/ingress`.
+
+## ScaledObject items
+When setting values for scaledObject `items`, provide them using the following input schema:
+
+| Value                                 | Type   | Default             | Description                                                                                                                                                                                  |
+|---------------------------------------|--------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels                                | dict   | helm default labels | Labels to add in addition to `commonLabels` and `.Values.keda.scaledObjects.labels`. Values go through tpl.                                                                                  |
+| annotations                           | dict   | omitted             | Annotations to add in addition to `commonAnnotations` and  `.Values.keda.scaledObjects.annotations`. Values go through tpl.                                                                  |
+| scaleTargetRef.apiVersion             | string | omitted             | API version of the target resource to scale.                                                                                                                                                 |
+| scaleTargetRef.kind                   | string | omitted             | Kind of the target resource to scale.                                                                                                                                                        |
+| scaleTargetRef.name                   | string | key name            | Name of the target resource to scale. Will be populated from the key of the item unless explicitly configured. Goes through tpl.                                                             |
+| scaleTargetRef.envSourceContainerName | string | omitted             | Name of the container to source ENVs from when resolving trigger authentication or connection strings. KEDAs internal default is `.spec.template.spec.containers[0].name`. Goes through tpl. |
+| pollingInterval                       | int    | omitted             | Specifies how often (in seconds) KEDA checks the trigger source for metrics.                                                                                                                 |
+| cooldownPeriod                        | int    | omitted             | Time (in seconds) to wait after the last active trigger before scaling back to the minimum.                                                                                                  |
+| initialCooldownPeriod                 | int    | omitted             | Delay (in seconds) after creation before KEDA starts scaling activity.                                                                                                                       |
+| idleReplicaCount                      | int    | omitted             | Number of replicas to keep when idled; ignored if higher than `minReplicaCount`.                                                                                                             |
+| minReplicaCount                       | int    | omitted             | Lowest number of replicas allowed when scaling down.                                                                                                                                         |
+| maxReplicaCount                       | int    | omitted             | Highest number of replicas allowed when scaling up.                                                                                                                                          |
+| fallback                              | dict   | omitted             | Defines behavior if metric collection fails.                                                                                                                                                 |
+| advanced                              | dict   | omitted             | Fine-tunes scaling behavior.                                                                                                                                                                 |
+| triggers                              | list   | []                  | List of metrics or event sources KEDA watches (e.g., Prometheus, Kafka, AWS SQS). Each trigger defines a type, metadata, and optionally authenticationRef for credentials.                   |
