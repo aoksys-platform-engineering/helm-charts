@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.38](https://img.shields.io/badge/Version-0.44.38-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.39](https://img.shields.io/badge/Version-0.44.39-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.38
+    version: 0.44.39
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" are mandatory
     import-values:
@@ -69,7 +69,7 @@ service:
 ...
 ```
 
-> NOTE
+> [!NOTE]
 >
 > You cannot use more complex expressions like `{{ .Values.service.ports[0].name }}` or
 > `{{ include "common.names.fullname" . }}` because this will result in templating errors.
@@ -321,10 +321,10 @@ Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to 
 | podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ## Extra manifests
-The values for `extraManifests` are a list of k8s YAML manifests to deploy when there is no dedicated template (yet).
-It is meant to be used as a fallback to not slow down the development and deployment of new services before a new template is added to the `chc-lib`.
+Values for `extraManifests` are a list of k8s manifests to deploy when there is no dedicated template (yet).
+This is a fallback to not slow down development and deployment of new services before `chc-lib` is updated.
 
-You simply provide the YAML of k8s manifests to deploy as value for the `extraManifests` list. All values go through tpl.
+Provide the list of k8s manifests to deploy for the `extraManifests` as value. All values go through tpl.
 
 These example values ...
 
@@ -398,7 +398,9 @@ This section explains which values can be set when the `JobTemplate` input schem
 | ttlSecondsAfterFinished | int    | 86400               | This limits the lifetime of a Job that has finished execution (either Complete or Failed). After `ttlSecondsAfterFinished` have passed, pods will be cleaned up automatically. |
 | pods                    | dict   | {}                  | All values eligible to configure pods managed by the job. Follows the `PodTemplate` input schema. See [PodTemplate](#podtemplate) in README for more.                          |
 
-You can use any of the above values when configuring a job. Note that if you don't set any values, defaults from `chc-lib` are used.
+> [!NOTE]
+>
+> You can use any of the above values when configuring a job. Note that if you don't set any values, defaults from `chc-lib` are used.
 
 ## PodTemplate
 This section explains which values can be set when the `PodTemplate` input schema is used.
@@ -425,7 +427,9 @@ This section explains which values can be set when the `PodTemplate` input schem
 | containers                    | dict           | {}                  | Containers to inject into pods. Follows the `ContainerSpec` input schema. See [ContainerSpec](#containerspec) in README for more.                                               |
 | initContainers                | dict           | omitted             | Containers to inject into pods. Follows the `ContainerSpec` input schema plus a mandatory `weight` value for odering. See [InitContainers](#initcontainers) in README for more. |
 
-You can use any of the listed values when to configure a pod. Note that if you don't set any value, `chc-lib` defaults are used.
+> [!NOTE]
+>
+> You can use any of the listed values when to configure a pod. Note that if you don't set any value, `chc-lib` defaults are used.
 
 ### PodSecurityContext
 When configuring the `securityContext` in a `PodTemplate`, you can provide values as string or dict.
@@ -454,7 +458,7 @@ seccompProfile:
 </table>
 
 ### Affinities
-When configuring `affinity.podAffinity` or `affinity.podAntiAffinity` in a `PodTemplate`, you can provide values either as string or dict.
+When configuring `affinity.podAffinity` or `affinity.podAntiAffinity` in a `PodTemplate`, you can provide values as string or dict.
 
 The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
@@ -493,7 +497,7 @@ The output depends on the provided data type:
   </tbody>
 </table>
 
-> NOTE
+> [!NOTE]
 >
 > The preset names and generated YAML output for `affinity.podAffinity` and `affinity.podAntiAffinity` are identical
 > because k8s only checks if values are indented under `podAffinity` or `podAntiAffinity` in a `PodTemplate` to decide which scheduling actions to perform.
@@ -608,7 +612,7 @@ spec:
           ...
 ```
 
-> NOTE
+> [!NOTE]
 >
 > Some input schemas like `JobTemplate`, `PodTemplate`, `ContainerSpec` and others technically follow the `ListFromDict` pattern, but there is an important difference:
 >
@@ -634,7 +638,9 @@ This section explains which values can be set when the "ContainerSpec" input sch
 | livenessProbe   | dict           | omitted          | Periodic probe of container liveness. Container will be restarted if the probe fails.                                                                                                                               |
 | readinessProbe  | dict           | omitted          | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.                                                                                                 |
 
-You can use all of the above values to configure a container. This is true for initContainers, too.
+> [!NOTE]
+>
+> You can use all of the above values to configure a container. This is true for initContainers, too.
 
 ### Images
 When setting values for a container `image`, provide them using the following input schema:
@@ -704,7 +710,7 @@ spec:
 ```
 
 ### ContainerSecurityContext
-When configuring the `securityContext` for a container, you can provide values either as string or dict.
+When configuring the `securityContext` for a container, you can provide values as string or dict.
 
 The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
@@ -732,7 +738,7 @@ capabilities:
 </table>
 
 ### Resources
-When configuring the `resources` for a container, you can provide values either as string or dict.
+When configuring the `resources` for a container, you can provide values as string or dict.
 
 The output depends on the provided data type:
 - Dict value: The value is used as-is without further processing. An empty dict (`{}`) is valid input, too.
@@ -828,10 +834,11 @@ limits:
 </table>
 
 ### InitContainers
-Setting values for initContainers follows the same input schema as containers with the addition that you have to specify a mandatory `weight` value.
-This is necessary to generate an *ordered list* of initContainers because execution order matters here.
+Configuring initContainers follows the same input schema as containers with the addition that you have to specify a mandatory `weight` value.
+This is necessary to generate an *ordered list* of initContainers because execution order matters for initContainers.
 
 The `weight` value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order (highest value goes first).
+If an invalid `weight` value is provided, the chart will print an error message and templating will fail.
 
 These example values ...
 
@@ -879,6 +886,10 @@ spec:
         - name: strawweight
           ...
 ```
+
+> [!NOTE]
+>
+> You can use all of the values of the (ContainerSpec)[#containerspec] to configure initContainers.
 
 ## Config and secret items
 When setting values for configs or secrets `items`, provide them using the following input schema:
@@ -1019,5 +1030,7 @@ spec:
         metadataPolicy: None
 ```
 
-If `.Values.externalSecretsOperator.externalSecrets.basePath` would not have been set,
-the `key` of each `remoteRef` entry would've been taken as-is and resulted in `eks/ingress`.
+> [!NOTE]
+>
+> If `.Values.externalSecretsOperator.externalSecrets.basePath` would not have been set,
+> the `key` of each `remoteRef` entry would've been taken as-is and resulted in `eks/ingress`.
