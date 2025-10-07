@@ -62,6 +62,21 @@ exports:
       # See [PersistentVolume items](#persistentvolume-items) in README for more.
       items: {}
 
+    persistentVolumeClaims:
+      # -- Toggle to enable/disable the creation of persistentvolumeclaims.
+      create: false
+
+      # -- Labels to add to all persistentvolumeclaims in addition to `commonLabels`. Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to all persistentvolumeclaims in addition to `commonAnnotations`. Values go through tpl.
+      annotations: {}
+
+      # -- Dict containing key/value pairs of persistentvolumeclaims to create. Each item creates one persistentvolumeclaim resource.
+      # Follows the `PersistentVolumeClaim items` input schema.
+      # See [PersistentVolumeClaim items](#persistentvolumeclaim-items) in README for more.
+      items: {}
+
     deployment:
       # -- Toggle to enable/disable the creation of the deployment. Mutually exclusive with `.Values.statefulset.create=true`.
       create: true

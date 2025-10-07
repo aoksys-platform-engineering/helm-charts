@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.46.0](https://img.shields.io/badge/Version-0.46.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.47.0](https://img.shields.io/badge/Version-0.47.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.46.0
+    version: 0.47.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory for templating to work
     import-values:
@@ -103,6 +103,16 @@ Values that can be set at `.Values.persistentVolumes.<Value>` to configure the `
 | labels | object | `{}` | Labels to add to all persistentvolumes in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all persistentvolumes in addition to `commonAnnotations`. Values go through tpl. |
 | items | object | `{}` | Dict containing key/value pairs of persistentvolumes to create. Each item creates one persistentvolume resource. Follows the `PersistentVolume items` input schema. See [PersistentVolume items](#persistentvolume-items) in README for more. |
+
+## PersistentVolumeClaims
+Values that can be set at `.Values.persistentVolumeClaims.<Value>` to configure the `persistentvolumeclaims` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `false` | Toggle to enable/disable the creation of persistentvolumeclaims. |
+| labels | object | `{}` | Labels to add to all persistentvolumeclaims in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to all persistentvolumeclaims in addition to `commonAnnotations`. Values go through tpl. |
+| items | object | `{}` | Dict containing key/value pairs of persistentvolumeclaims to create. Each item creates one persistentvolumeclaim resource. Follows the `PersistentVolumeClaim items` input schema. See [PersistentVolumeClaim items](#persistentvolumeclaim-items) in README for more. |
 
 ## Deployment
 Values that can be set at `.Values.deployment.<Value>` to configure the `deployment` template.
@@ -914,6 +924,15 @@ When setting values for persistentvolume `items`, provide them using the followi
 | labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumes.labels`. Values go through tpl.                                                                                                                               |
 | annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumes.annotations`. Values go through tpl.                                                                                                                |
 | spec        | dict | {}                  | Spec for the persistentvolume. See [PersistentVolumeSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec) for all available options. Values go through tpl. |
+
+## PersistentVolumeClaim items
+When setting values for persistentvolumeclaim `items`, provide them using the following input schema:
+
+| Value       | Type | Default             | Description                                                                                                                                                                                                                                                   |
+|-------------|------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumeClaims.labels`. Values go through tpl.                                                                                                                                               |
+| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumeClaims.annotations`. Values go through tpl.                                                                                                                                |
+| spec        | dict | {}                  | Spec for the persistentvolumeclaim. See [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for all available options. Values go through tpl. |
 
 ## Certificate items
 When setting values for certificate `items`, provide them using the following input schema:
