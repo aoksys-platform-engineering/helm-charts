@@ -1,22 +1,8 @@
 # chc-lib
 
-![Version: 0.45.0](https://img.shields.io/badge/Version-0.45.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.45.1](https://img.shields.io/badge/Version-0.45.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
-
-**Homepage:** <https://github.com/aoksys-platform-engineering/helm-charts/tree/main/charts/chc-lib>
-
-## Maintainers
-
-| Name | Email | Url |
-| ---- | ------ | --- |
-| Oliver Geyer | <N/A> | <https://www.aok-systems.de/startseite.html> |
-
-## Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common | 2.31.4 |
 
 # Usage
 Include `chc-lib` as dependency in your application chart to use it,
@@ -35,7 +21,7 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.45.0
+    version: 0.45.1
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" are mandatory
     import-values:
@@ -383,7 +369,7 @@ data:
   log.level: info
 ```
 
-## Custom input schemas
+# Custom input schemas
 Because `chc-lib` is a library chart, most values have sane defaults or are omitted from templated output if not configured explicitly.
 
 Some values use complex data types and require additional knowledge to be used.
