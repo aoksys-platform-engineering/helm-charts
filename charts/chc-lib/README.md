@@ -1,11 +1,11 @@
 # chc-lib
 
-![Version: 0.45.1](https://img.shields.io/badge/Version-0.45.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.45.2](https://img.shields.io/badge/Version-0.45.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
 # Usage
-Include `chc-lib` as dependency in your application chart to use it,
+Include `chc-lib` as dependency in your application chart
 because it cannot be installed or templated on its own:
 
 ```bash
@@ -13,7 +13,7 @@ $ helm template --generate-name chc-lib
 Error: library charts are not installable
 ```
 
-Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
+Add these `dependencies` to your `Chart.yaml` to include it:
 
 ```yaml
 # Chart.yaml of your application chart
@@ -21,9 +21,9 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.45.1
+    version: 0.45.2
     repository: https://aoksys-platform-engineering.github.io/helm-charts
-    # The "import-values" are mandatory
+    # Importing "defaults" is mandatory for templating to work
     import-values:
       - defaults
 ```
@@ -265,24 +265,6 @@ Values that can be set at `.Values.externalSecretsOperator.<Value>` to enable th
 |-------|------|---------|-------------|
 | enabled | bool | `false` | Toggle to enable/disable the creation of external-secrets operator related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
 
-## Prometheus-Operator
-Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usage of related custom resources.
-
-| Value | Type | Default | Description |
-|-------|------|---------|-------------|
-| enabled | bool | `false` | Toggle to enable/disable the creation of prometheus-operator related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
-
-### PodMonitor
-Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the `podmonitor` template.
-
-| Value | Type | Default | Description |
-|-------|------|---------|-------------|
-| create | bool | `false` | Toggle to enable/disable the creation of the podMonitor resource. |
-| namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used. |
-| labels | object | `{}` | Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl. |
-| annotations | object | `{}` | Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl. |
-| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
-
 ### ExternalSecrets
 Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Value>` to configure the `externalsecrets` template.
 
@@ -305,6 +287,24 @@ Values that can be set at `.Values.externalSecretsOperator.externalSecrets.<Valu
 | conversionStrategy | string | `"Default"` | Conversion strategy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
 | metadataPolicy | string | `"None"` | Metadata policy to use for all externalsecrets in the `remoteRef` fields. Can be overwritten in each externalsecret. |
 | items | object | `{}` | Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource. See [ExternalSecret items](#externalsecret-items) in README for more. |
+
+## Prometheus-Operator
+Values that can be set at `.Values.prometheusOperator.<Value>` to enable the usage of related custom resources.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| enabled | bool | `false` | Toggle to enable/disable the creation of prometheus-operator related custom resources. Should only be set to `true` if corresponding CRDs are installed in your cluster. |
+
+### PodMonitor
+Values that can be set under `.Values.prometheusOperator.podMonitor.<Value>` to configure the `podmonitor` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `false` | Toggle to enable/disable the creation of the podMonitor resource. |
+| namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used. |
+| labels | object | `{}` | Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl. |
+| podMetricsEndpoints | object | `{}` | Defines a list of endpoints serving metrics to be scraped by prometheus. See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more. |
 
 ## KEDA
 Values that can be set at `.Values.keda.<Value>` to enable the usage of related custom resources.
