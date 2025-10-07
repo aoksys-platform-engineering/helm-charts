@@ -47,6 +47,21 @@ exports:
       # See [Config and secret items](#config-and-secret-items) in README for more.
       items: {}
 
+    persistentVolumes:
+      # -- Toggle to enable/disable the creation of persistentvolumes.
+      create: false
+
+      # -- Labels to add to all persistentvolumes in addition to `commonLabels`. Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to all persistentvolumes in addition to `commonAnnotations`. Values go through tpl.
+      annotations: {}
+
+      # -- Dict containing key/value pairs of persistentvolumes to create. Each item creates one persistentvolume resource.
+      # Follows the `PersistentVolume items` input schema.
+      # See [PersistentVolume items](#persistentvolume-items) in README for more.
+      items: {}
+
     deployment:
       # -- Toggle to enable/disable the creation of the deployment. Mutually exclusive with `.Values.statefulset.create=true`.
       create: true

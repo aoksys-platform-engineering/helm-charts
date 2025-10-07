@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.45.2](https://img.shields.io/badge/Version-0.45.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.46.0](https://img.shields.io/badge/Version-0.46.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.45.2
+    version: 0.46.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory for templating to work
     import-values:
@@ -93,6 +93,16 @@ Values that can be set at `.Values.secrets.<Value>` to configure the `secrets` t
 | labels | object | `{}` | Labels to add to all secrets in addition to `commonLabels`. Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl. |
 | items | object | `{}` | Dict containing key/value pairs of secrets to create. Each item creates one secret resource. Follows the `Config and secret items` input schema. See [Config and secret items](#config-and-secret-items) in README for more. |
+
+## PersistentVolumes
+Values that can be set at `.Values.persistentVolumes.<Value>` to configure the `persistentvolumes` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `false` | Toggle to enable/disable the creation of persistentvolumes. |
+| labels | object | `{}` | Labels to add to all persistentvolumes in addition to `commonLabels`. Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to all persistentvolumes in addition to `commonAnnotations`. Values go through tpl. |
+| items | object | `{}` | Dict containing key/value pairs of persistentvolumes to create. Each item creates one persistentvolume resource. Follows the `PersistentVolume items` input schema. See [PersistentVolume items](#persistentvolume-items) in README for more. |
 
 ## Deployment
 Values that can be set at `.Values.deployment.<Value>` to configure the `deployment` template.
@@ -895,6 +905,15 @@ When setting values for configs or secrets `items`, provide them using the follo
 | annotations         | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                                                                                   |
 | restartPodsOnChange | bool | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.                                                                        |
 | data                | dict | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. If you need to keep data secure, use the `externalsecrets` template instead. Goes through tpl. |
+
+## PersistentVolume items
+When setting values for persistentvolume `items`, provide them using the following input schema:
+
+| Value       | Type | Default             | Description                                                                                                                                                                                                                              |
+|-------------|------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumes.labels`. Values go through tpl.                                                                                                                               |
+| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumes.annotations`. Values go through tpl.                                                                                                                |
+| spec        | dict | {}                  | Spec for the persistentvolume. See [PersistentVolumeSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec) for all available options. Values go through tpl. |
 
 ## Certificate items
 When setting values for certificate `items`, provide them using the following input schema:
