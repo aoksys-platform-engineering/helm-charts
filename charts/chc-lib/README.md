@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.44.40](https://img.shields.io/badge/Version-0.44.40-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.44.41](https://img.shields.io/badge/Version-0.44.41-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -35,7 +35,7 @@ Add `dependencies` to your `Chart.yaml` to use the `chc-lib`:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.44.40
+    version: 0.44.41
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # The "import-values" are mandatory
     import-values:
@@ -880,7 +880,7 @@ spec:
 
 > [!TIP]
 >
-> You can use all values of the (ContainerSpec)[#containerspec] to configure initContainers.
+> You can use all values of the [ContainerSpec](#containerspec) to configure initContainers.
 
 ## Config and secret items
 When setting values for configs or secrets `items`, provide them using the following input schema:
