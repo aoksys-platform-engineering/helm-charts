@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.47.0](https://img.shields.io/badge/Version-0.47.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.47.1](https://img.shields.io/badge/Version-0.47.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable functions and templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.47.0
+    version: 0.47.1
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory for templating to work
     import-values:
@@ -405,6 +405,34 @@ The following keywords are used to describe how values behave when a chart is re
 * `computed`: If a value is "computed", the chart generates it in some way and the value may not be overwritten by a user at this path.
 * `helm default labels`: When this default is set, the user doesn't have to provide a value, but provided values are merged with a set of always rendered, recommended default labels for k8s objects (https://helm.sh/docs/chart_best_practices/labels/#standard-labels).
 
+## Config and secret items
+When setting values for configs or secrets `items`, provide them using the following input schema:
+
+| Value               | Type | Default             | Description                                                                                                                                                                                                  |
+|---------------------|------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels              | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                                                                                  |
+| annotations         | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                                                                                   |
+| restartPodsOnChange | bool | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.                                                                        |
+| data                | dict | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. If you need to keep data secure, use the `externalsecrets` template instead. Goes through tpl. |
+
+## PersistentVolume items
+When setting values for persistentvolume `items`, provide them using the following input schema:
+
+| Value       | Type | Default             | Description                                                                                                                                                                                                                              |
+|-------------|------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumes.labels`. Values go through tpl.                                                                                                                               |
+| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumes.annotations`. Values go through tpl.                                                                                                                |
+| spec        | dict | {}                  | Spec for the persistentvolume. See [PersistentVolumeSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec) for all available options. Values go through tpl. |
+
+## PersistentVolumeClaim items
+When setting values for persistentvolumeclaim `items`, provide them using the following input schema:
+
+| Value       | Type | Default             | Description                                                                                                                                                                                                                                                   |
+|-------------|------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumeClaims.labels`. Values go through tpl.                                                                                                                                               |
+| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumeClaims.annotations`. Values go through tpl.                                                                                                                                |
+| spec        | dict | {}                  | Spec for the persistentvolumeclaim. See [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for all available options. Values go through tpl. |
+
 ## JobTemplate
 This section explains which values can be set when the `JobTemplate` input schema is used.
 
@@ -562,7 +590,6 @@ deployment:
             value: DEBUG
 
         volumeMounts:
-          # Keys and values are templated
           "{{ .Release.Name }}-configs":
             mountPath: /etc/config
         
@@ -906,34 +933,6 @@ spec:
 >
 > You can use all values of the [ContainerSpec](#containerspec) to configure initContainers.
 
-## Config and secret items
-When setting values for configs or secrets `items`, provide them using the following input schema:
-
-| Value               | Type | Default             | Description                                                                                                                                                                                                  |
-|---------------------|------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| labels              | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.<configs\|secrets>.labels`. Values go through tpl.                                                                                                  |
-| annotations         | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.<configs\|secrets>.annotations`. Values go through tpl.                                                                                   |
-| restartPodsOnChange | bool | omitted             | If `true`, creates an pod annotation containing a checksum of the `data` field to always restart pods if the value of `data` changes.                                                                        |
-| data                | dict | {}                  | Data to store in the configmap/secret. Note that all data has to be provided in clear text, even for secrets. If you need to keep data secure, use the `externalsecrets` template instead. Goes through tpl. |
-
-## PersistentVolume items
-When setting values for persistentvolume `items`, provide them using the following input schema:
-
-| Value       | Type | Default             | Description                                                                                                                                                                                                                              |
-|-------------|------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumes.labels`. Values go through tpl.                                                                                                                               |
-| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumes.annotations`. Values go through tpl.                                                                                                                |
-| spec        | dict | {}                  | Spec for the persistentvolume. See [PersistentVolumeSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec) for all available options. Values go through tpl. |
-
-## PersistentVolumeClaim items
-When setting values for persistentvolumeclaim `items`, provide them using the following input schema:
-
-| Value       | Type | Default             | Description                                                                                                                                                                                                                                                   |
-|-------------|------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| labels      | dict | helm default labels | Labels to add in addition to `commonLabels` and `.Values.persistentVolumeClaims.labels`. Values go through tpl.                                                                                                                                               |
-| annotations | dict | omitted             | Annotations to add in addition to `commonAnnotations` and `.Values.persistentVolumeClaims.annotations`. Values go through tpl.                                                                                                                                |
-| spec        | dict | {}                  | Spec for the persistentvolumeclaim. See [PersistentVolumeClaimSpec](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec) for all available options. Values go through tpl. |
-
 ## Certificate items
 When setting values for certificate `items`, provide them using the following input schema:
 
@@ -994,6 +993,7 @@ These example values ...
 externalSecretsOperator:
   enabled: true
   externalSecrets:
+    create: true
     basePath: aoksystems/dev
     items:
       ingress-tls:
@@ -1077,7 +1077,7 @@ When setting values for scaledObject `items`, provide them using the following i
 | annotations                           | dict   | omitted             | Annotations to add in addition to `commonAnnotations` and  `.Values.keda.scaledObjects.annotations`. Values go through tpl.                                                                  |
 | scaleTargetRef.apiVersion             | string | omitted             | API version of the target resource to scale.                                                                                                                                                 |
 | scaleTargetRef.kind                   | string | omitted             | Kind of the target resource to scale.                                                                                                                                                        |
-| scaleTargetRef.name                   | string | key name            | Name of the target resource to scale. Will be populated from the key of the item unless explicitly configured. Goes through tpl.                                                             |
+| scaleTargetRef.name                   | string | computed            | Name of the target resource to scale. Will be computed from the key of the item unless explicitly configured here. Goes through tpl.                                                         |
 | scaleTargetRef.envSourceContainerName | string | omitted             | Name of the container to source ENVs from when resolving trigger authentication or connection strings. KEDAs internal default is `.spec.template.spec.containers[0].name`. Goes through tpl. |
 | pollingInterval                       | int    | omitted             | Specifies how often (in seconds) KEDA checks the trigger source for metrics.                                                                                                                 |
 | cooldownPeriod                        | int    | omitted             | Time (in seconds) to wait after the last active trigger before scaling back to the minimum.                                                                                                  |
