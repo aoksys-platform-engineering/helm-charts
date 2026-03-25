@@ -1,11 +1,11 @@
 # Purpose
-Helm repository hosting library and application charts developed at AOK Systems GmbH.
+Helm repository to host library and application charts developed by AOK Systems GmbH.
 
 # Usage
 [Helm](https://helm.sh) must be installed to use the charts.  Please refer to
 Helm's [documentation](https://helm.sh/docs) to get started.
 
-Once Helm has been set up correctly, add the repo as follows:
+Once Helm has been set up, add the chart repo as follows:
 
 ```bash
 helm repo add aoksys-pe https://aoksys-platform-engineering.github.io/helm-charts
@@ -13,26 +13,27 @@ helm repo add aoksys-pe https://aoksys-platform-engineering.github.io/helm-chart
 
 # Docs
 Each chart includes a ``README.md`` file that provides usage instructions, configurable values, and other relevant documentation.
-Additionally, every chart contains a ``CHANGELOG.md`` file that outlines all changes introduced in each released version.
+Additionally, every chart contains a ``CHANGELOG.md`` file that outlines all changes introduced in each version.
 
 You can view the ``README.md`` and ``CHANGELOG.md`` file for each chart by visiting the ``charts/`` folder on GitHub
-or by downloading and unpacking the chart locally after you have added the aoksys-pe helm repo as described above. See the
-[chc-lib chart](https://github.com/aoksys-platform-engineering/helm-charts/tree/main/charts/chc-lib) as example.
+or by downloading and unpacking the chart locally after you have added the aoksys-pe helm repo as described above.
+
+See the [chc-lib chart](https://github.com/aoksys-platform-engineering/helm-charts/tree/main/charts/chc-lib) as example.
 
 ```bash
-helm pull aoksys-pe/<CHART_NAME> --version <VERSION> --untar
+helm pull aoksys-pe/<CHART> --version <VERSION> --untar
 ```
 
 ## Table of content
-Because chart documentations can be quite extensive, it’s helpful to use GitHub’s auto-generated table of contents for easier navigation.
+Because a chart's documentation can be extensive, it’s helpful to use GitHub’s auto-generated table of content for easier navigation.
 
-When viewing a chart's documentation within the ``charts/`` directory, click the “Outline” button to see the table of contents generated from a chart’s ``README.md`` file.
-You can click on any heading to jump directly to that section, or use the filter to quickly search for specific content.
+When viewing a chart's documentation within the ``charts/`` directory, click the “Outline” button to see the generated table of content from its ``README.md`` file.
+You can click on a heading to jump to that section, or use the filter to search for specific content.
 
 <img src="images/toc-readme.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 # Diff release versions
-In the ``Releases`` tab of the repository, you can track what has changed since the last released version of a Helm chart.
+In the ``Releases`` tab of the repository, you can track what has changed when a new version of a chart was released.
 
 To see those changes, click on the ``Releases`` tab:
 
@@ -51,4 +52,4 @@ The Helm charts published in this repository are open source, but closed commit.
 Development and releases are handled internally by AOK Systems GmbH.
 
 If you are a customer of AOK Systems GmbH and encounter issues using one of these charts,
-please open a support ticket via the established SUD process.
+please open a support ticket using the well-known SUD process.
