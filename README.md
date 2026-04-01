@@ -30,22 +30,22 @@ Because a chart's documentation can be extensive, it’s helpful to use GitHub�
 When viewing a chart's documentation within the ``charts/`` directory, click the “Outline” button to see the generated table of content from its ``README.md`` file.
 You can click on a heading to jump to that section, or use the filter to search for specific content.
 
-<img src="images/toc-readme.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
+<img src="imgs/toc-readme.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 # Diff release versions
 In the ``Releases`` tab of the repository, you can track what has changed when a new version of a chart was released.
 
 To see those changes, click on the ``Releases`` tab:
 
-<img src="images/diff-releases-1.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
+<img src="imgs/diff-releases-1.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 Then click on the commit for a specific release:
 
-<img src="images/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
+<img src="imgs/diff-releases-2.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 And view the diffs for that release:
 
-<img src="images/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
+<img src="imgs/diff-releases-3.jpg" alt="" style="border: 1px solid black; border-radius: 4px;">
 
 # Contributing and support
 The Helm charts published in this repository are open source, but closed commit.
