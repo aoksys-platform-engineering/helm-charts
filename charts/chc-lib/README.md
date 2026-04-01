@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.48.0](https://img.shields.io/badge/Version-0.48.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.48.1](https://img.shields.io/badge/Version-0.48.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,14 +21,14 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.48.0
+    version: 0.48.1
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
       - defaults
 ```
 
-# Values
+# Template values
 This section explains how to configure the templates that `chc-lib` provides.
 
 ## Dynamic values
@@ -447,14 +447,14 @@ data:
   log.level: info
 ```
 
-## Input schemas
+# Input schemas
 Because `chc-lib` is a library chart, values have sane defaults or are omitted from templated output
 to rely on kubernetes defaults if not set explicitly.
 
 Some values use custom data types and templating logic that require some explanation to use and configure them properly.
 This section describes these custom implementations ("input schemas") and provides examples for them.
 
-### Good to know
+## Good to know
 Values that depend on the metadata of a release, like "{{ .Release.Name }}" or "{{ .Release.Namespace }}",
 are shown as "<computed>" in all example values.
 
