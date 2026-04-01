@@ -1,6 +1,6 @@
 ---
 exports:
-  # -- Default values to import when using this chart as dependency in an application chart.
+  # -- Default values to import when using this chart as a dependency in an application chart.
   defaults:
     # -- Used to override the base name for all resources.
     nameOverride: ""
@@ -14,498 +14,739 @@ exports:
     # -- Annotations to add to all resources. Values go through tpl.
     commonAnnotations: {}
 
-    # -- Default imageRegistry to use when no other registry is specified for a container.
+    # -- Default imageRegistry to use when no other registry is specified.
     imageRegistry: ""
 
-    configs:
-      # -- Toggle to enable/disable the creation of configmaps.
-      create: false
-
-      # -- Labels to add to all configmaps in addition to `commonLabels`. Values go through tpl.
-      labels: {}
-
-      # -- Annotations to add to all configmaps in addition to `commonAnnotations`. Values go through tpl.
-      annotations: {}
-
-      # -- Dict containing key/value pairs of configmaps to create. Each item creates one configmap resource.
-      # Follows the `Config and secret items` input schema.
-      # See [Config and secret items](#config-and-secret-items) in README for more.
-      items: {}
-
-    secrets:
-      # -- Toggle to enable/disable the creation of secrets.
-      create: false
-
-      # -- Labels to add to all secrets in addition to `commonLabels`. Values go through tpl.
-      labels: {}
-
-      # -- Annotations to add to all secrets in addition to `commonAnnotations`. Values go through tpl.
-      annotations: {}
-
-      # -- Dict containing key/value pairs of secrets to create. Each item creates one secret resource.
-      # Follows the `Config and secret items` input schema.
-      # See [Config and secret items](#config-and-secret-items) in README for more.
-      items: {}
-
-    persistentVolumes:
-      # -- Toggle to enable/disable the creation of persistentvolumes.
-      create: false
-
-      # -- Labels to add to all persistentvolumes in addition to `commonLabels`. Values go through tpl.
-      labels: {}
-
-      # -- Annotations to add to all persistentvolumes in addition to `commonAnnotations`. Values go through tpl.
-      annotations: {}
-
-      # -- Dict containing key/value pairs of persistentvolumes to create. Each item creates one persistentvolume resource.
-      # Follows the `PersistentVolume items` input schema.
-      # See [PersistentVolume items](#persistentvolume-items) in README for more.
-      items: {}
-
-    persistentVolumeClaims:
-      # -- Toggle to enable/disable the creation of persistentvolumeclaims.
-      create: false
-
-      # -- Labels to add to all persistentvolumeclaims in addition to `commonLabels`. Values go through tpl.
-      labels: {}
-
-      # -- Annotations to add to all persistentvolumeclaims in addition to `commonAnnotations`. Values go through tpl.
-      annotations: {}
-
-      # -- Dict containing key/value pairs of persistentvolumeclaims to create. Each item creates one persistentvolumeclaim resource.
-      # Follows the `PersistentVolumeClaim items` input schema.
-      # See [PersistentVolumeClaim items](#persistentvolumeclaim-items) in README for more.
-      items: {}
-
-    deployment:
-      # -- Toggle to enable/disable the creation of the deployment. Mutually exclusive with `.Values.statefulset.create=true`.
+    pod:
+      # -- Toggle to enable/disable the creation of the pod.
       create: true
 
-      # -- Labels to add to the deployment in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to a pod in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the deployment in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to a pod in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Number of pods to create. Only used if `.Values.hpa.create=false`.
-      replicas: 1
+      # -- (int) Duration in seconds a pod may be active on the node before the system will mark it as failed to kill its containers.
+      # Omitted, if nil or empty.
+      activeDeadlineSeconds: ~
 
-      # -- Update strategy for pods.
-      updateStrategy:
-        type: RollingUpdate
+      affinity:
+        # -- Describes node affinity scheduling rules for a pod. Can be a preset name (string) or a dict.
+        # See [Affinities](#affinities) in README for more.
+        nodeAffinity: {}
 
-      # -- Number of ReplicaSet revisions to keep.
-      revisionHistoryLimit: 10
+        # -- Describes pod affinity scheduling rules for a pod. Can be a preset name (string) or a dict.
+        # See [Affinities](#affinities) in README for more.
+        podAffinity: {}
 
-      # -- Values to configure the pods managed by the deployment. Follows the `PodTemplate` input schema.
-      # See [PodTemplate](#podtemplate) in README for more.
+        # -- Describes pod anti-affinity scheduling rules for a pod. Can be a preset name (string) or a dict.
+        # See [Affinities](#affinities) in README for more.
+        podAntiAffinity: {}
+
+      # -- Toggle to enable automatic mounting of the serviceaccount token in a pod.
+      # Omitted, if not true.
+      automountServiceAccountToken: false
+
+      # -- Containers that are part of a pod. See [Containers](#containers) in README for more.
+      containers: {}
+
+      # -- DNS policy to use. Should probably be set to "ClusterFirstWithHostNet", if "hostNetwork=true".
+      # Omitted, if nil or empty.
+      dnsPolicy: ~
+
+      # -- List of hosts and IPs that will be injected into a pods hosts file.
+      # Omitted, if nil or empty.
+      hostAliases: []
+
+      # -- Toggle to start a pod in hostNetwork mode. Omitted, if not true.
+      hostNetwork: false
+
+      # --  List of references to secrets in the same namespace to use for pulling any of the images that are part of a pod.
+      # Omitted, if nil or empty.
+      imagePullSecrets: []
+
+      # -- Init containers that are part of a pod. See [InitContainers](#initcontainers) in README for more.
+      initContainers: {}
+
+      # -- Name of a node to schedule a pod to. Mainly useful for debugging purposes.
+      # Omitted, if nil or empty.
+      nodeName: ""
+
+      # -- Node selector for pod scheduling. Simpler to use than "affinity.nodeAffinity", but limited to simple label selectors.
+      # Omitted, if nil or empty.
+      nodeSelector: {}
+
+      # -- Name of a priorityClass to use for a pod. Omitted if nil or empty.
+      priorityClassName: ""
+
+      # -- Restart policy for all containers within the pod. One of "Always", "OnFailure", "Never".
+      # Omitted, if nil or empty.
+      restartPolicy: Always
+
+      # -- Security context to use for a pod. Can be a preset name (string) or a dict.
+      # See [PodSecurityContext](#podsecuritycontext) in README for more.
+      securityContext: default
+
+      # -- Name of the serviceAccount to use for a pod.
+      serviceAccountName: default
+
+      # -- Seconds to wait for graceful termination of a pod, when a SIGTERM/SIGKILL is send.
+      # Omitted, if nil or empty.
+      terminationGracePeriodSeconds: ~
+
+      # -- Tolerations for pod scheduling. Omitted, if nil or empty.
+      tolerations: []
+
+      # -- Volumes to mount into a pod. Follows the "List from dict" input schema.
+      # See [List from dict](#list-from-dict) in README for more.
+      # Omitted, if nil or empty.
+      volumes: {}
+
+    job:
+      # -- Toggle to enable/disable the creation of the job.
+      create: true
+
+      # -- Labels to add to a job in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to a job in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Toggle to enable/disable the automatic creation of a unique resource name by the kubernetes API server.
+      # Omitted, if not true.
+      generateName: false
+
+      # -- Specifies the duration in seconds that the job may be active before the system tries to terminate it.
+      # Omitted, if nil or empty.
+      activeDeadlineSeconds: 300
+
+      # -- The number of retries before marking this job failed. Omitted, if nil or empty.
+      backoffLimit: 3
+      
+      # -- (int) The limit for the number of retries within an index before marking this index as failed.
+      # Only takes effect if "completionMode=Indexed". Omitted, if nil or empty.
+      backoffLimitPerIndex: ~
+
+      # -- (int) Specifies the maximal number of failed indexes before marking the job as failed, when backoffLimitPerIndex is set.
+      # Omitted, if nil or empty.
+      maxFailedIndexes: ~
+
+      # -- Specifies how pod completions are tracked. Can be set to "NonIndexed" or "Indexed".
+      # Omitted, if nil or empty.
+      completionMode: ~
+
+      # -- The desired number of successfully finished pods the job should be run with.
+      # Omitted, if empty.
+      completions: 1
+
+      # -- The maximum desired number of pods the job should run at any given time.
+      # Omitted, if nil or empty.
+      parallelism: 1
+
+      # -- Specifies the policy of handling failed pods. Omitted, if nil or empty.
+      podFailurePolicy: ~
+
+      # -- Specifies when to create new pods that replace old ones. Omitted, if nil or empty.
+      podReplacementPolicy: ~
+
+      # -- Specifies the policy when the job can be declared as succeeded. Omitted, if nil or empty.
+      successPolicy: ~
+
+      # -- Specifies whether the job should create new pods, or not. Omitted, if not true.
+      suspend: false
+
+      # -- Time in seconds after which a finished pod is cleaned up automatically. If unset, pods are never cleaned up.
+      # Omitted, if nil or empty.
+      ttlSecondsAfterFinished: 600
+
+      # -- Values to configure the pods managed by the job.
+      # You can use all fields described in the [Pod](#pod) section of the README here.
       pods: {}
 
-    statefulset:
-      # -- Toggle to enable/disable the creation of a statefulset. Mutually exclusive with `.Values.deployment.create=true`.
-      create: false
+    deployment:
+      # -- Toggle to enable/disable the creation of the deployment.
+      create: true
 
-      # -- Minimum number of seconds for which a pod should be ready without any of its container crashing until it is considered healthy.
-      minReadySeconds: 0
+      # -- Labels to add to the deployment in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the deployment in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- (int) Number of seconds to wait before a pod is considered available, if no containers are crashing.
+      # Omitted, if nil or empty.
+      minReadySeconds: ~
+
+      # -- Indicates that the deployment is paused. Omitted, if not true.
+      paused: false
+
+      # -- (int) The maximum time in seconds for a deployment to make progress before it is considered to be failed.
+      # Omitted, if nil or empty.
+      progressDeadlineSeconds: ~
+
+      # -- (int) Number of desired pods to create. Omitted, if nil or empty.
+      replicas: ~
+
+      # -- (int) Number of old ReplicaSets to retain to allow rollback. Omitted, if nil or empty.
+      revisionHistoryLimit: ~
+
+      # -- The deployment strategy to use to replace existing pods with new ones. Omitted, if nil or empty.
+      strategy: {}
+
+      # -- Values to configure the pods managed by the deployment.
+      # You can use all fields described in the [Pod](#pod) section of the README here.
+      pods: {}
+
+    statefulSet:
+      # -- Toggle to enable/disable the creation of the statefulSet.
+      create: true
+
+      # -- Labels to add to the statefulSet in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the statefulSet in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- (int) Number of seconds to wait before a pod is considered available, if no containers are crashing.
+      # Omitted, if nil or empty.
+      minReadySeconds: ~
+
+      # -- Policy to manage the lifecycle of PVCs created from "volumeClaimTemplates".
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#statefulsetpersistentvolumeclaimretentionpolicy-v1-apps for which values can be used.
+      # Omitted, if empty or nil.
+      persistentVolumeClaimRetentionPolicy: {}
 
       # -- Policy to control how pods are created during initial scale up, when replacing pods on nodes, or when scaling down.
-      # Can be `OrderedReady` or `Parallel`.
+      # Can be "OrderedReady" or "Parallel".
       podManagementPolicy: OrderedReady
 
-      # -- Number of pods to create. Only used if `.Values.hpa.create=false`.
-      replicas: 1
+      # -- (int) Number of desired pods to create. Omitted, if nil or empty.
+      replicas: ~
 
-      # -- Maximum number of revisions that will be maintained in the StatefulSet's revision history.
-      revisionHistoryLimit: 10
+      # -- (int) Maximum number of revisions to keep in the statefulSet's revision history to perform rollbacks.
+      # Omitted, if nil or empty.
+      revisionHistoryLimit: ~
 
-      # -- Update strategy for pods.
-      updateStrategy:
-        type: RollingUpdate
-      
-      # -- A list of storage claims that are created and attached to the statefulset automatically.
-      # Useful to dynamically provision PVCs that are mapped to each pod controlled by the statefulset.
+      # -- Name of the service that governs this StatefulSet.
+      # Defaults to the name of the statefulSet, if nil or empty.
+      serviceName: ~
+
+      # -- The statefulSet updateStrategy to use to replace existing pods with new ones. Omitted, if nil or empty.
+      updateStrategy: {}
+
+      # -- A list of storage claims that are created and attached to the statefulSet automatically.
+      # Useful to dynamically provision PVCs that are mapped to each pod controlled by the statefulSet.
       # It takes precedence over volumes defined in the PodTemplate, if a volume and volumeClaimTemplate have the same name.
+      #
       # Should be used with caution because volumes managed by a volumeClaimTemplate cannot be resized dynamically after their creation.
-      # Values go through tpl.
+      # Values go through tpl. Omitted, if empty or nil.
       volumeClaimTemplates: []
 
-      # -- Policy to manage the lifecycle of PVCs created from `volumeClaimTemplates`.
-      # The `whenDeleted` value configures what happens to PVCs when the statefulset is deleted.
-      # The `whenScaled` value configures what happens to PVCs when pods are scaled down.
-      # Both can be set to either `Retain` or `Delete`.
-      persistentVolumeClaimRetentionPolicy:
-        whenDeleted: Delete
-        whenScaled: Delete
-
-      # -- Values to configure the pods managed by the statefulset. Follows the `PodTemplate` input schema.
-      # See [PodTemplate](#podtemplate) in README for more.
+      # -- Values to configure the pods managed by the statefulSet.
+      # You can use all fields described in the [Pod](#pod) section of the README here.
       pods: {}
 
-    hpa:
-      # -- Toggle to enable/disable the creation of the hpa.
-      create: false
+    cronJob:
+      # -- Toggle to enable/disable the creation of the cronJob.
+      create: true
 
-      # -- Labels to add to the hpa in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the cronJob in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the hpa in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to the cronJob in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- The lower limit for the number of pods to which the hpa can scale down. 
-      minReplicas: 1
+      # -- Specifies how to treat concurrent executions of a Job. Omitted, if nil or empty.
+      concurrencyPolicy: Forbid
 
-      # -- The upper limit for the number of pods that can be set by the hpa. Cannot be smaller than `minReplicas`.
-      maxReplicas: 3
+      # -- Number of failed finished jobs to retain. Omitted, if nil or empty.
+      failedJobsHistoryLimit: 1
 
-      # -- The target average CPU utilization (represented as a percentage of requested CPU) over all the pods.
-      targetCPUUtilizationPercentage: 70
+      # -- Schedule to launch jobs in Cron format, see https://en.wikipedia.org/wiki/Cron.
+      # Templating fails, if nil or empty.
+      schedule: "@daily"
 
-      # -- The target average memory utilization (represented as a percentage of requested memory) over all the pods.
-      targetMemoryUtilizationPercentage: ~
+      # -- (int) Deadline in seconds for starting the job if it misses scheduled time for any reason. Missed jobs executions will be counted as failed ones.
+      # Omitted, if nil or empty.
+      startingDeadlineSeconds: ~
+
+      # -- Number of successful finished jobs to retain. Omitted, if nil or empty.
+      successfulJobsHistoryLimit: 1
+
+      # -- Toggle to suspend subsequent executions. Omitted, if not true.
+      suspend: false
+
+      # -- Name of the time zone for the given schedule. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+      # Defaults to the time zone of the kube-controller-manager process. Omitted, if nil or empty.
+      timeZone: Europe/Berlin
+
+      # -- Values to configure the job managed by the cronJob.
+      # You can use all fields described in the [Job](#job) section of the README here.
+      jobs: {}
 
     service:
       # -- Toggle to enable/disable the creation of a service.
       create: true
 
-      # -- Labels to add to the service in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the service in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the service in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to the service in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
       # -- Type of the service to create.
       type: ClusterIP
 
-      # -- Session affinity to control how requests are routed. Can be `ClientIP` or `None`.
-      sessionAffinity: None
+      # -- Session affinity to control how requests are routed. Can be "ClientIP" or "None".
+      # Omitted if nil or empty.
+      sessionAffinity: ClientIP
 
-      # -- Session affinity configs to be set in addition to `sessionAffinity`.
+      # -- Session affinity configs to be set in addition to "sessionAffinity".
+      # Omitted if nil or empty.
       sessionAffinityConfig: ~
 
-      # -- Ports for the service. Follows the `ListFromDict` input schema.
-      # See [ListFromDict](#listfromdict) in README for more.
+      # -- Ports for the service. Follows the "list-from-dict" input schema.
+      # See [List from dict](#list-from-dict) in README for more.
       ports: {}
 
     ingress:
-      # -- Toggle to enable/disable the creation of an ingress.
-      create: false
+      # -- Toggle to enable/disable the creation of the ingress.
+      create: true
 
-      # -- Labels to add to the ingress in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the ingress in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the ingress in addition to `commonLabels`. Values go through tpl.
+      # -- Annotations to add to the ingress in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Name of the ingress class to use. Will be ommitted if empty.
+      # -- Backend that should handle any requests that don't match a rule.
+      # If "rules" are nil or empty, "defaultBackend" must be set.
+      # Omitted, if "rules" are set and this is nil or empty.
+      defaultBackend: ""
+
+      # -- Name of the ingressClass to use. Omitted, if nil or empty.
       className: ""
 
       # -- List of rules for the ingress. Values go through tpl.
-      # See https://kubernetes.io/docs/concepts/services-networking/ingress for more.
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingressrule-v1-networking-k8s-io for more.
       rules: []
       
-      # -- List of TLS hosts to serve using the ingress. Values go through tpl.
-      # See https://kubernetes.io/docs/concepts/services-networking/ingress for more.
+      # -- List of TLS hosts to serve. Values go through tpl. Omitted, if nil or empty.
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingresstls-v1-networking-k8s-io for more.
       tls: []
 
     serviceAccount:
-      # -- Toggle to enable/disable creation of the serviceaccount.
+      # -- Toggle to enable/disable the creation of the serviceAccount.
       create: true
 
-      # -- Name of the serviceaccount to create. Will be generated, if empty.
-      name: ""
-
-      # -- Labels to add to the serviceaccount in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the serviceAccount in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the serviceaccount in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to the serviceAccount in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Toggle to enable/disable the `automountServiceAccountToken` feature.
-      # Mounting the serviceaccount token is only necessary if your app calls the K8s API.
+      # -- Toggle to enable/disable the automatic mount of the serviceAccount token.
       automountServiceAccountToken: false
 
-    # Settings for RBAC resources that will be automatically attached to the serviceaccount, if ".Values.serviceAccount.create=true".
-    rbac:
-      # -- Toggle to enable/disable creation of RBAC resources.
-      create: false
+      # -- Name of the serviceAccount to create. Value goes through tpl.
+      # Templating fails if "create=true" and "name=default".
+      name: ""
 
-      # -- Namespace to create RBAC resources in. If empty or unset, `{{ .Release.Namespace }}` is used.
+    role:
+      # -- Toggle to enable/disable the creation of the role.
+      create: true
+
+      # -- Overrides the namespace to create the role in. It will be created in the release namespace, if empty or nil.
       namespaceOverride: ""
 
-      role:
-        # -- Labels to add to the role in addition to `commonLabels`. Values go through tpl.
-        labels: {}
-
-        # -- Annotations to add to the role in addition to `commonAnnotations`. Values go through tpl.
-        annotations: {}
-
-        # -- Rules to add to the role. Values go through tpl.
-        rules: []
-
-      roleBinding:
-        # -- Labels to add to the rolebinding in addition to `commonLabels`. Values go through tpl.
-        labels: {}
-
-        # -- Annotations to add to the rolebinding in addition to `commonAnnotations`. Values go through tpl.
-        annotations: {}
-
-    pdb:
-      # -- Toggle to enable/disable creation of the pdb.
-      create: false
-
-      # -- Labels to add to the pdb in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the role in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the pdb in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to the role in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- An eviction is allowed if at least `minAvailable` pods will still be available after the eviction.
-      minAvailable: 1
+      # -- List of RBAC rules for the role. Values go through tpl.
+      rules: []
 
-      # -- An eviction is allowed if at most `maxUnavailable` pods are unavailable after the eviction.
-      # This only takes effect if `minAvailable` is set to nil (~).
-      maxUnavailable: 1
+    roleBinding:
+      # -- Toggle to enable/disable the creation of the roleBinding.
+      create: true
 
-    job:
-      # -- Toggle to enable/disable the creation of the job.
-      create: false
+      # -- Overrides the namespace to create the roleBinding in. It will be created in the release namespace, if empty or nil.
+      namespaceOverride: ""
 
-      # -- Toggle to generate a suffix for `metadata.name` everytime the job is deployed.
-      generateName: false
-
-      # -- Labels to add to the job in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the roleBinding in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the job in addition to `commonLabels`. Values go through tpl.
+      # -- Annotations to add to the roleBinding in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Values to configure the job with. Follows the `JobTemplate` input schema.
-      # See [JobTemplate](#jobtemplate) in README for more.
+      subject:
+        # -- Kind of the subject to attach the roleBinding to.
+        kind: ServiceAccount
+
+        # -- Name of the subject to attach the roleBinding to. Will be computed, if nil or empty.
+        subject: ""
+
+        # Namespace of the subject to attach the roleBinding to. Will be the release namespace, if nil or empty.
+        namespace: ""
+
+      roleRef:
+        # -- apiGroup of the referenced role.
+        apiGroup: rbac.authorization.k8s.io
+
+        # -- kind of the referenced role.
+        kind: Role
+
+        # -- name of the referenced role. Will be computed, if nil or empty.
+        name: ""
+
+    configMap:
+      # -- Toggle to enable/disable the creation of the configMap.
+      create: true
+
+      # -- Labels to add to the configMap in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the configMap in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Data to store in the configMap. Values go through tpl.
+      data: {}
+
+    secret:
+      # -- Toggle to enable/disable the creation of the secret.
+      create: true
+
+      # -- Labels to add to the secret in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the secret in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Data to store in the secret. Note that all data has to be provided in clear text, not base64 encoded. Values go through tpl.
+      # Note: If you want to keep sensitive data secure, use a backend (e.g. AWS Secrets Manager or HashiCorp Vault)
+      # and retrieve secrets at runtime via External Secrets Operator instead of storing them in values files.
+      stringData: {}
+
+    persistentVolume:
+      # -- Toggle to enable/disable the creation of the persistentVolume.
+      create: true
+
+      # -- Labels to add to the persistentVolume in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the persistentVolume in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Configures the "spec" section of the persistentVolume. Values go through tpl.
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#persistentvolumespec-v1-core for more.
       spec: {}
 
-    cronjob:
-      # -- Toggle to enable/disable the creation of the cronjob.
-      create: false
+    persistentVolumeClaim:
+      # -- Toggle to enable/disable the creation of the persistentVolumeClaim.
+      create: true
 
-      # -- Labels to add to the cronjob in addition to `commonLabels`. Values go through tpl.
+      # -- Labels to add to the persistentVolumeClaim in addition to "commonLabels". Values go through tpl.
       labels: {}
 
-      # -- Annotations to add to the cronjob in addition to `commonAnnotations`. Values go through tpl.
+      # -- Annotations to add to the persistentVolumeClaim in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Specifies how to treat concurrent executions of a Job. Valid values are `Allow`, `Forbid` and `Replace`.
-      concurrencyPolicy: Forbid
+      # -- Configures the "spec" section of the persistentVolumeClaim. Values go through tpl.
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#persistentvolumeclaimspec-v1-core for more.
+      spec: {}
 
-      # -- The number of successful finished jobs to retain. Value must be non-negative integer.
-      successfulJobsHistoryLimit: 1
+    podDisruptionBudget:
+      # -- Toggle to enable/disable the creation of the podDisruptionBudget.
+      create: true
 
-      # -- The number of failed finished jobs to retain. Value must be non-negative integer.
-      failedJobsHistoryLimit: 3
+      # -- Labels to add to the podDisruptionBudget in addition to "commonLabels". Values go through tpl.
+      labels: {}
 
-      # -- The schedule to spawn jobs in Cron format. See https://en.wikipedia.org/wiki/Cron for more.
-      schedule: "@daily"
+      # -- Annotations to add to the podDisruptionBudget in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
 
-      # -- Time zone (TZ identifier) for the schedule. See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for more.
-      timeZone: Europe/Berlin
+      # -- Configures that an eviction is allowed, if at most "maxUnavailable" pods are unavailable after the eviction.
+      maxUnavailable: 1
 
-      # -- Deadline in seconds for starting the job if it misses scheduled time for any reason.
-      # Missed jobs executions will be counted as failed ones. Will be omitted, if set to nil ("~").
-      startingDeadlineSeconds: 180
+      # -- Configures that an eviction is allowed, if at least "minAvailable" pods will still be available after the eviction.
+      # This only takes effect if "maxUnavailable" is nil or empty. If both "maxUnavailable" and "minAvailable" are nil or empty, templating fails.
+      minAvailable: 1
 
-      # -- This flag tells the controller to suspend subsequent executions.
-      suspend: false
+      # -- Defines the criteria for when unhealthy pods should be considered for eviction.
+      # Can be "AlwaysAllow" or "IfHealthyBudget". Omitted, if nil or empty.
+      unhealthyPodEvictionPolicy: AlwaysAllow
 
-      # -- Values to configure the jobs managed by the cronjob. Follows the `JobTemplate` input schema.
-      # See [JobTemplate](#jobtemplate) in README for more.
-      jobs: {}
+    horizontalPodAutoscaler:
+      # -- Toggle to enable/disable the creation of the horizontalPodAutoscaler.
+      create: true
 
-    certManager:
-      # -- Toggle to enable/disable the creation of cert-manager related custom resources.
-      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
-      enabled: false
+      # -- Labels to add to the horizontalPodAutoscaler in addition to "commonLabels". Values go through tpl.
+      labels: {}
 
-      certificates:
-        # -- Toggle to enable/disable the creation of certificate resources.
-        create: false
+      # -- Annotations to add to the horizontalPodAutoscaler in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
 
-        # -- Labels to add to all certificates in addition to `commonLabels`. Values go through tpl.
+      scaleTargetRef:
+        # -- API version of the referent.
+        apiVersion: apps/v1
+
+        # -- Kind of the referent.
+        kind: Deployment
+
+        # -- Name of the referent. Will be compted, if nil or empty.
+        name: ""
+
+      # -- The lower limit number of pods to which the target can be scaled down to.
+      minReplicas: 1
+
+      # -- The upper limit number of pods that can be scaled up to. Cannot be smaller than "minReplicas".
+      maxReplicas: 3
+
+      # -- Configures the scaling behavior of the target in both directions (scale up and down). Omitted, if nil or empty.
+      # See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#horizontalpodautoscalerbehavior-v2-autoscaling for more.
+      behavior: {}
+
+      # -- The target average CPU utilization percentage across all pods. Omitted if nil or empty.
+      targetCPUUtilizationPercentage: 70
+
+      # -- The target average memory utilization percentage across all pods. Omitted if nil or empty.
+      # If both "targetCPUUtilizationPercentage" and "targetMemoryUtilizationPercentage" are nil/empty, templating fails.
+      targetMemoryUtilizationPercentage: ~
+
+    certificate:
+      # -- Toggle to enable/disable the creation of the certificate resource. Deployment fails, if corresponding
+      # custom resource definitions served by cert-manager are not installed in your cluster (https://cert-manager.io).
+      create: true
+
+      # -- Labels to add to the certficate in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the certficate in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      secret:
+        # -- Name of the corresponding secret to create. Will be computed, if nil or empty.
+        name: ""
+
+        # -- Labels to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         labels: {}
 
-        # -- Annotations to add to all certificates in addition to `commonAnnotations`. Values go through tpl.
+        # -- Annotations to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         annotations: {}
 
-        # -- Labels to add to all secrets created from certificates in addition to `commonLabels`. Values go through tpl.
-        secretLabels: {}
+      # -- Requested common name X509 certificate subject attribute. Values go through tpl. Omitted, if nil or empty.
+      commonName: "{{ .Release.Name }}"
 
-        # -- Annotations to add to all secrets created from certificates in addition to `commonAnnotations`. Values go through tpl.
-        secretAnnotations: {}
+      # -- Requested lifetime of the certificate. Omitted, if nil or empty.
+      duration: 720h0m0s
 
-        # -- Issuer kind to use for all certificates. Can be overwritten in each certificate.
-        issuerKind: ClusterIssuer
+      # -- Configures how long before the currently issued certificate’s expiry cert-manager should renew the certificate. Omitted, if nil or empty.
+      renewBefore: ""
 
-        # -- Issuer name to use for all certificates. Can be overwritten in each certificate.
-        issuerName: ca-issuer
+      # -- "renewBeforePercentage" is like "renewBefore", except it is a relative percentage rather than an absolute duration.
+      # Omitted, if nil/empty or "renewBefore" is already set.
+      renewBeforePercentage: 25
 
-        # -- Duration of validity for all certificates. Can be overwritten in each certificate.
-        duration: 720h0m0s
+      # -- List of requested DNS subject alternative names. Values go through tpl. Omitted, if nil or empty.
+      dnsNames:
+        - "{{ .Release.Name }}"
+        - "{{ .Release.Name }}.{{ .Release.Namespace }}"
+        - "{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local"
 
-        # -- When to renew certificates before they expire. Can be overwritten in each certificate.
-        renewBefore: 480h0m0s
+      keystores:
+        jks:
+          # -- Toggle to enable/disable the creation of a secret containing a JKS keystore.
+          create: false
 
-        # -- Common name to use for all certificates. Goes through tpl. Can be overwritten in each certificate.
-        commonName: "{{ .Release.Name }}"
+          # -- Name of the secret containing the key to encrypt the keystore with. Values go through tpl.
+          secretName: "{{ .Release.Name }}-jks"
 
-        # -- List of dnsNames to use for all certificates. Goes through tpl. Can be overwritten in each certificate.
-        dnsNames:
-          - "{{ .Release.Name }}"
-          - "{{ .Release.Name }}.{{ .Release.Namespace }}"
-          - "{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local"
+        pkcs12:
+          # -- Toggle to enable/disable the creation of a secret containing a pkcs12 keystore.
+          create: false
 
-        # -- Spec for how to create the the private key for all certificates. Can be overwritten in each certificate.
-        privateKey:
-          algorithm: RSA
-          encoding: PKCS1
-          size: 2048
+          # -- Name of the secret containing the key to encrypt the keystore with. Values go through tpl.
+          secretName: "{{ .Release.Name }}-pkcs12"
 
-        keystores:
-          jks:
-            # -- Toggle to enable/disable the creation of secrets for all certificates containg a JKS keystore.
-            # Can be overwritten in each certificate.
-            create: false
-            passwordSecretRef:
-              # -- Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
-              # Can be overwritten in each certificate. Can be created from `.Values.secrets.items`.
-              name: "{{ .Release.Name }}-jks"
-              # -- Name of the key in the secret that contains the password to encrypt the keystore with.
-              # Can be overwritten in each certificate.
-              key: password
+      issuerRef:
+        # -- API group of the issuer to use.
+        group: cert-manager.io
 
-          pkcs12:
-            # -- Toggle to enable/disable the creation of secrets for all certificates containg a pkcs12 keystore.
-            # Can be overwritten in each certificate.
-            create: false
-            passwordSecretRef:
-              # -- Name of the secret containing the key to encrypt the keystore with. Goes through tpl.
-              # Can be overwritten in each certificate. Can be created from `.Values.secrets.items`.
-              name: "{{ .Release.Name }}-pkcs12"
-              # -- Name of the key in the secret that contains the password to encrypt the keystore with.
-              # Can be overwritten in each certificate.
-              key: password
+        # -- Name of the (cluster)issuer to use.
+        name: ca-issuer
 
-        # -- Dict containing key/value pairs of certificates to create. Each item creates one certificate resource.
-        # Follows the `Certificate items` input schema.
-        # See [Certificate items](#certificate-items) in README for more.
-        items: {}
+        # -- Kind of issuer to use.
+        kind: ClusterIssuer
 
-    prometheusOperator:
-      # -- Toggle to enable/disable the creation of prometheus-operator related custom resources.
-      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
-      enabled: false
+      # -- Requested basic constraints isCA value. The isCA value is used to set the isCA field on the created CertificateRequest resources.
+      # Omitted, if not true.
+      isCA: false
 
-      podMonitor:
-        # -- Toggle to enable/disable the creation of the podMonitor resource.
-        create: false
+      # -- Requested key usages and extended key usages. These usages are used to set the usages field on the created CertificateRequest resources.
+      # Omitted, if nil or empty.
+      usages: []
 
-        # -- Namespace to create the podMonitor resource in. If empty or unset, `{{ .Release.Namespace }}` is used.
-        namespaceOverride: ""
+      # -- Spec for how to create the the private key. See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.CertificatePrivateKey for more.
+      privateKey:
+        algorithm: RSA
+        encoding: PKCS1
+        size: 2048
 
-        # -- Labels to add to the podMonitor in addition to `commonLabels`. Values go through tpl.
+      # -- The maximum number of CertificateRequest revisions that are maintained in the certificate’s history.
+      # Omitted, if nil or empty.
+      revisionHistoryLimit: 3
+
+      # -- x.509 certificate NameConstraint extension which MUST NOT be used in a non-CA certificate (isCA=false).
+      # See https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.NameConstraints for more.
+      nameConstraints: {}
+
+    podMonitor:
+      # -- Toggle to enable/disable the podMonitor resource. Deployment fails, if corresponding
+      # custom resource definitions served by the prometheus-operator are not installed in your cluster
+      # (https://prometheus-operator.dev/).
+      create: true
+
+      # -- Namespace to create the podMonitor resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
+      namespaceOverride: ""
+
+      # -- Labels to add to the podMonitor in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the podMonitor in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- List of endpoints where metrics are served from so they can be scraped by prometheus. Values go through tpl.
+      # See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options.
+      podMetricsEndpoints: []
+
+    externalSecret:
+      # -- Toggle to enable/disable the creation of the externalsecret resource. Deployment fails, if corresponding
+      # custom resource definitions served by external-secrets operator are not installed in your cluster (https://external-secrets.io).
+      create: true
+
+      # -- Labels to add to the externalsecret in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the externalsecret in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      secret:
+        # -- Name of the corresponding secret to create. Will be computed, if nil or empty.
+        name: ""
+
+        # -- Type of the corresponding secret to create. Omitted, if nil or empty.
+        type: ""
+
+        # -- Labels to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         labels: {}
 
-        # -- Annotations to add to the podMonitor in addition to `commonAnnotations`. Values go through tpl.
+        # -- Annotations to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         annotations: {}
 
-        # -- Defines a list of endpoints serving metrics to be scraped by prometheus.
-        # See https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMetricsEndpoint for all available options.
-        # Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.
-        podMetricsEndpoints: {}
-    
-    externalSecretsOperator:
-      # -- Toggle to enable/disable the creation of external-secrets operator related custom resources.
-      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
-      enabled: false
+        # -- Defines how to create the corresponding secret. Omitted, if empty or nil.
+        creationPolicy: ""
 
-      externalSecrets:
-        # -- Toggle to enable/disable the creation of external-secret resources.
-        create: false
+        # -- Defines how to delete the corresponding secret. Omitted, if empty or nil.
+        deletionPolicy: ""
 
-        # -- Labels to add to all externalsecrets in addition to `commonLabels`. Values go through tpl.
+      # -- Determines how the externalsecret should be refreshed. Omitted, if nil or empty.
+      refreshPolicy: OnChange
+
+      # -- The amount of time before the values are read again from the SecretStore provider, specified as Golang duration string.
+      refreshInterval: 24h0m0s
+
+      secretStoreRef:
+        # -- Name of the SecretStore to use.
+        name: aws
+
+        # -- Kind of the SecretStore to use.
+        kind: ClusterSecretStore
+
+      # -- Base path is prepended to the key of every remoteRef data item, if set.
+      basePath: ""
+
+      # --  Default decoding strategy to use for every remoteRef data item.
+      decodingStrategy: Auto
+
+      # --  Default conversion strategy to use every remoteRef data item.
+      conversionStrategy: Default
+
+      # --  Default metadata policy to use every remoteRef data item.
+      metadataPolicy: Fetch
+
+      # -- List of items that describe what data are fetched from a SecretStore and how to store it in a kubernetes secret.
+      # See https://external-secrets.io/latest/api/spec/#external-secrets.io/v1.ExternalSecretData for more.
+      data: []
+
+    kafkaUser:
+      # -- Toggle to enable/disable the creation of the kafkauser resource. Deployment fails, if corresponding
+      # custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io).
+      create: true
+
+      # -- Namespace to create the kafkauser resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
+      namespaceOverride: ""
+
+      # -- Labels to add to the kafkauser in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the kafkauser in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      secret:
+        # -- Labels to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         labels: {}
 
-        # -- Annotations to add to all externalsecrets in addition to `commonAnnotations`. Values go through tpl.
+        # -- Annotations to add to the corresponding secret in addition to "commonLabels". Values go through tpl.
         annotations: {}
 
-        # -- Labels to add to all secrets created from externalsecrets in addition to `commonLabels`. Values go through tpl.
-        secretLabels: {}
+      # -- Authentication mechanism to enable for the kafkauser. Supported authentication mechanisms are "scram-sha-512", "tls", and "tls-external".
+      # See https://strimzi.io/docs/operators/latest/configuring.html#type-KafkaUser-reference for more.
+      authentication:
+        type: scram-sha-512
 
-        # -- Annotations to add to all secrets created from externalsecrets in addition to `commonAnnotations`. Values go through tpl.
-        secretAnnotations: {}
+      # -- Authorization rules for the kafkauser. Values go through tpl.
+      # See https://strimzi.io/docs/operators/latest/configuring.html#type-KafkaUserAuthorizationSimple-reference for more.
+      authorization:
+        type: simple
+        acls: []
 
-        # -- Type of secret to create. Can be overwritten in each externalsecret.
-        secretType: Opaque
+      # -- Request quotas to limit kafka broker resource usage caused by the kafkauser.
+      # Omitted, if nil or empty.
+      quotas: {}
 
-        # -- Name of the secret store to use. Can be overwritten in each externalsecret.
-        secretStoreName: default
+    kafkaTopic:
+      # -- Toggle to enable/disable the creation of the kafkatopic resource. Deployment fails, if corresponding
+      # custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io).
+      create: true
 
-        # -- Kind of secret store to use. Can be overwritten in each externalsecret.
-        secretStoreKind: ClusterSecretStore
+      # -- Namespace to create the kafkatopic resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
+      namespaceOverride: ""
 
-        # -- Refresh policy for externalsecrets. Can be overwritten in each externalsecret.
-        refreshPolicy: Periodic
+      # -- Labels to add to the kafkatopic in addition to "commonLabels". Values go through tpl.
+      labels: {}
 
-        # -- Refresh intervall for all externalsecrets. Can be overwritten in each externalsecret.
-        refreshInterval: 1h
+      # -- Annotations to add to the kafkatopic in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
 
-        # -- Creation policy to configure the behaviour of owenership for created secrets. Can be overwritten in each externalsecret.
-        creationPolicy: Owner
+      # -- Name of the topic to create. Values go through tpl.
+      # Will be computed, if nil or empty.
+      topicName: ""
 
-        # -- Deletion policy to configure what happens to secrets when data fields are deleted from the provider (e.g., Vault, AWS SecretsManager).
-        # Can be overwritten in each externalsecret.
-        deletionPolicy: Merge
+      # -- (int) Number of partitions the topic should have. This cannot be decreased after topic creation.
+      # When absent, this will default to the broker configuration for "num.partitions". Omitted, if nil or empty.
+      partitions: ~
 
-        # -- Base path to prepend `providerSecretName` in `remoteRef` items with.
-        # Useful if you have a common path for all externalSecrets in your backend.
-        basePath: ""
+      # -- (int) Number of replicas the topic should have across brokers. Defaults to the broker configuration for "default.replication.factor", if unset.
+      # Omitted, if nil or empty.
+      replicas: ~
 
-        # -- Decoding strategy to use for all externalsecrets in the `remoteRef` fields.
-        # Can be overwritten in each externalsecret.
-        decodingStrategy: None
+      # -- Config for the topic. See https://kafka.apache.org/42/configuration/topic-configs/ for more.
+      # Omitted, if nil or empty.
+      config: {}
 
-        # -- Conversion strategy to use for all externalsecrets in the `remoteRef` fields.
-        # Can be overwritten in each externalsecret.
-        conversionStrategy: Default
-
-        # -- Metadata policy to use for all externalsecrets in the `remoteRef` fields.
-        # Can be overwritten in each externalsecret.
-        metadataPolicy: None
-
-        # -- Dict containing key/value pairs of externalsecrets to create. Each item creates one externalsecret resource.
-        # See [ExternalSecret items](#externalsecret-items) in README for more.
-        items: {}
-
-    keda:
-      # -- Toggle to enable/disable the creation of keda related custom resources.
-      # Should only be set to `true` if corresponding CRDs are installed in your cluster.
-      enabled: false
-
-      scaledObjects:
-        # -- Toggle to enable/disable the creation of scaledObject resources.
-        create: false
-
-        # -- Labels to add to all scaledobjects in addition to `commonLabels`. Values go through tpl.
-        labels: {}
-
-        # -- Annotations to add to all scaledobjects in addition to `commonAnnotations`. Values go through tpl.
-        annotations: {}
-
-        # -- Specifies which container to read ENVs from when resolving trigger authentication or connection strings.
-        # Can be overwritten in each scaledObject. Goes through tpl.
-        envSourceContainerName: ""
-
-        # -- Dict containing key/value pairs of scaledobjects to create. Each item creates one scaledobject resource.
-        # See [ScaledObject items](#scaledobject-items) in README for more.
-        items: {}
-
-    # -- List of arbitrary kubernetes manifests to deploy when there is no dedicated library template (yet). Values go through tpl.
+    # -- List of kubernetes manifests to install. Values go through tpl.
     # See [Extra manifests](#extra-manifests) in README for more.
     extraManifests: []

@@ -1,29 +1,41 @@
-{{- define "chc-lib.ingress" }}
-{{- $ingress := .Values.ingress }}
-{{- if $ingress.create }}
+{{/*
+Template to generate an "Ingress" manifest from.
+
+See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingress-v1-networking-k8s-io" for the full API spec.
+
+input scheme:
+  dict:
+    name: string|nil (optional)
+    values: dict
+    context: object (has to be $)
+*/}}
+
+{{- define "chc-lib.ingress.tpl" }}
+{{- $ctx := .context }}
+{{- if .values.create }}
+{{- if and (empty .values.defaultBackend) (empty .values.rules) }}
+{{- fail "Both 'defaultBackend' and 'rules' are nil or empty, but at least of one them must be set" }}
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  {{- include "chc-lib.render.labelsAnnotations" (dict
-      "labels" (list .Values.commonLabels $ingress.labels)
-      "annotations" (list .Values.commonAnnotations $ingress.annotations)
-      "context" $) | nindent 2 }}
+  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  namespace: {{ $ctx.Release.Namespace }}
+  {{- include "chc-lib.compute.labels-and-annotations" (dict
+      "labels" (list $ctx.Values.commonLabels .values.labels)
+      "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
+      "context" $ctx) | nindent 2 }}
 spec:
-  {{- with $ingress.className }}
-  ingressClassName: {{ . }}
+  {{- if .values.defaultBackend }}
+  defaultBackend: {{ .values.defaultBackend }}
   {{- end }}
-
-  {{- if $ingress.rules }}
-  rules: {{ include "common.tplvalues.render" (dict "value" $ingress.rules "context" $) | nindent 4 }}
-  {{- else }}
-  rules: {{ list | toYaml }}
+  {{- if .values.className }}
+  ingressClassName: {{ .values.className }}
   {{- end }}
-
-  {{- if $ingress.tls }}
-  tls: {{ include "common.tplvalues.render" (dict "value" $ingress.tls "context" $) | nindent 4 }}
+  rules: {{ include "common.tplvalues.render" (dict "value" .values.rules "context" $ctx) | nindent 4 }}
+  {{- if .values.tls }}
+  tls: {{ include "common.tplvalues.render" (dict "value" .values.tls "context" $ctx) | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}

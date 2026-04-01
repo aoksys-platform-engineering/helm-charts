@@ -1,7 +1,9 @@
 {{/*
-Template to generate a "Job" manifest from.
+Template to generate a "Pod" manifest from.
 
-See "https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#job-v1-batch" for the full API spec.
+See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#pod-v1-core" for the full API spec.
+
+NOTE: The main purpose of this template is to provide an easy to use, small interface to run unittests against.
 
 input scheme:
   dict:
@@ -10,18 +12,14 @@ input scheme:
     context: object (has to be $)
 */}}
 
-{{- define "chc-lib.job.tpl" }}
+{{- define "chc-lib.pod.tpl" }}
 {{- $ctx := .context }}
 {{- if .values.create }}
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Pod
 metadata:
-  {{- if .values.generateName }}
-  generateName: {{ printf "%s-" (.name | default (include "common.names.fullname" $ctx)) }}
-  {{- else }}
   name: {{ .name | default (include "common.names.fullname" $ctx) }}
-  {{- end }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
@@ -29,6 +27,6 @@ metadata:
       "context" $ctx) | nindent 2 }}
 
 {{- /* We use "mergeOverwrite" here to ensure chc-lib default values are always applied */}}
-spec: {{ include "chc-lib.specs.job" (dict "values" (mergeOverwrite $ctx.Values.job .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
+spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite $ctx.Values.pod .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
 {{- end }}
 {{- end }}

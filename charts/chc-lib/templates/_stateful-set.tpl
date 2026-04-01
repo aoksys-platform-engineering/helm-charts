@@ -1,7 +1,7 @@
 {{/*
-Template to generate a "Deployment" manifest from.
+Template to generate a "StatefulSet" manifest from.
 
-See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#deploymentspec-v1-apps" for the full API spec.
+See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#statefulset-v1-apps" for the full API spec.
 
 input scheme:
   dict:
@@ -10,12 +10,12 @@ input scheme:
     context: object (has to be $)
 */}}
 
-{{- define "chc-lib.deployment.tpl" }}
+{{- define "chc-lib.stateful-set.tpl" }}
 {{- $ctx := .context }}
 {{- if .values.create }}
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .name | default (include "common.names.fullname" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
@@ -27,20 +27,22 @@ spec:
   {{- if .values.minReadySeconds }}
   minReadySeconds: {{ .values.minReadySeconds }}
   {{- end }}
-  {{- if .values.paused }}
-  paused: true
+  {{- if .values.persistentVolumeClaimRetentionPolicy }}
+  persistentVolumeClaimRetentionPolicy: {{ .values.persistentVolumeClaimRetentionPolicy | toYaml | nindent 4 }}
   {{- end }}
-  {{- if .values.progressDeadlineSeconds }}
-  progressDeadlineSeconds: {{ .values.progressDeadlineSeconds }}
-  {{- end }}
+  podManagementPolicy: {{ .values.podManagementPolicy }}
   {{- if .values.replicas }}
   replicas: {{ .values.replicas }}
   {{- end }}
   {{- if .values.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .values.revisionHistoryLimit }}
   {{- end }}
-  {{- if .values.strategy }}
-  strategy: {{ .values.strategy | toYaml | nindent 4 }}
+  serviceName: {{ .values.serviceName | default (include "common.names.fullname" $ctx) }}
+  {{- if .values.updateStrategy }}
+  updateStrategy: {{ .values.updateStrategy | toYaml | nindent 4 }}
+  {{- end }}
+  {{- if .values.volumeClaimTemplates }}
+  volumeClaimTemplates: {{ include "common.tplvalues.render" (dict "value" .values.volumeClaimTemplates "context" $ctx) | nindent 4 }}
   {{- end }}
   selector:
     matchLabels: {{ include "common.labels.matchLabels" $ctx | nindent 6 }}
@@ -52,7 +54,7 @@ spec:
         "annotations" (list $ctx.Values.commonAnnotations (.values.pods).annotations)
         "context" $ctx) | nindent 6 }}
 
-    {{- /* We use "mergeOverwrite" here to ensure chc-lib default values are always applied */}}
+    {{- /* We use "mergeOverwrite" here to ensure chc-lib default values are applied */}}
     spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite $ctx.Values.pod .values.pods) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 6 }}
 {{- end }}
 {{- end }}

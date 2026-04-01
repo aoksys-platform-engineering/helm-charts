@@ -1,7 +1,7 @@
 {{/*
-Template to generate a "Role" manifest from.
+Template to generate a "Secret" manifest from.
 
-See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#role-v1-rbac-authorization-k8s-io" for the full API spec.
+See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#secret-v1-core" for the full API spec.
 
 input scheme:
   dict:
@@ -10,19 +10,19 @@ input scheme:
     context: object (has to be $)
 */}}
 
-{{- define "chc-lib.role.tpl" }}
+{{- define "chc-lib.secret.tpl" }}
 {{- $ctx := .context }}
 {{- if .values.create }}
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+apiVersion: v1
+kind: Secret
 metadata:
   name: {{ .name | default (include "common.names.fullname" $ctx) }}
-  namespace: {{ .values.namespaceOverride | default $ctx.Release.Namespace }}
+  namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
       "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
       "context" $ctx) | nindent 2 }}
-rules: {{ include "common.tplvalues.render" (dict "value" .values.rules "context" $ctx) | nindent 2 }}
+stringData: {{ include "common.tplvalues.render" (dict "value" .values.stringData "context" $ctx) | nindent 2 }}
 {{- end }}
 {{- end }}
