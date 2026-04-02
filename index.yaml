@@ -2,6 +2,25 @@ apiVersion: v1
 entries:
   chc-lib:
   - apiVersion: v2
+    created: "2026-04-02T05:50:52.952971252Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.37.0
+    description: Library chart to provide reusable templates to compose application
+      charts with.
+    digest: b6fa948a680abe05eb15bf0a1e0caafba11583b31305a758cd86053aea845d68
+    home: https://github.com/aoksys-platform-engineering/helm-charts/tree/main/charts/chc-lib
+    icon: https://www.aok-systems.de/daten/corporate/i/logo-aok-systems.png
+    maintainers:
+    - name: Oliver Geyer
+      url: https://www.aok-systems.de/startseite.html
+    name: chc-lib
+    type: library
+    urls:
+    - https://github.com/aoksys-platform-engineering/helm-charts/releases/download/chc-lib-0.48.2/chc-lib-0.48.2.tgz
+    version: 0.48.2
+  - apiVersion: v2
     created: "2026-04-01T08:25:37.163865152Z"
     dependencies:
     - name: common
@@ -489,4 +508,4 @@ entries:
     urls:
     - https://github.com/aoksys-platform-engineering/helm-charts/releases/download/example-0.1.0/example-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-01T08:25:37.16398716Z"
+generated: "2026-04-02T05:50:52.953146398Z"
