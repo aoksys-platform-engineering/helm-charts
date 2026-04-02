@@ -527,4 +527,20 @@ entries:
     urls:
     - https://github.com/aoksys-platform-engineering/helm-charts/releases/download/example-0.1.0/example-0.1.0.tgz
     version: 0.1.0
-generated: "2026-04-02T11:51:37.053562744Z"
+  example-app:
+  - apiVersion: v2
+    created: "2026-04-02T12:53:18.877029705Z"
+    dependencies:
+    - import-values:
+      - defaults
+      name: chc-lib
+      repository: https://aoksys-platform-engineering.github.io/helm-charts
+      version: 0.49.0
+    description: Example to show how an application chart can be built using the chc-lib
+    digest: 496d3fae4d919313fa62f5c727bdb7b7a169c27e4a9782a53f32da90a85c2705
+    name: example-app
+    type: application
+    urls:
+    - https://github.com/aoksys-platform-engineering/helm-charts/releases/download/example-app-0.1.0/example-app-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-04-02T12:53:18.877097482Z"
