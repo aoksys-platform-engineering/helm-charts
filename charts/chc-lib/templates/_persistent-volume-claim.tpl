@@ -17,7 +17,7 @@ input scheme:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)

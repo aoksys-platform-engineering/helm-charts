@@ -19,14 +19,14 @@ input scheme:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
       "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
       "context" $ctx) | nindent 2 }}
 
-{{- /* We use "mergeOverwrite" here to ensure chc-lib default values are always applied */}}
-spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite $ctx.Values.pod .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
+{{- /* We use "mergeOverwrite" and "deepCopy" here to ensure chc-lib default values are always applied but not modified */}}
+spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite (deepCopy $ctx.Values.pod) .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
 {{- end }}
 {{- end }}

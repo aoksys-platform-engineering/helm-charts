@@ -17,15 +17,15 @@ input scheme:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ .values.namespaceOverride | default $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
       "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
       "context" $ctx) | nindent 2 }}
 spec:
-  {{- if .values.topicName }}
-  topicName: {{ tpl .values.topicName $ctx }}
+  {{- if .values.name }}
+  topicName: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   {{- end }}
   {{- if .values.partitions}}
   partitions: {{ .values.partitions }}

@@ -20,7 +20,7 @@ input scheme:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
@@ -53,6 +53,7 @@ spec:
           "annotations" (list $ctx.Values.commonAnnotations .values.jobs.annotations)
           "context" $ctx) | nindent 6 }}
 
-    spec: {{ include "chc-lib.specs.job" (dict "values" (mergeOverwrite $ctx.Values.job .values.jobs) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 6 }}
+    {{- /* We use "mergeOverwrite" and "deepCopy" here to ensure chc-lib default values are always applied but not modified */}}
+    spec: {{ include "chc-lib.specs.job" (dict "values" (mergeOverwrite (deepCopy $ctx.Values.job) .values.jobs) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 6 }}
 {{- end }}
 {{- end }}

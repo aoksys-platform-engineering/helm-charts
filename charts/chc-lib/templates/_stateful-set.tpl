@@ -17,7 +17,7 @@ input scheme:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
@@ -54,7 +54,7 @@ spec:
         "annotations" (list $ctx.Values.commonAnnotations (.values.pods).annotations)
         "context" $ctx) | nindent 6 }}
 
-    {{- /* We use "mergeOverwrite" here to ensure chc-lib default values are applied */}}
-    spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite $ctx.Values.pod .values.pods) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 6 }}
+    {{- /* We use "mergeOverwrite" and "deepCopy" here to ensure chc-lib default values are always applied but not modified */}}
+    spec: {{ include "chc-lib.specs.pod" (dict "values" (mergeOverwrite (deepCopy $ctx.Values.pod) .values.pods) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 6 }}
 {{- end }}
 {{- end }}

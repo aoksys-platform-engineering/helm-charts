@@ -17,7 +17,7 @@ input scheme:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.labels)
@@ -43,11 +43,7 @@ spec:
   {{- if .values.dnsNames }}
   dnsNames: {{ include "common.tplvalues.render" (dict "value" .values.dnsNames "context" $ctx) | nindent 4 }}
   {{- end }}
-  {{- if .values.secret.name }}
-  secretName: {{ .values.secret.name }}
-  {{- else }}
-  secretName: {{ .name | default (include "common.names.fullname" $ctx) }}-tls
-  {{- end }}
+  secretName: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values.secret "context" $ctx) }}
   secretTemplate:
   {{- include "chc-lib.compute.labels-and-annotations" (dict
       "labels" (list $ctx.Values.commonLabels .values.secret.labels)

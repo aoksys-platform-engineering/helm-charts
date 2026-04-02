@@ -21,6 +21,9 @@ exports:
       # -- Toggle to enable/disable the creation of the pod.
       create: true
 
+      # -- Name of the pod to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to a pod in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -107,6 +110,9 @@ exports:
       # -- Toggle to enable/disable the creation of the job.
       create: true
 
+      # -- Name of the job to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to a job in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -168,6 +174,9 @@ exports:
       # -- Toggle to enable/disable the creation of the deployment.
       create: true
 
+      # -- Name of the deployment to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the deployment in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -201,6 +210,9 @@ exports:
     statefulSet:
       # -- Toggle to enable/disable the creation of the statefulSet.
       create: true
+
+      # -- Name of the statefulSet to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the statefulSet in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -251,6 +263,9 @@ exports:
       # -- Toggle to enable/disable the creation of the cronJob.
       create: true
 
+      # -- Name of the cronJob to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the cronJob in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -289,6 +304,9 @@ exports:
       # -- Toggle to enable/disable the creation of a service.
       create: true
 
+      # -- Name of the service to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the service in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -313,6 +331,9 @@ exports:
     ingress:
       # -- Toggle to enable/disable the creation of the ingress.
       create: true
+
+      # -- Name of the ingress to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the ingress in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -340,6 +361,9 @@ exports:
       # -- Toggle to enable/disable the creation of the serviceAccount.
       create: true
 
+      # -- Name of the serviceAccount to create. Values goes through tpl. Templating fails if "create=true" and "name=default".
+      name: ""
+
       # -- Labels to add to the serviceAccount in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -349,13 +373,12 @@ exports:
       # -- Toggle to enable/disable the automatic mount of the serviceAccount token.
       automountServiceAccountToken: false
 
-      # -- Name of the serviceAccount to create. Value goes through tpl.
-      # Templating fails if "create=true" and "name=default".
-      name: ""
-
     role:
       # -- Toggle to enable/disable the creation of the role.
       create: true
+
+      # -- Name of the role to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Overrides the namespace to create the role in. It will be created in the release namespace, if empty or nil.
       namespaceOverride: ""
@@ -372,6 +395,9 @@ exports:
     roleBinding:
       # -- Toggle to enable/disable the creation of the roleBinding.
       create: true
+
+      # -- Name of the roleBinding to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Overrides the namespace to create the roleBinding in. It will be created in the release namespace, if empty or nil.
       namespaceOverride: ""
@@ -406,6 +432,9 @@ exports:
       # -- Toggle to enable/disable the creation of the configMap.
       create: true
 
+      # -- Name of the configMap to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the configMap in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -418,6 +447,9 @@ exports:
     secret:
       # -- Toggle to enable/disable the creation of the secret.
       create: true
+
+      # -- Name of the secret to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the secret in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -434,6 +466,9 @@ exports:
       # -- Toggle to enable/disable the creation of the persistentVolume.
       create: true
 
+      # -- Name of the persistentVolume to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the persistentVolume in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -448,6 +483,9 @@ exports:
       # -- Toggle to enable/disable the creation of the persistentVolumeClaim.
       create: true
 
+      # -- Name of the persistentVolumeClaim to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Labels to add to the persistentVolumeClaim in addition to "commonLabels". Values go through tpl.
       labels: {}
 
@@ -461,6 +499,9 @@ exports:
     podDisruptionBudget:
       # -- Toggle to enable/disable the creation of the podDisruptionBudget.
       create: true
+
+      # -- Name of the podDisruptionBudget to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the podDisruptionBudget in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -482,6 +523,9 @@ exports:
     horizontalPodAutoscaler:
       # -- Toggle to enable/disable the creation of the horizontalPodAutoscaler.
       create: true
+
+      # -- Name of the horizontalPodAutoscaler to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the horizontalPodAutoscaler in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -520,6 +564,9 @@ exports:
       # -- Toggle to enable/disable the creation of the certificate resource. Deployment fails, if corresponding
       # custom resource definitions served by cert-manager are not installed in your cluster (https://cert-manager.io).
       create: true
+
+      # -- Name of the certificate to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the certficate in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -609,6 +656,9 @@ exports:
       # (https://prometheus-operator.dev/).
       create: true
 
+      # -- Name of the podMonitor to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Namespace to create the podMonitor resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
       namespaceOverride: ""
 
@@ -626,6 +676,9 @@ exports:
       # -- Toggle to enable/disable the creation of the externalsecret resource. Deployment fails, if corresponding
       # custom resource definitions served by external-secrets operator are not installed in your cluster (https://external-secrets.io).
       create: true
+
+      # -- Name of the externalSecret to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
 
       # -- Labels to add to the externalsecret in addition to "commonLabels". Values go through tpl.
       labels: {}
@@ -686,6 +739,9 @@ exports:
       # custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io).
       create: true
 
+      # -- Name of the kafkaUser to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Namespace to create the kafkauser resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
       namespaceOverride: ""
 
@@ -722,6 +778,9 @@ exports:
       # custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io).
       create: true
 
+      # -- Name of the kafkaUser to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
       # -- Namespace to create the kafkatopic resource in. If nil or empty, "{{ .Release.Namespace }}" is used.
       namespaceOverride: ""
 
@@ -730,10 +789,6 @@ exports:
 
       # -- Annotations to add to the kafkatopic in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
-
-      # -- Name of the topic to create. Values go through tpl.
-      # Will be computed, if nil or empty.
-      topicName: ""
 
       # -- (int) Number of partitions the topic should have. This cannot be decreased after topic creation.
       # When absent, this will default to the broker configuration for "num.partitions". Omitted, if nil or empty.

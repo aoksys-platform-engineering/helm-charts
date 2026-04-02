@@ -18,9 +18,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   {{- if .values.generateName }}
-  generateName: {{ printf "%s-" (.name | default (include "common.names.fullname" $ctx)) }}
+  generateName: {{ printf "%s-" (include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx)) }}
   {{- else }}
-  name: {{ .name | default (include "common.names.fullname" $ctx) }}
+  name: {{ include "chc-lib.compute.name" (dict "name" .name "values" .values "context" $ctx) }}
   {{- end }}
   namespace: {{ $ctx.Release.Namespace }}
   {{- include "chc-lib.compute.labels-and-annotations" (dict
@@ -28,7 +28,7 @@ metadata:
       "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
       "context" $ctx) | nindent 2 }}
 
-{{- /* We use "mergeOverwrite" here to ensure chc-lib default values are always applied */}}
-spec: {{ include "chc-lib.specs.job" (dict "values" (mergeOverwrite $ctx.Values.job .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
+{{- /* We use "mergeOverwrite" and "deepCopy" here to ensure chc-lib default values are always applied but not modified */}}
+spec: {{ include "chc-lib.specs.job" (dict "values" (mergeOverwrite (deepCopy $ctx.Values.job) .values) "defaultRegistry" $ctx.Values.imageRegistry "context" $ctx) | nindent 2 }}
 {{- end }}
 {{- end }}

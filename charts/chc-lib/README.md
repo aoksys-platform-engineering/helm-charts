@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.48.2](https://img.shields.io/badge/Version-0.48.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.49.0](https://img.shields.io/badge/Version-0.49.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.48.2
+    version: 0.49.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
@@ -80,6 +80,7 @@ Values to configure the `pod` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the pod. |
+| name | string | `""` | Name of the pod to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to a pod in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to a pod in addition to "commonAnnotations". Values go through tpl. |
 | activeDeadlineSeconds | int | `nil` | Duration in seconds a pod may be active on the node before the system will mark it as failed to kill its containers. Omitted, if nil or empty. |
@@ -109,6 +110,7 @@ Values to configure the `job` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the job. |
+| name | string | `""` | Name of the job to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to a job in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to a job in addition to "commonAnnotations". Values go through tpl. |
 | generateName | bool | `false` | Toggle to enable/disable the automatic creation of a unique resource name by the kubernetes API server. Omitted, if not true. |
@@ -132,6 +134,7 @@ Values to configure the `deployment` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the deployment. |
+| name | string | `""` | Name of the deployment to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the deployment in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the deployment in addition to "commonAnnotations". Values go through tpl. |
 | minReadySeconds | int | `nil` | Number of seconds to wait before a pod is considered available, if no containers are crashing. Omitted, if nil or empty. |
@@ -148,6 +151,7 @@ Values to configure the `stateful-set` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the statefulSet. |
+| name | string | `""` | Name of the statefulSet to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the statefulSet in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the statefulSet in addition to "commonAnnotations". Values go through tpl. |
 | minReadySeconds | int | `nil` | Number of seconds to wait before a pod is considered available, if no containers are crashing. Omitted, if nil or empty. |
@@ -166,6 +170,7 @@ Values to configure the `cron-job` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the cronJob. |
+| name | string | `""` | Name of the cronJob to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the cronJob in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the cronJob in addition to "commonAnnotations". Values go through tpl. |
 | concurrencyPolicy | string | `"Forbid"` | Specifies how to treat concurrent executions of a Job. Omitted, if nil or empty. |
@@ -183,6 +188,7 @@ Values to configure the `service` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of a service. |
+| name | string | `""` | Name of the service to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the service in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the service in addition to "commonAnnotations". Values go through tpl. |
 | type | string | `"ClusterIP"` | Type of the service to create. |
@@ -196,6 +202,7 @@ Values to configure the `ingress` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the ingress. |
+| name | string | `""` | Name of the ingress to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the ingress in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the ingress in addition to "commonAnnotations". Values go through tpl. |
 | defaultBackend | string | `""` | Backend that should handle any requests that don't match a rule. If "rules" are nil or empty, "defaultBackend" must be set. Omitted, if "rules" are set and this is nil or empty. |
@@ -209,10 +216,10 @@ Values to configure the `service-account` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the serviceAccount. |
+| name | string | `""` | Name of the serviceAccount to create. Values goes through tpl. Templating fails if "create=true" and "name=default". |
 | labels | object | `{}` | Labels to add to the serviceAccount in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the serviceAccount in addition to "commonAnnotations". Values go through tpl. |
 | automountServiceAccountToken | bool | `false` | Toggle to enable/disable the automatic mount of the serviceAccount token. |
-| name | string | `""` | Name of the serviceAccount to create. Value goes through tpl. Templating fails if "create=true" and "name=default". |
 
 ## Role
 Values to configure the `role` template.
@@ -220,6 +227,7 @@ Values to configure the `role` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the role. |
+| name | string | `""` | Name of the role to create. Values go through tpl. Will be computed, if nil or empty. |
 | namespaceOverride | string | `""` | Overrides the namespace to create the role in. It will be created in the release namespace, if empty or nil. |
 | labels | object | `{}` | Labels to add to the role in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the role in addition to "commonAnnotations". Values go through tpl. |
@@ -231,6 +239,7 @@ Values to configure the `role-binding` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the roleBinding. |
+| name | string | `""` | Name of the roleBinding to create. Values go through tpl. Will be computed, if nil or empty. |
 | namespaceOverride | string | `""` | Overrides the namespace to create the roleBinding in. It will be created in the release namespace, if empty or nil. |
 | labels | object | `{}` | Labels to add to the roleBinding in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the roleBinding in addition to "commonAnnotations". Values go through tpl. |
@@ -246,6 +255,7 @@ Values to configure the `config-map` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the configMap. |
+| name | string | `""` | Name of the configMap to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the configMap in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the configMap in addition to "commonAnnotations". Values go through tpl. |
 | data | object | `{}` | Data to store in the configMap. Values go through tpl. |
@@ -256,6 +266,7 @@ Values to configure the `secret` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the secret. |
+| name | string | `""` | Name of the secret to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the secret in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the secret in addition to "commonAnnotations". Values go through tpl. |
 | stringData | object | `{}` | Data to store in the secret. Note that all data has to be provided in clear text, not base64 encoded. Values go through tpl. Note: If you want to keep sensitive data secure, use a backend (e.g. AWS Secrets Manager or HashiCorp Vault) and retrieve secrets at runtime via External Secrets Operator instead of storing them in values files. |
@@ -266,6 +277,7 @@ Values to configure the `persistent-volume` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the persistentVolume. |
+| name | string | `""` | Name of the persistentVolume to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the persistentVolume in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the persistentVolume in addition to "commonAnnotations". Values go through tpl. |
 | spec | object | `{}` | Configures the "spec" section of the persistentVolume. Values go through tpl. See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#persistentvolumespec-v1-core for more. |
@@ -276,6 +288,7 @@ Values to configure the `persistent-volume-claim` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the persistentVolumeClaim. |
+| name | string | `""` | Name of the persistentVolumeClaim to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the persistentVolumeClaim in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the persistentVolumeClaim in addition to "commonAnnotations". Values go through tpl. |
 | spec | object | `{}` | Configures the "spec" section of the persistentVolumeClaim. Values go through tpl. See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#persistentvolumeclaimspec-v1-core for more. |
@@ -286,6 +299,7 @@ Values to configure the `pod-disruption-budget` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the podDisruptionBudget. |
+| name | string | `""` | Name of the podDisruptionBudget to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the podDisruptionBudget in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the podDisruptionBudget in addition to "commonAnnotations". Values go through tpl. |
 | maxUnavailable | int | `1` | Configures that an eviction is allowed, if at most "maxUnavailable" pods are unavailable after the eviction. |
@@ -298,6 +312,7 @@ Values to configure the `horizontal-pod-autoscaler` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the horizontalPodAutoscaler. |
+| name | string | `""` | Name of the horizontalPodAutoscaler to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the horizontalPodAutoscaler in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the horizontalPodAutoscaler in addition to "commonAnnotations". Values go through tpl. |
 | scaleTargetRef.apiVersion | string | `"apps/v1"` | API version of the referent. |
@@ -315,6 +330,7 @@ Values to configure the `certificate` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the certificate resource. Deployment fails, if corresponding custom resource definitions served by cert-manager are not installed in your cluster (https://cert-manager.io). |
+| name | string | `""` | Name of the certificate to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the certficate in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the certficate in addition to "commonAnnotations". Values go through tpl. |
 | secret.name | string | `""` | Name of the corresponding secret to create. Will be computed, if nil or empty. |
@@ -344,6 +360,7 @@ Values to configure the `pod-monitor` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the podMonitor resource. Deployment fails, if corresponding custom resource definitions served by the prometheus-operator are not installed in your cluster (https://prometheus-operator.dev/). |
+| name | string | `""` | Name of the podMonitor to create. Values go through tpl. Will be computed, if nil or empty. |
 | namespaceOverride | string | `""` | Namespace to create the podMonitor resource in. If nil or empty, "{{ .Release.Namespace }}" is used. |
 | labels | object | `{}` | Labels to add to the podMonitor in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the podMonitor in addition to "commonAnnotations". Values go through tpl. |
@@ -355,6 +372,7 @@ Values to configure the `external-secret` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the externalsecret resource. Deployment fails, if corresponding custom resource definitions served by external-secrets operator are not installed in your cluster (https://external-secrets.io). |
+| name | string | `""` | Name of the externalSecret to create. Values go through tpl. Will be computed, if nil or empty. |
 | labels | object | `{}` | Labels to add to the externalsecret in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the externalsecret in addition to "commonAnnotations". Values go through tpl. |
 | secret.name | string | `""` | Name of the corresponding secret to create. Will be computed, if nil or empty. |
@@ -379,6 +397,7 @@ Values to configure the `kafka-user` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the kafkauser resource. Deployment fails, if corresponding custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io). |
+| name | string | `""` | Name of the kafkaUser to create. Values go through tpl. Will be computed, if nil or empty. |
 | namespaceOverride | string | `""` | Namespace to create the kafkauser resource in. If nil or empty, "{{ .Release.Namespace }}" is used. |
 | labels | object | `{}` | Labels to add to the kafkauser in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the kafkauser in addition to "commonAnnotations". Values go through tpl. |
@@ -394,10 +413,10 @@ Values to configure the `kafka-topic` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the kafkatopic resource. Deployment fails, if corresponding custom resource definitions served by strimzi-kafka-operator are not installed in your cluster (https://strimzi.io). |
+| name | string | `""` | Name of the kafkaUser to create. Values go through tpl. Will be computed, if nil or empty. |
 | namespaceOverride | string | `""` | Namespace to create the kafkatopic resource in. If nil or empty, "{{ .Release.Namespace }}" is used. |
 | labels | object | `{}` | Labels to add to the kafkatopic in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the kafkatopic in addition to "commonAnnotations". Values go through tpl. |
-| topicName | string | `""` | Name of the topic to create. Values go through tpl. Will be computed, if nil or empty. |
 | partitions | int | `nil` | Number of partitions the topic should have. This cannot be decreased after topic creation. When absent, this will default to the broker configuration for "num.partitions". Omitted, if nil or empty. |
 | replicas | int | `nil` | Number of replicas the topic should have across brokers. Defaults to the broker configuration for "default.replication.factor", if unset. Omitted, if nil or empty. |
 | config | object | `{}` | Config for the topic. See https://kafka.apache.org/42/configuration/topic-configs/ for more. Omitted, if nil or empty. |
