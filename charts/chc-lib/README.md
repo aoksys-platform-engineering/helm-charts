@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.48.1](https://img.shields.io/badge/Version-0.48.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.48.2](https://img.shields.io/badge/Version-0.48.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.48.1
+    version: 0.48.2
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
@@ -456,7 +456,7 @@ This section describes these custom implementations ("input schemas") and provid
 
 ## Good to know
 Values that depend on the metadata of a release, like "{{ .Release.Name }}" or "{{ .Release.Namespace }}",
-are shown as "<computed>" in all example values.
+are shown as "&lt;computed&gt;" in all example values.
 
 Furthermore, the following keywords are used to describe how values behave when a chart is rendered:
 

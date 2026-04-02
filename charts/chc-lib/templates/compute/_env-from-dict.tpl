@@ -29,7 +29,7 @@ env:
   {{- if kindIs "map" $v }}
     {{- $entry = merge $entry $v -}}
   {{- else }}
-    {{- $entry = merge $entry (dict "value" $v) -}}
+    {{- $entry = merge $entry (dict "value" ($v | toString)) -}}
   {{- end }}
   {{- $result = append $result $entry -}}
 {{- end }}
