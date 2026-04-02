@@ -1,0 +1,164 @@
+---
+deployment:
+  replicas: 3
+  pods:
+    volumes:
+      spring-config:
+        configMap:
+          name: "{{ .Release.Name }}-spring-config"
+
+    containers:
+      app:
+        image:
+          repository: ghcr.io/example/spring-boot-app
+          tag: "latest"
+
+        ports:
+          http:
+            containerPort: 8080
+
+        env:
+          KAFKA_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Release.Name }}-ku"
+                key: username
+
+          KAFKA_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Release.Name }}-ku"
+                key: password
+
+        volumeMounts:
+          spring-config:
+            mountPath: /config/application.yaml
+            subPath: application.yaml
+            readOnly: true
+
+configMap:
+  name: "{{ .Release.Name }}-spring-config"
+  data:
+    application.yaml: |
+      server:
+        port: 8080
+
+      management:
+        endpoints:
+          web:
+            exposure:
+              include: health,info,prometheus
+
+        endpoint:
+          health:
+            probes:
+              enabled: true
+
+service:
+  name: "{{ .Release.Name }}"
+  ports:
+    http:
+      port: 80
+      targetPort: http
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+
+  rules:
+    - host: chc-lib.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "{{ .Release.Name }}"
+                port:
+                  name: http
+
+  hosts:
+    - host: chc-lib.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          servicePort: http
+
+  tls:
+    - secretName: "{{ .Release.Name }}-tls"
+      hosts:
+        - chc-lib.example.com
+
+podMonitor:
+  podMetricsEndpoints:
+    - port: http
+      path: /
+      interval: 30s
+
+kafkaUser:
+  secret:
+    name: "{{ .Release.Name }}-ku"
+
+  labels: &strimziLabels
+    strimzi.io/cluster: test
+
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: topic-one
+          patternType: literal
+        operation: Read
+
+      - resource:
+          type: topic
+          name: topic-one
+          patternType: literal
+        operation: Write
+
+      - resource:
+          type: topic
+          name: topic-two
+          patternType: literal
+        operation: Write
+
+      - resource:
+          type: topic
+          name: spring-events
+          patternType: literal
+        operation: Read
+
+      - resource:
+          type: topic
+          name: spring-events
+          patternType: literal
+        operation: Write
+
+      - resource:
+          type: group
+          name: spring-events-group
+          patternType: literal
+        operation: Read
+
+kafkaTopics:
+  topic-one:
+    labels: *strimziLabels
+    partitions: 1
+    replicas: 3
+    config:
+      retention.ms: 259200000
+
+  topic-two:
+    labels: *strimziLabels
+    partitions: 3
+    replicas: 3
+    config:
+      retention.ms: 604800000
+
+  spring-events:
+    labels: *strimziLabels
+    partitions: 4
+    replicas: 3
+    config:
+      cleanup.policy: compact

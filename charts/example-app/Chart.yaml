@@ -1,0 +1,12 @@
+---
+apiVersion: v2
+name: example-app
+description: Example to show how an application chart can be built using the chc-lib
+type: application
+version: 0.1.0
+dependencies:
+  - name: chc-lib
+    repository: https://aoksys-platform-engineering.github.io/helm-charts
+    version: 0.49.0
+    import-values:
+      - defaults

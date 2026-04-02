@@ -1,0 +1,1 @@
+{{ include "chc-lib.ingress.tpl" (dict "values" .Values.ingress "context" $) }}

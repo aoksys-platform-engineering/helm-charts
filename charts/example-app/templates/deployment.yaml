@@ -1,0 +1,1 @@
+{{ include "chc-lib.deployment.tpl" (dict "values" .Values.deployment "context" $) }}

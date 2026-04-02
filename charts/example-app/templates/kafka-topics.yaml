@@ -1,0 +1,3 @@
+{{- range $key, $values := .Values.kafkaTopics }}
+{{ include "chc-lib.kafka-topic.tpl" (dict "name" $key "values" (mergeOverwrite (deepCopy $.Values.kafkaTopic) $values) "context" $) }}
+{{- end }}

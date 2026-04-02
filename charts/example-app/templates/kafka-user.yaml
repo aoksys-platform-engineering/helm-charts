@@ -1,0 +1,1 @@
+{{ include "chc-lib.kafka-user.tpl" (dict "values" .Values.kafkaUser "context" $) }}

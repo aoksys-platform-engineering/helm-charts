@@ -1,0 +1,1 @@
+{{ include "chc-lib.pod-monitor.tpl" (dict "values" .Values.podMonitor "context" $) }}
