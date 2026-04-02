@@ -2,6 +2,10 @@
 deployment:
   replicas: 3
   pods:
+    annotations:
+      # This causes pods to restart on configMap change
+      config/checksum: "{{ .Values.configMap.data | toYaml | sha256sum }}"
+
     volumes:
       spring-config:
         configMap:
