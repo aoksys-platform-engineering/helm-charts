@@ -1,47 +1,73 @@
 ---
-deployment:
-  replicas: 3
-  pods:
-    annotations:
-      # This causes pods to restart on configMap change
-      config/checksum: "{{ .Values.configMap.data | toYaml | sha256sum }}"
+replicas: 3
+revisionHistoryLimit: 5
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 1
 
-    volumes:
-      spring-config:
-        configMap:
-          name: "{{ .Release.Name }}-spring-config"
+pods:
+  annotations:
+    # This causes pods to get rolled on a config change automatically
+    config/checksum: "{{ .Values.configMap.data | toYaml | sha256sum }}"
 
-    containers:
-      app:
-        image:
-          repository: ghcr.io/example/spring-boot-app
-          tag: "latest"
+  volumes:
+    spring-config:
+      configMap:
+        name: "{{ .Release.Name }}"
 
-        ports:
-          http:
-            containerPort: 8080
+  containers:
+    app:
+      resources: medium
+      image:
+        repository: ghcr.io/example/spring-boot-app
 
-        env:
-          KAFKA_USERNAME:
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Release.Name }}-ku"
-                key: username
+      env:
+        KAFKA_USERNAME:
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-ku"
+              key: username
 
-          KAFKA_PASSWORD:
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Release.Name }}-ku"
-                key: password
+        KAFKA_PASSWORD:
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-ku"
+              key: password
 
-        volumeMounts:
-          spring-config:
-            mountPath: /config/application.yaml
-            subPath: application.yaml
-            readOnly: true
+      ports:
+        http:
+          containerPort: 8080
+
+      startupProbe:
+        periodSeconds: 10
+        failureThreshold: 18
+        httpGet:
+          path: /actuator/health/liveness
+          port: 8080
+
+      readinessProbe:
+        periodSeconds: 10
+        initialDelaySeconds: 10
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8080
+
+      livenessProbe:
+        periodSeconds: 10
+        failureThreshold: 3
+        httpGet:
+          path: /actuator/health/liveness
+          port: 8080
+
+      volumeMounts:
+        spring-config:
+          mountPath: /config
+          readOnly: true
 
 configMap:
-  name: "{{ .Release.Name }}-spring-config"
+  name: "{{ .Release.Name }}"
   data:
     application.yaml: |
       server:
@@ -60,6 +86,7 @@ configMap:
 
 service:
   name: "{{ .Release.Name }}"
+  sessionAffinity: None
   ports:
     http:
       port: 80
@@ -96,7 +123,7 @@ ingress:
 podMonitor:
   podMetricsEndpoints:
     - port: http
-      path: /
+      path: /actuator/prometheus
       interval: 30s
 
 kafkaUser:
@@ -117,33 +144,9 @@ kafkaUser:
 
       - resource:
           type: topic
-          name: topic-one
-          patternType: literal
-        operation: Write
-
-      - resource:
-          type: topic
           name: topic-two
           patternType: literal
         operation: Write
-
-      - resource:
-          type: topic
-          name: spring-events
-          patternType: literal
-        operation: Read
-
-      - resource:
-          type: topic
-          name: spring-events
-          patternType: literal
-        operation: Write
-
-      - resource:
-          type: group
-          name: spring-events-group
-          patternType: literal
-        operation: Read
 
 kafkaTopics:
   topic-one:
@@ -159,10 +162,3 @@ kafkaTopics:
     replicas: 3
     config:
       retention.ms: 604800000
-
-  spring-events:
-    labels: *strimziLabels
-    partitions: 4
-    replicas: 3
-    config:
-      cleanup.policy: compact

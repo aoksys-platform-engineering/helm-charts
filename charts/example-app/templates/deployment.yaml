@@ -1,1 +1,1 @@
-{{ include "chc-lib.deployment.tpl" (dict "values" .Values.deployment "context" $) }}
+{{ include "chc-lib.deployment.tpl" (dict "values" (mergeOverwrite (deepCopy .Values.deployment) .Values) "context" $) }}
