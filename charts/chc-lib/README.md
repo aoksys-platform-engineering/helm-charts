@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.49.0](https://img.shields.io/badge/Version-0.49.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.50.0](https://img.shields.io/badge/Version-0.50.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.49.0
+    version: 0.50.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
@@ -87,7 +87,8 @@ Values to configure the `pod` template.
 | affinity.nodeAffinity | object | `{}` | Describes node affinity scheduling rules for a pod. Can be a preset name (string) or a dict. See [Affinities](#affinities) in README for more. |
 | affinity.podAffinity | object | `{}` | Describes pod affinity scheduling rules for a pod. Can be a preset name (string) or a dict. See [Affinities](#affinities) in README for more. |
 | affinity.podAntiAffinity | object | `{}` | Describes pod anti-affinity scheduling rules for a pod. Can be a preset name (string) or a dict. See [Affinities](#affinities) in README for more. |
-| automountServiceAccountToken | bool | `false` | Toggle to enable automatic mounting of the serviceaccount token in a pod. Omitted, if not true. |
+| serviceAccount.name | string | `""` | Name of the serviceAccount to use for a pod. Will be computed, if nil or empty. |
+| serviceAccount.automountToken | bool | `false` | Toggle to enable/disable the automatic mount of the serviceAccount token. Omitted, if not true. |
 | containers | object | `{}` | Containers that are part of a pod. See [Containers](#containers) in README for more. |
 | dnsPolicy | string | `nil` | DNS policy to use. Should probably be set to "ClusterFirstWithHostNet", if "hostNetwork=true". Omitted, if nil or empty. |
 | hostAliases | list | `[]` | List of hosts and IPs that will be injected into a pods hosts file. Omitted, if nil or empty. |
@@ -99,7 +100,6 @@ Values to configure the `pod` template.
 | priorityClassName | string | `""` | Name of a priorityClass to use for a pod. Omitted if nil or empty. |
 | restartPolicy | string | `"Always"` | Restart policy for all containers within the pod. One of "Always", "OnFailure", "Never". Omitted, if nil or empty. |
 | securityContext | string | `"default"` | Security context to use for a pod. Can be a preset name (string) or a dict. See [PodSecurityContext](#podsecuritycontext) in README for more. |
-| serviceAccountName | string | `"default"` | Name of the serviceAccount to use for a pod. |
 | terminationGracePeriodSeconds | string | `nil` | Seconds to wait for graceful termination of a pod, when a SIGTERM/SIGKILL is send. Omitted, if nil or empty. |
 | tolerations | list | `[]` | Tolerations for pod scheduling. Omitted, if nil or empty. |
 | volumes | object | `{}` | Volumes to mount into a pod. Follows the "List from dict" input schema. See [List from dict](#list-from-dict) in README for more. Omitted, if nil or empty. |
@@ -114,7 +114,7 @@ Values to configure the `job` template.
 | labels | object | `{}` | Labels to add to a job in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to a job in addition to "commonAnnotations". Values go through tpl. |
 | generateName | bool | `false` | Toggle to enable/disable the automatic creation of a unique resource name by the kubernetes API server. Omitted, if not true. |
-| activeDeadlineSeconds | int | `300` | Specifies the duration in seconds that the job may be active before the system tries to terminate it. Omitted, if nil or empty. |
+| activeDeadlineSeconds | int | `3600` | Specifies the duration in seconds that the job may be active before the system tries to terminate it. Omitted, if nil or empty. |
 | backoffLimit | int | `3` | The number of retries before marking this job failed. Omitted, if nil or empty. |
 | backoffLimitPerIndex | int | `nil` | The limit for the number of retries within an index before marking this index as failed. Only takes effect if "completionMode=Indexed". Omitted, if nil or empty. |
 | maxFailedIndexes | int | `nil` | Specifies the maximal number of failed indexes before marking the job as failed, when backoffLimitPerIndex is set. Omitted, if nil or empty. |
@@ -125,7 +125,7 @@ Values to configure the `job` template.
 | podReplacementPolicy | string | `nil` | Specifies when to create new pods that replace old ones. Omitted, if nil or empty. |
 | successPolicy | string | `nil` | Specifies the policy when the job can be declared as succeeded. Omitted, if nil or empty. |
 | suspend | bool | `false` | Specifies whether the job should create new pods, or not. Omitted, if not true. |
-| ttlSecondsAfterFinished | int | `600` | Time in seconds after which a finished pod is cleaned up automatically. If unset, pods are never cleaned up. Omitted, if nil or empty. |
+| ttlSecondsAfterFinished | int | `3600` | Time in seconds after which a finished pod is cleaned up automatically. If unset, pods are never cleaned up. Omitted, if nil or empty. |
 | pods | object | `{}` | Values to configure the pods managed by the job. You can use all fields described in the [Pod](#pod) section of the README here. |
 
 ## Deployment
@@ -216,10 +216,10 @@ Values to configure the `service-account` template.
 | Value | Type | Default | Description |
 |-------|------|---------|-------------|
 | create | bool | `true` | Toggle to enable/disable the creation of the serviceAccount. |
-| name | string | `""` | Name of the serviceAccount to create. Values goes through tpl. Templating fails if "create=true" and "name=default". |
+| name | string | `""` | Name of the serviceAccount to create. Values goes through tpl. Will be computed, if nil or empty. Templating fails if "create=true" and "name=default". |
 | labels | object | `{}` | Labels to add to the serviceAccount in addition to "commonLabels". Values go through tpl. |
 | annotations | object | `{}` | Annotations to add to the serviceAccount in addition to "commonAnnotations". Values go through tpl. |
-| automountServiceAccountToken | bool | `false` | Toggle to enable/disable the automatic mount of the serviceAccount token. |
+| automountToken | bool | `false` | Toggle to enable/disable the automatic mount of the serviceAccount token. Omitted, if not true. |
 
 ## Role
 Values to configure the `role` template.

@@ -47,9 +47,12 @@ exports:
         # See [Affinities](#affinities) in README for more.
         podAntiAffinity: {}
 
-      # -- Toggle to enable automatic mounting of the serviceaccount token in a pod.
-      # Omitted, if not true.
-      automountServiceAccountToken: false
+      serviceAccount:
+        # -- Name of the serviceAccount to use for a pod. Will be computed, if nil or empty.
+        name: ""
+
+        # -- Toggle to enable/disable the automatic mount of the serviceAccount token. Omitted, if not true.
+        automountToken: false
 
       # -- Containers that are part of a pod. See [Containers](#containers) in README for more.
       containers: {}
@@ -91,9 +94,6 @@ exports:
       # See [PodSecurityContext](#podsecuritycontext) in README for more.
       securityContext: default
 
-      # -- Name of the serviceAccount to use for a pod.
-      serviceAccountName: default
-
       # -- Seconds to wait for graceful termination of a pod, when a SIGTERM/SIGKILL is send.
       # Omitted, if nil or empty.
       terminationGracePeriodSeconds: ~
@@ -125,7 +125,7 @@ exports:
 
       # -- Specifies the duration in seconds that the job may be active before the system tries to terminate it.
       # Omitted, if nil or empty.
-      activeDeadlineSeconds: 300
+      activeDeadlineSeconds: 3600
 
       # -- The number of retries before marking this job failed. Omitted, if nil or empty.
       backoffLimit: 3
@@ -164,7 +164,7 @@ exports:
 
       # -- Time in seconds after which a finished pod is cleaned up automatically. If unset, pods are never cleaned up.
       # Omitted, if nil or empty.
-      ttlSecondsAfterFinished: 600
+      ttlSecondsAfterFinished: 3600
 
       # -- Values to configure the pods managed by the job.
       # You can use all fields described in the [Pod](#pod) section of the README here.
@@ -361,7 +361,8 @@ exports:
       # -- Toggle to enable/disable the creation of the serviceAccount.
       create: true
 
-      # -- Name of the serviceAccount to create. Values goes through tpl. Templating fails if "create=true" and "name=default".
+      # -- Name of the serviceAccount to create. Values goes through tpl. Will be computed, if nil or empty.
+      # Templating fails if "create=true" and "name=default".
       name: ""
 
       # -- Labels to add to the serviceAccount in addition to "commonLabels". Values go through tpl.
@@ -370,8 +371,8 @@ exports:
       # -- Annotations to add to the serviceAccount in addition to "commonAnnotations". Values go through tpl.
       annotations: {}
 
-      # -- Toggle to enable/disable the automatic mount of the serviceAccount token.
-      automountServiceAccountToken: false
+      # -- Toggle to enable/disable the automatic mount of the serviceAccount token. Omitted, if not true.
+      automountToken: false
 
     role:
       # -- Toggle to enable/disable the creation of the role.

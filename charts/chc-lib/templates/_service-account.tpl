@@ -5,6 +5,7 @@ See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#servi
 
 input scheme:
   dict:
+    name: string|nil (optional)
     values: dict
     context: object (has to be $)
 */}}
@@ -25,8 +26,8 @@ metadata:
       "labels" (list $ctx.Values.commonLabels .values.labels)
       "annotations" (list $ctx.Values.commonAnnotations .values.annotations)
       "context" $ctx) | nindent 2 }}
-{{- if .values.automountServiceAccountToken }}
-automountServiceAccountToken: {{ .values.automountServiceAccountToken }}
+{{- if .values.automountToken }}
+automountServiceAccountToken: {{ .values.automountToken }}
 {{- end }}
 {{- end }}
 {{- end }}

@@ -8,6 +8,7 @@ See "https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#pod-v
 
 input scheme:
   dict:
+    name: string|nil (optional)
     values: dict
     context: object (has to be $)
 
@@ -44,7 +45,7 @@ affinity:
   podAntiAffinity: {{ $a.podAntiAffinity | toYaml | nindent 4 }}
   {{- end }}
 {{- end }}
-{{- if .values.automountServiceAccountToken }}
+{{- if .values.serviceAccount.automountToken }}
 automountServiceAccountToken: true
 {{- end }}
 containers: {{ include "chc-lib.compute.list-of-containers" (dict "values" .values.containers "context" $ctx) | nindent 2 }}
@@ -76,7 +77,7 @@ priorityClassName: {{ .values.priorityClassName }}
 restartPolicy: {{ .values.restartPolicy }}
 {{- end }}
 securityContext: {{ include "chc-lib.compute.pod-security-context" (dict "values" (.values).securityContext) | nindent 2 }}
-serviceAccountName: {{ .values.serviceAccountName }}
+serviceAccountName: {{ include "chc-lib.compute.name" (dict "name" .name "values" (.values.serviceAccount | default $ctx.Values.serviceAccount) "context" $ctx) }}
 {{- if .values.terminationGracePeriodSeconds }}
 terminationGracePeriodSeconds: {{ .values.terminationGracePeriodSeconds }}
 {{- end }}
