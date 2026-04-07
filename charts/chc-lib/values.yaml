@@ -357,6 +357,57 @@ exports:
       # See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingresstls-v1-networking-k8s-io for more.
       tls: []
 
+    httpRoute:
+      # -- Toggle to enable/disable the creation of the httpRoute.
+      create: true
+
+      # -- Name of the httpRoute to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
+      # -- Labels to add to the httpRoute in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the httpRoute in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Spec of the httpRoute to create. Values go through tpl.
+      # See https://gateway-api.sigs.k8s.io/api-types/httproute/#spec.
+      spec: {}
+
+    tlsRoute:
+      # -- Toggle to enable/disable the creation of the tlsRoute.
+      create: true
+
+      # -- Name of the tlsRoute to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
+      # -- Labels to add to the tlsRoute in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the tlsRoute in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Spec of the tlsRoute to create. Values go through tpl.
+      # See https://gateway-api.sigs.k8s.io/api-types/tlsroute/#spec.
+      spec: {}
+
+    referenceGrant:
+      # -- Toggle to enable/disable the creation of the referenceGrant.
+      create: true
+
+      # -- Name of the referenceGrant to create. Values go through tpl. Will be computed, if nil or empty.
+      name: ""
+
+      # -- Labels to add to the referenceGrant in addition to "commonLabels". Values go through tpl.
+      labels: {}
+
+      # -- Annotations to add to the referenceGrant in addition to "commonAnnotations". Values go through tpl.
+      annotations: {}
+
+      # -- Spec of the referenceGrant to create. Values go through tpl.
+      # See https://gateway-api.sigs.k8s.io/api-types/referencegrant/.
+      spec: {}
+
     serviceAccount:
       # -- Toggle to enable/disable the creation of the serviceAccount.
       create: true

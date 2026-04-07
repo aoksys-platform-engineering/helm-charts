@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.50.0](https://img.shields.io/badge/Version-0.50.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.51.0](https://img.shields.io/badge/Version-0.51.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.50.0
+    version: 0.51.0
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
@@ -209,6 +209,39 @@ Values to configure the `ingress` template.
 | className | string | `""` | Name of the ingressClass to use. Omitted, if nil or empty. |
 | rules | list | `[]` | List of rules for the ingress. Values go through tpl. See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingressrule-v1-networking-k8s-io for more. |
 | tls | list | `[]` | List of TLS hosts to serve. Values go through tpl. Omitted, if nil or empty. See https://kubernetes.io/docs/reference/generated/kubernetes-api/latest/#ingresstls-v1-networking-k8s-io for more. |
+
+## HTTPRoute
+Values to configure the `http-route` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `true` | Toggle to enable/disable the creation of the httpRoute. |
+| name | string | `""` | Name of the httpRoute to create. Values go through tpl. Will be computed, if nil or empty. |
+| labels | object | `{}` | Labels to add to the httpRoute in addition to "commonLabels". Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to the httpRoute in addition to "commonAnnotations". Values go through tpl. |
+| spec | object | `{}` | Spec of the httpRoute to create. Values go through tpl. See https://gateway-api.sigs.k8s.io/api-types/httproute/#spec. |
+
+## TLSRoute
+Values to configure the `tls-route` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `true` | Toggle to enable/disable the creation of the tlsRoute. |
+| name | string | `""` | Name of the tlsRoute to create. Values go through tpl. Will be computed, if nil or empty. |
+| labels | object | `{}` | Labels to add to the tlsRoute in addition to "commonLabels". Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to the tlsRoute in addition to "commonAnnotations". Values go through tpl. |
+| spec | object | `{}` | Spec of the tlsRoute to create. Values go through tpl. See https://gateway-api.sigs.k8s.io/api-types/tlsroute/#spec. |
+
+## ReferenceGrant
+Values to configure the `reference-grant` template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| create | bool | `true` | Toggle to enable/disable the creation of the referenceGrant. |
+| name | string | `""` | Name of the referenceGrant to create. Values go through tpl. Will be computed, if nil or empty. |
+| labels | object | `{}` | Labels to add to the referenceGrant in addition to "commonLabels". Values go through tpl. |
+| annotations | object | `{}` | Annotations to add to the referenceGrant in addition to "commonAnnotations". Values go through tpl. |
+| spec | object | `{}` | Spec of the referenceGrant to create. Values go through tpl. See https://gateway-api.sigs.k8s.io/api-types/referencegrant/. |
 
 ## ServiceAccount
 Values to configure the `service-account` template.
