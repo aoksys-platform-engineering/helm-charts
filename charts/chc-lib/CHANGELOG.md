@@ -9,3 +9,4 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Templates to support "HTTPRoute", "TLSRoute" and "ReferenceGrant" resources to use the kubernetes gateway API
+
