@@ -1,3 +1,5 @@
 README.md.gotmpl
 Chart.lock
 .DS_Store
+RELEASE.md
+action.sh

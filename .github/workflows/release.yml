@@ -26,9 +26,27 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Get changed charts
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^charts/' | cut -d/ -f2 | sort -u)
+          echo "CHANGED_CHARTS=${CHANGED}" >> $GITHUB_ENV
+
+      - name: Create RELEASE.md
+        run: |
+          for chart in $CHANGED_CHARTS; do
+            DIR=charts/$chart
+            VERSION=$(yq '.version' $DIR/Chart.yaml)
+        
+            if [ -f "$DIR/CHANGELOG.md" ]; then
+              awk "/^## \\[$VERSION\\]/{flag=1;next}/^## \\[/{flag=0}flag" $DIR/CHANGELOG.md > $DIR/RELEASE.md
+            else
+              echo "Couldn't find a CHANGELOG.md file in $DIR - skipping"
+            fi
+          done
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
 
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_RELEASE_NOTES_FILE: CHANGELOG.md
+          CR_RELEASE_NOTES_FILE: RELEASE.md
