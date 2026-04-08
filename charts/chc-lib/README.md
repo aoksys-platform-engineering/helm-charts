@@ -1,6 +1,6 @@
 # chc-lib
 
-![Version: 0.51.0](https://img.shields.io/badge/Version-0.51.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.51.1](https://img.shields.io/badge/Version-0.51.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Library chart to provide reusable templates to compose application charts with.
 
@@ -21,7 +21,7 @@ Add these `dependencies` to your `Chart.yaml` to include it:
 ...
 dependencies:
   - name: chc-lib
-    version: 0.51.0
+    version: 0.51.1
     repository: https://aoksys-platform-engineering.github.io/helm-charts
     # Importing "defaults" is mandatory
     import-values:
@@ -593,34 +593,39 @@ seccompProfile:
 </table>
 
 ## Containers
-This section explains which values can be set when you configure a `container`.
+This section shows which values can be set to configure a "container".
 
-| Value           | Type           | Default          | Description                                                                                                                                                                                                         |
-|-----------------|----------------|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name            | string         | computed         | Value for the `name` field of the container. This is generated from the key of each dict item.                                                                                                                      |
-| image           | dict           | mandatory        | Container image to use. Follows the `Images` input schema. See [Images](#images) in README for more.                                                                                                                |
-| command         | list           | omitted          | List of commands to use as ENTRYPOINT for the container. If not specified, the ENTRYPOINT from the container image is used. Values go through tpl.                                                                  |
-| args            | list           | omitted          | List of argument to provide for the ENTRYPOINT. Values go through tpl.                                                                                                                                              |
-| securityContext | dict or string | "default" preset | Security context for the container. Can be a preset name (string) or a dict. See [ContainerSecurityContext](#containersecuritycontext) in README for more.                                                          |
-| restartPolicy   | string         | omitted          | RestartPolicy defines the restart behavior of individual containers in a pod. This field may only be set for init containers. For non-init containers, the restart behavior is defined by the Pod's restart policy. |
-| resources       | dict or string | "xsmall" preset  | Resources for the container. Can be a preset name (string) or a dict. See [Resources](#resources) in README for more.                                                                                               |
-| volumeMounts    | dict           | omitted          | Volumes to mount in the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                   |
-| env             | dict           | omitted          | ENVs to set for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                       |
-| ports           | dict           | omitted          | Ports for the container. Follows the `ListFromDict` input schema. See [ListFromDict](#listfromdict) in README for more.                                                                                             |
-| startupProbe    | dict           | omitted          | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully.                                                                     |
-| livenessProbe   | dict           | omitted          | Periodic probe of container liveness. Container will be restarted if the probe fails.                                                                                                                               |
-| readinessProbe  | dict           | omitted          | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.                                                                                                 |
+They are not used to configure a template, but they are picked up wherever the "specs/_container.tpl" snippet is used,
+such as in the pod spec section of the "deployment", "statefulSet" or "job" template.
+
+| Value | Type | Default | Description |
+|-------|------|---------|-------------|
+| name | string | `""` | Name of the container. This will be computed from the key of each dict item. |
+| image | object | `{}` | Container image to use. Templating fails, if nil or empty. Follows the "Images" input schema. See [Images](#images) in README for more. |
+| command | list | `[]` | List of commands to use as ENTRYPOINT for the container. If not specified, the ENTRYPOINT from the container image is used. Values go through tpl. Omitted, if nil or empty. |
+| args | list | `[]` | List of argument to provide for the ENTRYPOINT. Values go through tpl. Omitted, if nil or empty. |
+| workingDir | string | `""` | Overwrites the working directory for the container. Cannot be updated, if configured. Omitted, if nil or empty. |
+| securityContext | object | `{}` | Security context for the container. Can be a preset name (string) or a dict. If nil or empty, the values of the "default" preset are used. See [ContainerSecurityContext](#containersecuritycontext) in README for more. |
+| restartPolicy | string | `""` | RestartPolicy defines the restart behavior of individual containers in a pod. Omitted, if nil or empty. Note: This can only be set for initContainers. |
+| resources | object | `{}` | Resources for the container. Can be a preset name (string) or a dict. If nil or empty, the values of the "xsmall" preset are used. See [Resources](#resources) in README for more. |
+| volumeMounts | object | `{}` | Volumes to mount in the container. Values go through tpl. Omitted, if nil or empty. Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more. |
+| env | object | `{}` | ENVs to set for the container. Values go through tpl. Omitted, if nil or empty. Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more. |
+| ports | object | `{}` | Ports to set for the container. Values go through tpl. Omitted, if nil or empty. Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more. |
+| lifecycle | object | `{}` | Actions that the management system should take in response to container lifecycle events. Cannot be updated, if configured. Note: Cannot be set for initContainers. |
+| startupProbe | object | `{}` | Startup probe to use for the container. Values go through tpl. Omitted, if nil or empty. Note: Cannot be set for initContainers. |
+| livenessProbe | object | `{}` | Liveness probe to use for the container. Values go through tpl. Omitted, if nil or empty. Note: Cannot be set for initContainers. |
+| readinessProbe | object | `{}` | Readiness probe to use for the container. Values go through tpl. Omitted, if nil or empty. Note: Cannot be set for initContainers. |
 
 ### Images
-When setting values for a container `image`, provide them using the following input schema:
+When setting values for a container "image", provide them using the following input schema:
 
-| Value      | Type   | Default                                   | Description                                                                                                                                                                         |
-|------------|--------|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Value      | Type   | Default                                   | Description                                                                                           |
+|------------|--------|-------------------------------------------|-------------------------------------------------------------------------------------------------------|
 | registry   | string | omitted                                   | Registry to pull the container image from. If unset, the value of "imageRegistry" is used. |
-| repository | string | mandatory                                 | Repository in the registry to pull the container image from.                                                                                                                        |
-| tag        | string | `{{ .Chart.AppVersion }}` | Tag of the container image to pull.                                                                                                                                                 |
-| digest     | string | omitted                                   | Image digest to use when pulling the container image.                                                                                                                                     |
-| pullPolicy | string | omitted                                   | Policy when images are pulled from the registry. Can be "Always" or "IfNotPresent" Omitted, if unset.                                                                                                 |
+| repository | string | mandatory                                 | Repository in the registry to pull the container image from. Templating fails, if nil or empty. |
+| tag        | string | `{{ .Chart.AppVersion }}` | Tag of the container image to pull. |
+| digest     | string | omitted                                   | Image digest to use when pulling the container image. |
+| pullPolicy | string | omitted                                   | Policy when images are pulled from the registry. Can be "Always" or "IfNotPresent" Omitted, if nil or unset. |
 
 These example values ...
 
@@ -914,13 +919,13 @@ spec:
 ```
 
 ## InitContainers
-This section explains which values can be set when you configure an `initContainer`.
+This section explains which values can be set to configure an "initContainer".
 
-Configuring initContainers follows the same input schema as containers with the addition of a mandatory `weight` value.
-The `weight` value is necessary to generate an ordered list of initContainers to ensure their order of execution when a pod launches.
+Configuring initContainers follows the same input schema as [containers](#containers) with the addition of a mandatory "weight" value.
+The "weight" value is necessary to ensure initContainers are executed in order when a pod launches.
 
-The `weight` value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order (highest value goes first).
-If an invalid `weight` value is provided, templating will fail and it returns an error message.
+The "weight" value can range between 1-999 (<1000, >0) and the list of initContainers will be sorted in descending order (highest value goes first).
+If an invalid "weight" value is provided, templating will fail and it returns an error message.
 
 These example values ...
 
@@ -929,7 +934,7 @@ These example values ...
 ...
 deployment:
   ...
-  pod:
+  pods:
     ...
     initContainers:
       strawweight:

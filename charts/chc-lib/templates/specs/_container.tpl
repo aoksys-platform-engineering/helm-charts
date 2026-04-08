@@ -14,19 +14,22 @@ input scheme:
 {{- $ctx := .context -}}
 
 name: {{ .name }}
-image: {{ include "chc-lib.compute.image-pull-string" (dict "values" .values.image "context" $ctx) }}
-{{- with (.values.image).pullPolicy }}
-imagePullPolicy: {{ . }}
+image: {{ include "chc-lib.compute.image-pull-string" (dict "name" .name "values" .values.image "context" $ctx) }}
+{{- if (.values.image).pullPolicy }}
+imagePullPolicy: {{ .values.image.pullPolicy }}
 {{- end }}
-{{- with (.values).command }}
-command: {{ include "common.tplvalues.render" (dict "value" . "context" $ctx) | nindent 2 }}
+{{- if .values.command }}
+command: {{ include "common.tplvalues.render" (dict "value" .values.command "context" $ctx) | nindent 2 }}
 {{- end }}
-{{- with (.values).args }}
-args: {{ include "common.tplvalues.render" (dict "value" . "context" $ctx) | nindent 2 }}
+{{- if .values.args }}
+args: {{ include "common.tplvalues.render" (dict "value" .values.args "context" $ctx) | nindent 2 }}
+{{- end }}
+{{- if .values.workingDir }}
+workingDir: {{ .values.workingDir }}
 {{- end }}
 securityContext: {{ include "chc-lib.compute.container-security-context" (dict "values" (.values).securityContext) | nindent 2 }}
-{{- with (.values).restartPolicy }}
-restartPolicy: {{ . }}
+{{- if .values.restartPolicy }}
+restartPolicy: {{ .values.restartPolicy }}
 {{- end }}
 resources: {{ include "chc-lib.compute.container-resources" (dict "values" .values.resources) | nindent 2 }}
 {{- if .values.volumeMounts }}
@@ -35,16 +38,19 @@ volumeMounts: {{ include "chc-lib.compute.list-from-dict" (dict "values" .values
 {{- if .values.env }}
 env: {{ include "chc-lib.compute.env-from-dict" (dict "values" .values.env "context" $ctx) | nindent 2 }}
 {{- end }}
-{{- with (.values).ports }}
-ports: {{ include "chc-lib.compute.list-from-dict" (dict "values" . "keyName" "name" "context" $ctx) | nindent 2 }}
+{{- if .values.ports }}
+ports: {{ include "chc-lib.compute.list-from-dict" (dict "values" .values.ports "keyName" "name" "context" $ctx) | nindent 2 }}
 {{- end }}
-{{- with .values.startupProbe }}
-startupProbe: {{ . | toYaml | nindent 2 }}
+{{- if .values.lifecycle }}
+lifecycle: {{ .values.lifecycle | toYaml | nindent 2 }}
 {{- end }}
-{{- with .values.livenessProbe }}
-livenessProbe: {{ . | toYaml | nindent 2 }}
+{{- if .values.startupProbe }}
+startupProbe: {{ .values.startupProbe | toYaml | nindent 2 }}
 {{- end }}
-{{- with .values.readinessProbe }}
-readinessProbe: {{ . | toYaml | nindent 2 }}
+{{- if .values.livenessProbe }}
+livenessProbe: {{ .values.livenessProbe | toYaml | nindent 2 }}
+{{- end }}
+{{- if .values.readinessProbe }}
+readinessProbe: {{ .values.readinessProbe | toYaml | nindent 2 }}
 {{- end }}
 {{- end }}

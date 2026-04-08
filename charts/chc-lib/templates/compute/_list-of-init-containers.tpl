@@ -41,7 +41,7 @@ initContainers:
     {{- fail (printf "The initContainer '%v' has an invalid weight value of '%v' (must be >0 and <= 999)" $k $v.weight) }}
   {{- end }}
   {{- $weight := printf "%03d" (int $v.weight) }}
-  {{- $entry := include "chc-lib.specs.container" (dict "name" $k "values" (omit $v "weight") "context" $ctx) | fromYaml -}}
+  {{- $entry := include "chc-lib.specs.container" (dict "name" $k "values" (omit $v "weight" "lifecycle" "startupProbe" "livenessProbe" "readinessProbe") "context" $ctx) | fromYaml -}}
   {{- $results = merge $results (dict $weight $entry) -}}
 {{- end }}
 

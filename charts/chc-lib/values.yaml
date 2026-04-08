@@ -857,3 +857,61 @@ exports:
     # -- List of kubernetes manifests to install. Values go through tpl.
     # See [Extra manifests](#extra-manifests) in README for more.
     extraManifests: []
+
+    container:
+      # -- Name of the container. This will be computed from the key of each dict item.
+      name: ""
+
+      # -- Container image to use. Templating fails, if nil or empty.
+      # Follows the "Images" input schema. See [Images](#images) in README for more.
+      image: {}
+
+      # -- List of commands to use as ENTRYPOINT for the container. If not specified, the ENTRYPOINT from the container image is used.
+      # Values go through tpl. Omitted, if nil or empty.
+      command: []
+
+      # -- List of argument to provide for the ENTRYPOINT. Values go through tpl. Omitted, if nil or empty.
+      args: []
+
+      # -- Overwrites the working directory for the container. Cannot be updated, if configured. Omitted, if nil or empty.
+      workingDir: ""
+
+      # -- Security context for the container. Can be a preset name (string) or a dict. If nil or empty, the values of the "default" preset are used.
+      # See [ContainerSecurityContext](#containersecuritycontext) in README for more.
+      securityContext: {}
+
+      # -- RestartPolicy defines the restart behavior of individual containers in a pod. Omitted, if nil or empty.
+      # Note: This can only be set for initContainers.
+      restartPolicy: ""
+
+      # -- Resources for the container. Can be a preset name (string) or a dict. If nil or empty, the values of the "xsmall" preset are used.
+      # See [Resources](#resources) in README for more.
+      resources: {}
+
+      # -- Volumes to mount in the container. Values go through tpl. Omitted, if nil or empty.
+      # Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more.
+      volumeMounts: {}
+
+      # -- ENVs to set for the container. Values go through tpl. Omitted, if nil or empty.
+      # Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more.
+      env: {}
+
+      # -- Ports to set for the container. Values go through tpl. Omitted, if nil or empty.
+      # Follows the "ListFromDict" input schema. See [List from dict](#list-from-dict) in README for more.
+      ports: {}
+
+      # -- Actions that the management system should take in response to container lifecycle events. Cannot be updated, if configured.
+      # Note: Cannot be set for initContainers.
+      lifecycle: {}
+
+      # -- Startup probe to use for the container. Values go through tpl. Omitted, if nil or empty.
+      # Note: Cannot be set for initContainers.
+      startupProbe: {}
+
+      # -- Liveness probe to use for the container. Values go through tpl. Omitted, if nil or empty.
+      # Note: Cannot be set for initContainers.
+      livenessProbe: {}
+
+      # -- Readiness probe to use for the container. Values go through tpl. Omitted, if nil or empty.
+      # Note: Cannot be set for initContainers.
+      readinessProbe: {}

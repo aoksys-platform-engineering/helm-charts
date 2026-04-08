@@ -4,6 +4,7 @@ This helper is meant to be used in "specs/_container.tpl".
 
 Input scheme:
   dict:
+    name: string
     values:
       registry: string|nil
       repository: string
@@ -49,6 +50,10 @@ image:
 {{- $pin := .values.tag | toString -}}
 {{- $registry := .values.registry -}}
 {{- $defaultRegistry := $ctx.Values.imageRegistry -}}
+
+{{- if not .values.repository }}
+{{- fail (printf "The '%s' container has no value for 'image.repository' configured" .name) }}
+{{- end }}
 
 {{- if or (kindIs "invalid" $registry) (empty $registry) -}}
   {{- $registry = $defaultRegistry -}}

@@ -36,7 +36,7 @@ containers:
 {{- $results := list }}
 
 {{- range $k, $v := .values }}
-  {{- $entry := include "chc-lib.specs.container" (dict "name" $k "values" $v "context" $ctx) | fromYaml -}}
+  {{- $entry := include "chc-lib.specs.container" (dict "name" $k "values" (omit $v "restartPolicy") "context" $ctx) | fromYaml -}}
   {{- $results = append $results $entry -}}
 {{- end }}
 
